@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+Assuming a global CSS or within <style> tags in a Svelte component
+.message-content {
+    position: relative; /* Ensure relative positioning for proper padding application */
+    padding-left: 2rem; /* Indent all content */
+}
+
+.message-content::first-line {
+    font-weight: bold; /* Any style you want to apply to the first line */
+}
+
+/* If you need the container to not have the padding affect other layout parts */
+.message-container {
+    margin-left: -2rem; /* Counteract the padding effect on the overall layout */
+}
+
+body {
+    margin: 0;
+    padding: 0;
+  }
+  
+  #video-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* Ensure it is behind other content */
+    overflow: hidden; /* Ensures the video does not exceed the container */
+}
+
+#background-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Cover the entire container without losing aspect ratio */
+}
+
+#video-container::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Dark overlay */
+    z-index: 1; /* Above the video, but still within the container */
+}
