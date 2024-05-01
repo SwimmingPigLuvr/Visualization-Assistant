@@ -1,18 +1,21 @@
 <script lang="ts">
     import { browser } from "$app/environment";
-    import { voiceID } from "$lib/stores";
+    import { currentVoiceID } from "$lib/stores";
     import { writable } from "svelte/store";
 
     export let message: string;
+
+    let listenToolTip = false;
+    let pauseTooltip = false;
 
     const audioSource = writable('');
     const isPlaying = writable(false);
     const isLoading = writable(false);
     let audioPlayer: HTMLAudioElement;
 
-    export async function readText(text: string) {
+    async function readText(text: string) {
         console.log('hope this works');
-        console.log('using voiceID: ', $voiceID);
+        console.log('using voiceID: ', $currentVoiceID);
         if (!browser) return; // Ensure this runs only in the browser
 
         isLoading.set(true);
@@ -62,18 +65,39 @@
         <div class="animate-spin">💿</div>
     {:else if $isPlaying}
         <!-- Pause button -->
-        <button on:click={togglePlayBack} class="">
+        <button 
+            on:mouseenter={() => pauseTooltip = true}
+            on:mouseleave={() => pauseTooltip = false}
+            on:click={togglePlayBack} 
+            class="relative">
+            {#if pauseTooltip}
+                    <span class="text-sm absolute left-1/2 top-0 -translate-x-1/2 tooltip rounded shadow-lg p-1 bg-black text-slate-400 mt-8">pause</span>
+            {/if}
             ⏸️
         </button>
     {:else if $audioSource}
         <!-- Resume button if audio is loaded but not playing -->
-        <button on:click={resumeAudio} class="">
-            🗣️
+        <button 
+            on:mouseenter={() => listenToolTip = true}
+            on:mouseleave={() => listenToolTip = false}
+            on:click={resumeAudio} 
+            class="relative">
+                {#if listenToolTip}
+                    <span class="text-sm absolute left-1/2 top-0 -translate-x-1/2 tooltip rounded shadow-lg p-1 bg-black text-slate-400 mt-8">listen</span>
+                {/if}
+            🎧
         </button>
     {:else}
         <!-- Read text button if audio hasn't been loaded -->
-        <button on:click={() => readText(message)} class="opacity-50 hover:opacity-100">
-            🗣️
+        <button 
+            on:mouseenter={() => listenToolTip = true}
+            on:mouseleave={() => listenToolTip = false}
+            on:click={() => readText(message)} 
+            class="relative">
+                {#if listenToolTip}
+                    <span class="text-sm absolute left-1/2 top-0 -translate-x-1/2 tooltip rounded shadow-lg p-1 bg-black text-slate-400 mt-8">listen</span>
+                {/if}
+            🎧
         </button>
     {/if}
 </div>

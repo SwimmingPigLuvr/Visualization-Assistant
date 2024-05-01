@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { voiceID } from "$lib/stores";
+    import { currentVoiceID } from "$lib/stores";
     import type { Voice } from "$lib/stores";
     import { writable } from "svelte/store";
 
@@ -8,15 +8,15 @@
     let updatingVoice = false;
     let updateSuccess = writable(false);
 
-    function updateVoiceID(voiceIDString: string) {
+    function updateVoiceID(idString: string) {
         updatingVoice = true;
 
-        voiceID.set(voiceIDString);
+        currentVoiceID.set(idString);
 
         updateSuccess.set(true);
 
         console.log('updated Voice:');
-        console.log('VoiceID: ', voiceIDString);
+        console.log('VoiceID: ', idString);
         console.log('Name: ', voice.name);
         console.log('ImageURL: ', voice.imageURL);
 

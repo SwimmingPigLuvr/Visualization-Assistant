@@ -3,17 +3,17 @@ import { XI_API_KEY } from '$env/static/private';
 import { json } from '@sveltejs/kit';
 import fetch from 'node-fetch';
 import type { RequestHandler } from '@sveltejs/kit';
-import { voiceID } from '$lib/stores';
-import { get as getStoreValue } from 'svelte/store';
+import { currentVoiceID } from '$lib/stores';
+import { get } from 'svelte/store';
 
 export const POST: RequestHandler = async ({ request }) => {
-  console.log('umm voice id: ', voiceID);
-  const currentVoiceID = getStoreValue(voiceID); 
-  console.log('currentVoiceID: ', currentVoiceID);
+  console.log('umm voice id: ', currentVoiceID);
+  const myVoiceID = get(currentVoiceID); 
+  console.log('currentVoiceID: ', myVoiceID);
   const { text } = await request.json();
 
   // ElevenLabs API URL with voice ID path parameter
-  const url = `https://api.elevenlabs.io/v1/text-to-speech/${currentVoiceID}/stream`;
+  const url = `https://api.elevenlabs.io/v1/text-to-speech/${myVoiceID}/stream`;
 
   const headers = {
     "Accept": "audio/mpeg",

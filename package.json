@@ -25,7 +25,9 @@
 	"type": "module",
 	"dependencies": {
 		"ai": "^3.0.24",
+		"firebase": "^9.23.0",
 		"openai": "^4.38.1",
+		"sveltefire": "^0.4.5",
 		"zod": "^3.22.5"
 	}
 }

@@ -1,9 +1,21 @@
 import { writable } from "svelte/store";
+import type { Message } from "ai/svelte";
 
-export let voiceID = writable<string>('7Uw4vgM4Qb1qiwwUnu15');
+export let currentThread = writable<string>('');
+
+export let userThreads = writable<string[]>([]);
+
+export let currentVoiceID = writable<string>('7Uw4vgM4Qb1qiwwUnu15');
+
+export let messagesStore = writable<Message[]>([]);
 
 export interface Voice {
     name: string;
     id: string;
     imageURL: string;
 }
+
+export let userNameStore = writable<string>('');
+export let userPfp = writable<string>('/pfps/field-aura.png');
+export let assistantPfp = writable<string>('/pfps/gigaBubble.png');
+
