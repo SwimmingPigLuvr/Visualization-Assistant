@@ -15,11 +15,6 @@
 
         updateSuccess.set(true);
 
-        console.log('updated Voice:');
-        console.log('VoiceID: ', idString);
-        console.log('Name: ', voice.name);
-        console.log('ImageURL: ', voice.imageURL);
-
         setTimeout(() => {updateSuccess.set(false);}, 1000);
     }
 

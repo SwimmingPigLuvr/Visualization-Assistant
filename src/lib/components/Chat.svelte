@@ -1,122 +1,64 @@
 <script lang="ts">
     import MessageTools from './MessageTools.svelte';
-    import { useChat, type Message } from "ai/svelte";
     import { blur, fade, fly, slide } from "svelte/transition";
-    import { currentThread, userPfp, assistantPfp, userNameStore, messagesStore } from "$lib/stores";
+    import { currentThread, userPfp, assistantPfp, userNameStore, messagesStore, isThinking } from "$lib/stores";
     import { get } from "svelte/store";
     import { cubicInOut } from 'svelte/easing';
     import { SignedIn } from 'sveltefire';
-    import type { Event, Events, Delta, ContentDelta } from '$lib/types';
+    import type { Event, Message, Events, MessageEvent, Delta, ContentDelta } from '$lib/types';
+    import { createAndRun, retrieveAndRun } from '$lib/api';
 
     let events: Events = [];
 
-    const username = $userNameStore;
+    const username = get(userNameStore);
+    let threadID: string | undefined = get(currentThread);
+    let userInput: string = '';
 
-    $: userProfilePicture = get(userPfp);
-    $: assistantProfilePicture = get(assistantPfp);
+    $: isTouched = userInput.length > 0;
 
+    // adapt these for useAssistant() (doesn't exist for svelte yet)
     // const { input, handleSubmit, messages } = useChat();
 
-    let userInput: string;
 
-    async function handleSubmit (event: any, input: string) {
-        const inputValue = userInput;
+    async function handleSubmit (userInput: string) {
         if (!userInput) return;
 
         // if no thread => createAndRun
-        // let's handle the createAndRun of a new thread first
+        if ($currentThread === '') {
 
-        // if thread run
-    }
+            // userInput as first message
+            const initialMessage: Message = {
+                id: 'initial message',
+                content: userInput,
+                role: 'user',
+                createdAt: new Date()
+            }
 
-    $: isTouched = userInput?.length > 0;
+            // set initial message first
+            messagesStore.set([initialMessage, ...$messagesStore]);
 
-    let threadID: string | undefined;
+            // create & run new Thread
+            createAndRun(userInput);
 
+            // reset input
+            userInput = '';
+        }
 
-    async function retrieveAndRun(threadID: string, userInput: string) {
-        try {
-            const response = await fetch(`https://api.openai.com/v1/threads/${threadID}/runs`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    thread_id: threadID,
-                    message: {
-                        role: 'user',
-                        content: userInput,
-                    }
-                }),
-            });
-
-            const data = await response.json();
-            const messages = data.messages || [];
-            messagesStore.set(messages);
-            console.log('Messages from existing thread:', messages);
-        } catch (error) {
-            console.error('Error running existing thread:', error);
+        // if thread => run
+        if ($currentThread !== '') {
+            retrieveAndRun($currentThread, userInput);
         }
     }
 
-    function extractMessages(events: any[]) {
 
-        // handle deltas, optional?
-        // const messageDeltas = events.filter(event => event.object === 'thread.message.delta');
 
-        // filter for message events
-        const messageEvents = events.filter(event => event.object === 'thread.message');
+    // run existing thread
+    
 
-        // return content of message events
-        const messages: Message[] = messageEvents.map(event => {
-            return {
-                id: event.id,
-                content: event.content || "No content",
-                createdAt: event.created_at,
-                role: event.role
-            };
-        });
+    
 
-        return messages;
-    }
-
-    // if creating new thread
-    async function createAndRun(userInput: string) {
-        try {
-
-            const response = await fetch('/api/threads/createAndRun', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    message: {
-                        role: 'user',
-                        content: userInput,
-                    },
-                }),
-            });
-
-            // get data as events
-            const data = await response.json() as { events: Events };
-
-            // get new threadID
-            threadID = data?.events[0]?.id; 
-            // set threadStore
-            currentThread.set(threadID || '');
-
-            const messages = extractMessages(data.events);
-            messagesStore.set(messages);
-            console.log('messages', messages);
-            
-            console.log('userInput', userInput);
-            console.log('currentThread store value: ', $currentThread);
-
-        } catch (error) {
-            console.error('err creating and running thread: ', error);
-        }
-
-    }
+    // create and run new thread
+    
 
 
 
@@ -125,21 +67,10 @@
 
 
 
+    // show suggested prompts
+    // implement prompts on click
     function useExamplePrompt(examplePrompt: string) {
         userInput = examplePrompt
-    }
-
-    let isThinking = true;
-    
-    const defaultPfp = 'images/default.png';
-
-    function getImageUrl(message: Message) {
-        if (message.role === 'user') {
-            return userProfilePicture;
-        } else if (message.role === 'assistant') {
-            return assistantProfilePicture;
-        }
-        return defaultPfp;
     }
 
     const randomPrompts = [
@@ -186,14 +117,21 @@
     ]
 
     let showSubmitButton = false;
-    let copied = false;
 
-    // copyButton
-    function handleCopy(text: string) {
-        navigator.clipboard.writeText(text);
-        copied = true;
+    
+    $: userProfilePicture = get(userPfp);
+    $: assistantProfilePicture = get(assistantPfp);
+    const defaultPfp = 'images/default.png';
+
+    // use correct pfp for users/assistants
+    function getImageUrl(message: Message) {
+        if (message.role === 'user') {
+            return userProfilePicture;
+        } else if (message.role === 'assistant') {
+            return assistantProfilePicture;
+        }
+        return defaultPfp;
     }
-
 
 </script>
 
@@ -202,11 +140,15 @@
 
         <!-- chat -->
         <div id="chat-container" class="p-2 fixed h-[84vh] w-full my-20 pb-20 text-xl tracking-tight overflow-x-hidden overflow-y-auto">
+            {#if $isThinking}
+               <img class="fixed left-1/2 -translate-x-1/3 top-1/2 rounded-full animate-bounce" src="/pfps/gigaBubble.png" alt=""> 
+            {/if}
             {#if threadID}
                 <div class="thread-id-display">
                     Thread ID: {threadID}
                 </div>
             {/if}
+
 
             {#if $messagesStore.length > 0}
                 <ul class="max-w-xl mx-auto p-2">
@@ -227,7 +169,7 @@
                                         <span class="font-mono italic leading-8">
                                             {message.content}
 
-                                            {#if isThinking}
+                                            {#if $isThinking}
                                                 <img class="w-4 h-4 rounded-full animate-pulse inline-block" src="/icons/gigaBubble.png" alt="">
                                             {/if}
                                         </span>
@@ -265,7 +207,7 @@
         {#if $messagesStore.length === 0}
 
             <!-- example prompts -->
-            <form on:submit={handleSubmit} class="max-w-3xl left-1/2 -translate-x-1/2 text-sm flex w-full flex-col space-y-2 md:flex-row md:space-x-2 md:space-y-0 absolute bottom-16 px-2">
+            <form on:submit={() => handleSubmit(userInput)} class="max-w-3xl left-1/2 -translate-x-1/2 text-sm flex w-full flex-col space-y-2 md:flex-row md:space-x-2 md:space-y-0 absolute bottom-16 px-2">
                 <button 
                     on:click={() => useExamplePrompt(randomSelectedPromptsAsStrings[0])} 
                     class="hover:bg-gray-900 rounded-lg p-3 border-neutral-700 border-[1px] w-full md:w-1/2 text-left focus:ring-0 outline-none bg-black flex flex-col">

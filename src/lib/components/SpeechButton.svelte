@@ -14,8 +14,6 @@
     let audioPlayer: HTMLAudioElement;
 
     async function readText(text: string) {
-        console.log('hope this works');
-        console.log('using voiceID: ', $currentVoiceID);
         if (!browser) return; // Ensure this runs only in the browser
 
         isLoading.set(true);

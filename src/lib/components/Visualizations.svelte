@@ -29,13 +29,10 @@
             const data = await response.json();
             
             firstMessage = data.body?.data?.[1]?.content?.[0]?.text?.value ?? `invalid threadID: ${threadID}`;
-            console.log('first message from threadID:', threadID, firstMessage);
 
             if (data.body?.data) {
                 const messages = data.body.data.map((message: { content: any[]; }) => message.content?.map(content => content.text?.value).join('') || 'No content');
-                console.log('All messages from threadID:', threadID, messages);
             } else {
-                console.log('no messages found or invalid thread id: ', threadID);
             }  
         }
          catch (error) {
@@ -61,7 +58,6 @@
             }
 
             const result = await response.json();
-            console.log(result);
 
             // delete from firestore
             if (result.success) {
@@ -71,7 +67,6 @@
                     threads: arrayRemove(threadID)
                 });
 
-                console.log('thread id removed', threadID);
             }
         } catch (error) {
             console.error('failed to delete the thread: ', error);
@@ -81,7 +76,6 @@
 
     async function setThread(threadID: string) {
         currentThread.set(threadID);
-        console.log('thread set to: ', $currentThread);
     }
 
     getThreadMessages();

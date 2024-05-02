@@ -1,5 +1,5 @@
 import { writable } from "svelte/store";
-import type { Message } from "ai/svelte";
+import type { Message } from "$lib/types";
 
 export let currentThread = writable<string>('');
 
@@ -18,4 +18,6 @@ export interface Voice {
 export let userNameStore = writable<string>('');
 export let userPfp = writable<string>('/pfps/field-aura.png');
 export let assistantPfp = writable<string>('/pfps/gigaBubble.png');
+
+export let isThinking = writable<boolean>(false);
 

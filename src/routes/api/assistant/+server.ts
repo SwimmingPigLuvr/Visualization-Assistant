@@ -15,9 +15,7 @@ export async function POST() {
         });
     } catch (error: unknown) {
         if (error instanceof Error) {
-            console.log(error.message); // Now TypeScript knows error is an Error object
         } else {
-            console.log('An unknown error occurred');
         }
     }
 }

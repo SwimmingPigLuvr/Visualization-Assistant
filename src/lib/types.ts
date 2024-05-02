@@ -1,12 +1,37 @@
+import type { Annotation } from "openai/resources/beta/threads/messages.mjs";
+
 export interface Event {
     id: string;
     object: string;
     created_at: number;
-    metadata?: any;  // Specify more detailed types if possible
-    tool_resources?: any;  // Specify more detailed types if possible
+    metadata?: any;
+    tool_resources?: any;
     content?: string;
-    delta?: Delta;  // Define Delta if you have details on its structure
-    role?: string;  // If this is part of the data structure
+    delta?: Delta;
+    role?: string;
+}
+
+export interface Message {
+    id: string;
+    content: string;
+    createdAt: Date;
+    role: 'user' | 'assistant' | 'system' | 'function' | 'data' | 'tool';
+}
+
+export interface MessageEvent {
+    [x: string]: string;
+    id: string;
+    created_at: Date;
+    content: TextContent[];
+    role?: string;
+}
+
+export interface TextContent {
+    text: {
+        value: string;
+        annotations?: Annotation[];
+    };
+    type: string;
 }
 
 export interface Delta {
@@ -22,4 +47,4 @@ export interface ContentDelta {
     type: string;
 }
 
-export type Events = Event[];
+export type Events = MessageEvent[];

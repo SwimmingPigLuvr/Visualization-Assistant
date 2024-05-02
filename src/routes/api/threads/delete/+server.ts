@@ -10,16 +10,13 @@ export async function DELETE({ request }) {
 
         const deletedThread = await openai.beta.threads.del(threadID);
 
-        console.log(deletedThread);
         return new Response(JSON.stringify(deletedThread), {
             headers: { 'Content-Type': 'application/json' }
         });
 
     } catch (error: unknown) {
         if (error instanceof Error) {
-            console.log(error.message); // Now TypeScript knows error is an Error object
         } else {
-            console.log('An unknown error occurred');
         }
     }
 }

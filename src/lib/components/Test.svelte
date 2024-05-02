@@ -7,9 +7,6 @@
             },
         });
         const data = await response.json();
-
-        console.log('created thread: ');
-        console.log(data);
     }
 </script>
 

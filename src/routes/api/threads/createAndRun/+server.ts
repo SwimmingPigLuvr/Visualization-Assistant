@@ -26,7 +26,6 @@ export async function POST({ request }) {
             events.push(event.data);
         }
         
-        console.log('usermessage: ', userMessage);
         return json({ events });
     } catch (error) {
         let errorMessage = 'An unknown error occurred';

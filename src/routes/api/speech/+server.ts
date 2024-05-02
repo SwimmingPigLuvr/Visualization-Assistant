@@ -7,9 +7,7 @@ import { currentVoiceID } from '$lib/stores';
 import { get } from 'svelte/store';
 
 export const POST: RequestHandler = async ({ request }) => {
-  console.log('umm voice id: ', currentVoiceID);
   const myVoiceID = get(currentVoiceID); 
-  console.log('currentVoiceID: ', myVoiceID);
   const { text } = await request.json();
 
   // ElevenLabs API URL with voice ID path parameter
