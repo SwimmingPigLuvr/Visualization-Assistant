@@ -1,23 +1,31 @@
 <script lang="ts">
     import MessageTools from './MessageTools.svelte';
     import { blur, fade, fly, slide } from "svelte/transition";
-    import { currentThread, userPfp, assistantPfp, userNameStore, messagesStore, isThinking } from "$lib/stores";
+    import { currentThread, userPfp, assistantPfp, userNameStore, messagesStore, isThinking, currentRun } from "$lib/stores";
     import { get } from "svelte/store";
     import { cubicInOut } from 'svelte/easing';
     import { SignedIn } from 'sveltefire';
     import type { Event, Message, Events, MessageEvent, Delta, ContentDelta } from '$lib/types';
-    import { createAndRun, retrieveAndRun } from '$lib/api';
-
+    import { cancelRun, createAndRun, retrieveAndRun } from '$lib/api';
+    
     let events: Events = [];
 
     const username = get(userNameStore);
     let threadID: string | undefined = get(currentThread);
+    let runID: string | undefined = get(currentRun);
     let userInput: string = '';
 
     $: isTouched = userInput.length > 0;
 
     // adapt these for useAssistant() (doesn't exist for svelte yet)
     // const { input, handleSubmit, messages } = useChat();
+
+    function autoScroll() {
+        // if $messagesStore changes at all {
+            const container = document.getElementById('chat-container');
+            container.scrollTop = container.scrollHeight;
+        // }
+    }
 
 
     async function handleSubmit (userInput: string) {
@@ -136,17 +144,22 @@
 </script>
 
 <SignedIn let:user>
+    {#if $isThinking}
+        <div class="flex w-screen h-screen">
+            <img  class="w-40 m-auto rounded-full animate-bounce" src="/pfps/gigaBubble.png" alt="">
+        </div>
+    {/if}
     <div class="w-full m-auto flex flex-col space-y-4 overflow-y-auto overflow-x-hidden">
 
         <!-- chat -->
         <div id="chat-container" class="p-2 fixed h-[84vh] w-full my-20 pb-20 text-xl tracking-tight overflow-x-hidden overflow-y-auto">
-            {#if $isThinking}
-               <img class="fixed left-1/2 -translate-x-1/3 top-1/2 rounded-full animate-bounce" src="/pfps/gigaBubble.png" alt=""> 
-            {/if}
             {#if threadID}
                 <div class="thread-id-display">
                     Thread ID: {threadID}
                 </div>
+            {/if}
+            {#if runID}
+                Run ID: {runID}
             {/if}
 
 
@@ -233,7 +246,11 @@
         <form on:submit={() => createAndRun(userInput)} class="flex max-w-3xl items-center justify-between p-2 fixed left-1/2 -translate-x-1/2 bottom-0 w-full my-2">
             <input bind:value={userInput} placeholder="Input message..." class="w-full focus:ring-0 outline-none bg-black rounded-lg relative p-3 border-neutral-700 border-[1px] overflow-x-hidden overflow-y-auto">
             <!-- submit button -->
-            <button type="submit" class="{isTouched ? 'bg-white text-black hover:bg-neutral-400 ' : 'bg-neutral-700 text-neutral-800'}  w-8 h-8 absolute right-4 rounded-lg text-2xl flex items-center justify-center transform transition-all duration-500 ease-in-out">⏎</button>
+            {#if !$isThinking}
+                <button type="submit" class="{isTouched ? 'bg-white text-black hover:bg-neutral-400 ' : 'bg-neutral-700 text-neutral-800'}  w-8 h-8 absolute right-4 rounded-lg text-2xl flex items-center justify-center transform transition-all duration-500 ease-in-out">⏎</button>
+            {:else}
+                <button on:click={() => cancelRun(threadID, runID)} class="bg-white text-black hover:bg-neutral-400 w-8 h-8 absolute right-4 rounded-lg text-2xl flex items-center justify-center transform transition-all duration-500 ease-in-out">⏹️</button>
+            {/if}
         </form>
 
         <!-- chat completions input -->

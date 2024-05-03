@@ -31,12 +31,12 @@
             Your browser does not support the video tag.
         </video>
     </div>
-    <!-- <div>
+    <div>
         <audio id="background-audio" autoplay loop>
             <source src="/sounds/alima.mp3" type="audio/mp3">
             Your browser does not support the audio tag.
         </audio>
-    </div> -->
+    </div>
     
     
 </body>

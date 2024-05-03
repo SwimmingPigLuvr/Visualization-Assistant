@@ -2,6 +2,7 @@ import { writable } from "svelte/store";
 import type { Message } from "$lib/types";
 
 export let currentThread = writable<string>('');
+export let currentRun = writable<string>('');
 
 export let userThreads = writable<string[]>([]);
 

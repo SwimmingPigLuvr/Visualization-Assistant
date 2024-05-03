@@ -1,4 +1,4 @@
-import { messagesStore, currentThread, isThinking } from "./stores";
+import { messagesStore, currentThread, isThinking, currentRun } from "./stores";
 import type { Events, Message } from "$lib/types";
 
 export async function createAndRun(userInput: string): Promise<void> {
@@ -25,8 +25,14 @@ export async function createAndRun(userInput: string): Promise<void> {
             const threadID = data?.events[0]?.id; 
             currentThread.set(threadID || '');
 
+            // get runID && set run store
+            const runID = data?.events[1]?.id;
+            currentRun.set(runID || '');
+
             // extract messages && set messages store
             const messages = extractMessages(data.events);
+            console.log('data: ', data);
+            console.log('data.events: ', data.events);
             
             messagesStore.set(messages);
             
@@ -83,3 +89,22 @@ export function extractMessageValues(events: Events): string[] {
         .join(' ')
       );
 }
+
+export async function cancelRun(threadID: string, runID: string) {
+    try {
+        const response = await fetch(`/api/threads/${threadID}/runs/${runID}`, {
+            method: 'DELETE',
+        })
+
+        if (response.ok) {
+            console.log('run cancelled');
+            isThinking.set(false);
+        } else {
+            console.error('failed to cancel run: ', response.statusText);
+        }
+    } catch (error) {
+        console.error('error during deletion: ', error);
+    }
+}
+
+
