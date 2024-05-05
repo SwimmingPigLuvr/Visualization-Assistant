@@ -21,6 +21,21 @@
             name: 'Soothing Sam',
             imageURL: '/images/voices/soothing-sam.png',
         },
+        {
+            id: '286VLndcKwmm1RxLQoOn',
+            name: 'Materialize',
+            imageURL: '/images/voices/materializePath.png',
+        },
+        {
+            id: 'aOcS60CY8CoaVaZfqqb5',
+            name: 'Bleakoff',
+            imageURL: '/images/voices/bleakoffHandDox.png',
+        },
+        {
+            id: 'Xb3zeLrTi6F4ziIcXdwk',
+            name: 'Zoomer',
+            imageURL: '/images/voices/zoomer.png',
+        },
     ];
 
     let isMenuOpen = false;
@@ -103,7 +118,7 @@
                             <div 
                                 in:slide={{duration: 300, easing: cubicInOut}}
                                 out:slide={{duration: 300, easing: cubicInOut}}
-                                class="flex space-x-6 p-4">
+                                class="flex flex-wrap gap-8 p-8 w-full overflow-x-auto">
                                 {#each voices as voice}
                                     <Voice voice={voice} />
                                 {/each}

@@ -6,16 +6,17 @@
     export let voice: Voice;
 
     let updatingVoice = false;
-    let updateSuccess = writable(false);
+    let updateSuccess = true;
 
     function updateVoiceID(idString: string) {
+        console.log('calling update voice function with voiceID: ', idString);
+
         updatingVoice = true;
 
         currentVoiceID.set(idString);
+        updateSuccess = true;
 
-        updateSuccess.set(true);
-
-        setTimeout(() => {updateSuccess.set(false);}, 1000);
+        setTimeout(() => {updateSuccess = false; updatingVoice = false}, 1000);
     }
 
 </script>
@@ -26,7 +27,7 @@
                 <span class="text-5xl">✔️</span>
             </div>
         {:else}
-            <img class="h-20 rounded-full border-white border-2 mx-auto group-hover:-translate-y-1 transform transition-all duration-1000 ease-in-out" src={voice.imageURL} alt="">
+            <img class="h-24 rounded-full border-white border-2 mx-auto group-hover:-translate-y-1 transform transition-all duration-1000 ease-in-out" src={voice.imageURL} alt="">
         {/if}
         <p class="font-serif -tracking-widest italic">{voice.name}</p>
     </button>

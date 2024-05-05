@@ -1,7 +1,7 @@
 <script lang="ts">
     import { browser } from "$app/environment";
     import { currentVoiceID } from "$lib/stores";
-    import { writable } from "svelte/store";
+    import { get, writable } from "svelte/store";
 
     export let message: string;
 
@@ -19,12 +19,14 @@
         isLoading.set(true);
         isPlaying.set(false);
 
+        const voiceID = get(currentVoiceID);
+
         const response = await fetch('/api/speech', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ text }) // Send the text to your SvelteKit endpoint
+            body: JSON.stringify({ text, voiceID })
         });
 
         isLoading.set(false);

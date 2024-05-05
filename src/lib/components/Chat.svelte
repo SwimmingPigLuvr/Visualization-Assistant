@@ -1,16 +1,13 @@
 <script lang="ts">
     import MessageTools from './MessageTools.svelte';
     import { blur, fade, fly, slide } from "svelte/transition";
-    import { currentThread, userPfp, assistantPfp, userNameStore, messagesStore, isThinking, currentRun } from "$lib/stores";
+    import { currentThread, userPfp, assistantPfp, userNameStore, messagesStore, isThinking, currentRun, partialMessage, completedMessage } from "$lib/stores";
     import { get } from "svelte/store";
     import { cubicInOut } from 'svelte/easing';
     import { SignedIn } from 'sveltefire';
-    import type { Event, Message, Events, MessageEvent, Delta, ContentDelta } from '$lib/types';
+    import type { Event, Message, Delta, ContentDelta } from '$lib/types';
     import { cancelRun, createAndRun, retrieveAndRun } from '$lib/api';
     
-    let events: Events = [];
-
-    const username = get(userNameStore);
     let threadID: string | undefined = get(currentThread);
     let runID: string | undefined = get(currentRun);
     let userInput: string = '';
@@ -23,7 +20,9 @@
     function autoScroll() {
         // if $messagesStore changes at all {
             const container = document.getElementById('chat-container');
-            container.scrollTop = container.scrollHeight;
+            if (container) {
+                container.scrollTop = container.scrollHeight;
+            }
         // }
     }
 
@@ -144,11 +143,11 @@
 </script>
 
 <SignedIn let:user>
-    {#if $isThinking}
+    <!-- {#if $isThinking}
         <div class="flex w-screen h-screen">
             <img  class="w-40 m-auto rounded-full animate-bounce" src="/pfps/gigaBubble.png" alt="">
         </div>
-    {/if}
+    {/if} -->
     <div class="w-full m-auto flex flex-col space-y-4 overflow-y-auto overflow-x-hidden">
 
         <!-- chat -->
@@ -166,23 +165,25 @@
             {#if $messagesStore.length > 0}
                 <ul class="max-w-xl mx-auto p-2">
                     {#each $messagesStore as message, index}
-                        <div class="{message.role === 'user' ? '' : ''} my-4">
+                        <div class="my-4">
                             <li class="relative px-8">
                                 <img class="transform transition-all duration-500 ease-in-out rounded-xl w-6 h-6 sm:w-10 sm:h-10 absolute border-white border-[1px] sm:border-2 -left-1 sm:-left-6" src={getImageUrl(message)} alt={message.role}>
                                 <span class="{message.role === 'user' ? '' : ''} capitalize font-bold">
                                     {#if message.role === 'user'}
-                                        {username}
+                                        {$userNameStore}
                                     {:else}
                                         {message.role}
                                     {/if}
                                 </span>
                                 <br>
+
                                 {#if message.role === 'assistant'}
                                     <div class="">
                                         <span class="font-mono italic leading-8">
-                                            {message.content}
+                                            {@html message.content}
 
-                                            {#if $isThinking}
+                                            {#if $isThinking && index === $messagesStore.length - 1}
+                                                <span class="text-gray-400">{@html $partialMessage}</span>
                                                 <img class="w-4 h-4 rounded-full animate-pulse inline-block" src="/icons/gigaBubble.png" alt="">
                                             {/if}
                                         </span>
@@ -206,6 +207,30 @@
                             <!-- <hr class="my-4 margin auto"> -->
                         {/if}
                     {/each}
+
+                    <!-- partial message -->
+                    {#if $partialMessage.content !== ''}
+                        
+                        <div class="my-4">
+                            <li class="relative px-8">
+                                <img class="transform transition-all duration-500 ease-in-out rounded-xl w-6 h-6 sm:w-10 sm:h-10 absolute border-white border-[1px] sm:border-2 -left-1 sm:-left-6" src={$assistantPfp} alt="assistant">
+                                <span class="capitalize font-bold">Assistant</span>
+                                <br>
+
+                                <div class="">
+                                    <span class="font-mono italic leading-8">
+                                        {#if $isThinking}
+                                            <span class="">{$partialMessage.content}</span>
+                                            <img class="w-4 h-4 rounded-full animate-pulse inline-block" src="/icons/gigaBubble.png" alt="">
+                                        {/if}
+                                    </span>
+
+                                </div>
+
+                            </li>
+
+                        </div>
+                    {/if}
                 </ul>
             {:else}
                 <div class="w-full h-screen flex flex-col items-center space-y-4">

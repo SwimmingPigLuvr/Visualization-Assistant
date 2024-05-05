@@ -14,17 +14,17 @@ export interface Event {
 export interface Message {
     id: string;
     content: string;
-    createdAt: Date;
+    createdAt?: Date;
     role: 'user' | 'assistant' | 'system' | 'function' | 'data' | 'tool';
 }
 
-export interface MessageEvent {
-    [x: string]: string;
-    id: string;
-    created_at: Date;
-    content: TextContent[];
-    role?: string;
-}
+// export interface MessageEvent {
+//     [x: string]: string;
+//     id: string;
+//     created_at: Date;
+//     content: TextContent[];
+//     role?: string;
+// }
 
 export interface TextContent {
     text: {
@@ -47,4 +47,4 @@ export interface ContentDelta {
     type: string;
 }
 
-export type Events = MessageEvent[];
+// export type Events = MessageEvent[];

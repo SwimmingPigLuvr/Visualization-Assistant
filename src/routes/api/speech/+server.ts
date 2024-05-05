@@ -4,14 +4,14 @@ import { json } from '@sveltejs/kit';
 import fetch from 'node-fetch';
 import type { RequestHandler } from '@sveltejs/kit';
 import { currentVoiceID } from '$lib/stores';
-import { get } from 'svelte/store';
 
 export const POST: RequestHandler = async ({ request }) => {
-  const myVoiceID = get(currentVoiceID); 
-  const { text } = await request.json();
+  const { text, voiceID } = await request.json();
+  console.log('howdy from api/speech/+server.ts. voiceID: ', voiceID);
 
   // ElevenLabs API URL with voice ID path parameter
-  const url = `https://api.elevenlabs.io/v1/text-to-speech/${myVoiceID}/stream`;
+  const url = `https://api.elevenlabs.io/v1/text-to-speech/${voiceID}/stream`;
+  console.log('url: ', url);
 
   const headers = {
     "Accept": "audio/mpeg",
@@ -22,7 +22,6 @@ export const POST: RequestHandler = async ({ request }) => {
   const data = {
     text: text,
     model_id: "eleven_monolingual_v1",
-    // Add other parameters as per ElevenLabs' API documentation
   };
 
   const response = await fetch(url, {

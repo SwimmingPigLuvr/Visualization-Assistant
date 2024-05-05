@@ -1,13 +1,15 @@
 import { writable } from "svelte/store";
 import type { Message } from "$lib/types";
 
+export let currentVoiceID = writable<string>('286VLndcKwmm1RxLQoOn');
 export let currentThread = writable<string>('');
 export let currentRun = writable<string>('');
 
 export let userThreads = writable<string[]>([]);
 
-export let currentVoiceID = writable<string>('7Uw4vgM4Qb1qiwwUnu15');
-
+export let responseText = writable<string>('');
+export let partialMessage = writable<Message>({ content: '', role: 'assistant', id: 'partial_message', createdAt: new Date()});
+export let completedMessage = writable<string>('');
 export let messagesStore = writable<Message[]>([]);
 
 export interface Voice {
