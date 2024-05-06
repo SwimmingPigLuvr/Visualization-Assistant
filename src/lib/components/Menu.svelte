@@ -4,13 +4,13 @@
     import { cubicInOut, cubicIn, cubicOut } from "svelte/easing";
     import { writable } from "svelte/store";
     import Visualizations from "./Visualizations.svelte";
-    import { currentThread, userThreads, wallpaper } from "$lib/stores";
+    import { bgMode, currentThread, userThreads, wallpaper } from "$lib/stores";
     import { SignedIn, SignedOut, Doc, collectionStore, docStore, userStore } from "sveltefire";
     import { auth, db } from "$lib/firebase";
     import { onDestroy } from "svelte";
     import Threads from "./Threads.svelte";
 
-    let wallpaperSRCs = [
+    let wallpapers = [
         { 
             src: "/wallpaper/images/scene1.png",
             alt: "A serene landscape with clear blue skies, lush green meadows and gentle flowing rivers under the warm summer sun. The scene is filled with vibrant colors of nature's palette, creating an atmosphere that evokes tranquility and harmony. in the style of anime."
@@ -23,6 +23,10 @@
             src: "/wallpaper/images/background.jpeg",
             alt: "pretty field of green grass, neatly cut, a branch with many pink cherry blossoms and green leaves is in the view of the top right corner of the image. the sun shines white with long rays in the upper left over a sky of beautiful white clouds"
         },
+    ];
+
+    let videos = [
+        "/videos/clouds.mp4",
     ];
 
     let voices = [
@@ -80,8 +84,17 @@
         isVideoOn.set(!isVideoOn);
     }
 
-    function setWallpaper(src: string) {
-        wallpaper.set(src);
+    function setWallpaper(src: string, mode: 'image' | 'video') {
+        if (mode === 'image') {
+            console.log('bg mode: image');
+            console.log('image source: ', src);
+            wallpaper.set(src);
+            bgMode.set(mode);
+        } else if (mode === 'video') {
+            console.log('bg mode: video');
+            console.log('video source: ', src);
+            bgMode.set(mode);
+        }
     }
 
 
@@ -165,14 +178,19 @@
                                 <!-- video -->
                                 <h2>Background</h2>
                                 <div class="flex space-x-2">
-                                    {#each wallpaperSRCs as wallpaper}
-                                        <button class="transform transition-all duration-500 ease-in-out items-center justify-center opacity-50 hover:opacity-100 group flex flex-col" on:click={() => setWallpaper(wallpaper.src)}>
+                                    <h3>Image</h3>
+                                    {#each wallpapers as wallpaper}
+                                        <button class="transform transition-all duration-500 ease-in-out items-center justify-center opacity-50 hover:opacity-100 group flex flex-col" on:click={() => setWallpaper(wallpaper.src, 'image')}>
                                             <img class="h-20 rounded-full border-white border-2 mx-auto group-hover:-translate-y-1 transform transition-all duration-1000 ease-in-out" src={wallpaper.src} alt={wallpaper.alt}>
                                         </button>
                                     {/each}
-                                    <button class="transform transition-all duration-500 ease-in-out items-center justify-center opacity-50 hover:opacity-100 group flex flex-col" on:click={toggleVideo}>
-                                        <video class="h-20 rounded-full border-white border-2 mx-auto group-hover:-translate-y-1 transform transition-all duration-1000 ease-in-out" src="/videos/clouds.mp4" autoplay loop muted>
-                                    </button>
+
+                                    <h3>Video</h3>
+                                    {#each videos as video}
+                                        <button class="transform transition-all duration-500 ease-in-out items-center justify-center opacity-50 hover:opacity-100 group flex flex-col" on:click={() => setWallpaper(video, 'video')}>
+                                            <video class="h-20 rounded-full border-white border-2 mx-auto group-hover:-translate-y-1 transform transition-all duration-1000 ease-in-out" src={video} autoplay loop muted>
+                                        </button>
+                                    {/each}
                                     
                                 </div>
                             </div>

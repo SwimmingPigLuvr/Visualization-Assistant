@@ -7,6 +7,23 @@
     import { SignedIn } from 'sveltefire';
     import type { Event, Message, Delta, ContentDelta } from '$lib/types';
     import { cancelRun, createAndRun, retrieveAndRun } from '$lib/api';
+    import { browser } from '$app/environment';
+
+
+    function formatText(inputText: string) {
+        let formattedText = inputText;
+        
+        // Replace double newlines with HTML line breaks
+        formattedText = formattedText.replace(/\n\n/g, '<br><br>');
+
+        // Replace Markdown-like bold syntax
+        formattedText = formattedText.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+
+        return formattedText;
+    }
+
+    $: formattedMessage = formatText($completedMessage);
+    $: formattedPartial = formatText($partialMessage.content);
     
     let threadID: string | undefined = get(currentThread);
     let runID: string | undefined = get(currentRun);
@@ -24,6 +41,15 @@
                 container.scrollTop = container.scrollHeight;
             }
         // }
+    }
+
+    $: if ($partialMessage) {
+        if (browser) {
+            const container = document.getElementById('chat-container');
+            if (container) {
+                container.scrollTop = container.scrollHeight;
+            }
+        }
     }
 
 
@@ -187,10 +213,10 @@
                                 {#if message.role === 'assistant'}
                                     <div class="">
                                         <span class="font-mono italic leading-8">
-                                            {@html message.content}
+                                            {@html formatText(message.content)}
 
                                             {#if $isThinking && index === $messagesStore.length - 1}
-                                                <span class="text-gray-400">{@html $partialMessage}</span>
+                                                <span class="text-gray-400">{@html formattedPartial}</span>
                                                 <img class="w-4 h-4 rounded-full animate-pulse inline-block" src="/icons/gigaBubble.png" alt="">
                                             {/if}
                                         </span>

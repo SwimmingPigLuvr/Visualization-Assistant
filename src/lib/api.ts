@@ -1,6 +1,9 @@
 import { get } from "svelte/store";
 import { responseText, messagesStore, currentThread, isThinking, currentRun, partialMessage, completedMessage } from "./stores";
 
+
+
+
 export async function createAndRun(userInput: string) {
     isThinking.set(true);
 
@@ -53,12 +56,12 @@ export async function createAndRun(userInput: string) {
 
                 // Ensure that delta.content array exists and is not empty
                 if (delta.content && delta.content.length > 0 && delta.content[0].text) {
+                    const newText = delta.content[0].text.value;
                     partialMessage.update(currentMessage => ({
                         ...currentMessage,
-                        content: currentMessage.content + delta.content[0].text.value
+                        content: currentMessage.content + newText
                     }));
                 }
-                const currentPartialMessage = get(partialMessage);
             }
             // Completed message
             else if (event.event === 'thread.message.completed') {

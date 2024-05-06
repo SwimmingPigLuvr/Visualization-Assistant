@@ -8,6 +8,7 @@ export let currentRun = writable<string>('');
 export let userThreads = writable<string[]>([]);
 
 export let wallpaper = writable<string>('/videos/clouds.mp4');
+export let bgMode = writable<'image' | 'video'>('video');
 
 export let responseText = writable<string>('');
 export let partialMessage = writable<Message>({ content: '', role: 'assistant', id: 'partial_message', createdAt: new Date()});
