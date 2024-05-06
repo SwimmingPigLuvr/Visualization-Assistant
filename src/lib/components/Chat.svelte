@@ -152,14 +152,21 @@
 
         <!-- chat -->
         <div id="chat-container" class="p-2 fixed h-[84vh] w-full my-20 pb-20 text-xl tracking-tight overflow-x-hidden overflow-y-auto">
-            {#if threadID}
-                <div class="thread-id-display">
-                    Thread ID: {threadID}
-                </div>
-            {/if}
-            {#if runID}
-                Run ID: {runID}
-            {/if}
+            
+            <!-- threadID & runID -->
+            <div class="fixed top-4 left-1/4 -translate-x-1/4 flex flex-col max-w-xl text-left text-xs opacity-50">
+                {#if $currentThread !== ''}
+                    <p in:fade>
+                        Thread ID: {$currentThread}
+                    </p>
+                {/if}
+                
+                {#if $currentRun !== ''}
+                    <p in:blur>
+                        Run ID: {$currentRun}
+                    </p>
+                {/if}
+            </div>
 
 
             {#if $messagesStore.length > 0}
@@ -167,7 +174,7 @@
                     {#each $messagesStore as message, index}
                         <div class="my-4">
                             <li class="relative px-8">
-                                <img class="transform transition-all duration-500 ease-in-out rounded-xl w-6 h-6 sm:w-10 sm:h-10 absolute border-white border-[1px] sm:border-2 -left-1 sm:-left-6" src={getImageUrl(message)} alt={message.role}>
+                                <img class="transform transition-all duration-500 ease-in-out rounded-xl w-6 h-6 sm:w-10 sm:h-10 absolute border-white border-[1px] sm:border-2 -left-1 sm:-left-5" src={getImageUrl(message)} alt={message.role}>
                                 <span class="{message.role === 'user' ? '' : ''} capitalize font-bold">
                                     {#if message.role === 'user'}
                                         {$userNameStore}
@@ -274,7 +281,11 @@
             {#if !$isThinking}
                 <button type="submit" class="{isTouched ? 'bg-white text-black hover:bg-neutral-400 ' : 'bg-neutral-700 text-neutral-800'}  w-8 h-8 absolute right-4 rounded-lg text-2xl flex items-center justify-center transform transition-all duration-500 ease-in-out">⏎</button>
             {:else}
-                <button on:click={() => cancelRun(threadID, runID)} class="bg-white text-black hover:bg-neutral-400 w-8 h-8 absolute right-4 rounded-lg text-2xl flex items-center justify-center transform transition-all duration-500 ease-in-out">⏹️</button>
+                <!-- cancel button -->
+                {#if $currentRun !== ''}
+                    <button on:click={() => cancelRun(threadID, runID)} class="bg-white text-black hover:bg-neutral-400 w-8 h-8 absolute right-4 rounded-lg text-2xl flex items-center justify-center transform transition-all duration-500 ease-in-out">⏹️</button>
+                {/if}
+
             {/if}
         </form>
 

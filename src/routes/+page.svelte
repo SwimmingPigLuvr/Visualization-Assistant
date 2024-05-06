@@ -4,7 +4,11 @@
     import Menu from "$lib/components/Menu.svelte";
     import Test from "$lib/components/Test.svelte";
     import Login from "$lib/components/Login.svelte";
+    import { wallpaper } from "$lib/stores";
 
+    $: {
+        document.body.style.backgroundImage = `url(${$wallpaper})`;
+    }
     
 </script>
 
@@ -25,12 +29,12 @@
     <Chat />
 
     <!-- clouds -->
-    <div id="video-container">
+    <!-- <div id="video-container">
         <video id="background-video" autoplay loop muted>
             <source src="/videos/clouds.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
-    </div>
+    </div> -->
     <div>
         <audio id="background-audio" autoplay loop>
             <source src="/sounds/alima.mp3" type="audio/mp3">

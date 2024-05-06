@@ -4,11 +4,26 @@
     import { cubicInOut, cubicIn, cubicOut } from "svelte/easing";
     import { writable } from "svelte/store";
     import Visualizations from "./Visualizations.svelte";
-    import { currentThread, userThreads } from "$lib/stores";
+    import { currentThread, userThreads, wallpaper } from "$lib/stores";
     import { SignedIn, SignedOut, Doc, collectionStore, docStore, userStore } from "sveltefire";
     import { auth, db } from "$lib/firebase";
     import { onDestroy } from "svelte";
     import Threads from "./Threads.svelte";
+
+    let wallpaperSRCs = [
+        { 
+            src: "/wallpaper/images/scene1.png",
+            alt: "A serene landscape with clear blue skies, lush green meadows and gentle flowing rivers under the warm summer sun. The scene is filled with vibrant colors of nature's palette, creating an atmosphere that evokes tranquility and harmony. in the style of anime."
+        },
+        { 
+            src: "/wallpaper/images/scene2.png",
+            alt: "Japanese temple, Japanese landscape with waterfalls and blue sky, fantasy art style, concept art in the style of Atey Ghailan and Studio Ghibli, anime background, red accents, digital painting, high resolution"
+        },
+        { 
+            src: "/wallpaper/images/background.jpeg",
+            alt: "pretty field of green grass, neatly cut, a branch with many pink cherry blossoms and green leaves is in the view of the top right corner of the image. the sun shines white with long rays in the upper left over a sky of beautiful white clouds"
+        },
+    ];
 
     let voices = [
         {
@@ -63,6 +78,10 @@
 
     function toggleVideo(event: MouseEvent) {
         isVideoOn.set(!isVideoOn);
+    }
+
+    function setWallpaper(src: string) {
+        wallpaper.set(src);
     }
 
 
@@ -144,18 +163,17 @@
                                 class="flex flex-col space-y-2">
 
                                 <!-- video -->
-                                <h2>Video</h2>
+                                <h2>Background</h2>
                                 <div class="flex space-x-2">
+                                    {#each wallpaperSRCs as wallpaper}
+                                        <button class="transform transition-all duration-500 ease-in-out items-center justify-center opacity-50 hover:opacity-100 group flex flex-col" on:click={() => setWallpaper(wallpaper.src)}>
+                                            <img class="h-20 rounded-full border-white border-2 mx-auto group-hover:-translate-y-1 transform transition-all duration-1000 ease-in-out" src={wallpaper.src} alt={wallpaper.alt}>
+                                        </button>
+                                    {/each}
                                     <button class="transform transition-all duration-500 ease-in-out items-center justify-center opacity-50 hover:opacity-100 group flex flex-col" on:click={toggleVideo}>
                                         <video class="h-20 rounded-full border-white border-2 mx-auto group-hover:-translate-y-1 transform transition-all duration-1000 ease-in-out" src="/videos/clouds.mp4" autoplay loop muted>
-                                        <input type="radio">
-                                        <p class="font-serif -tracking-widest italic">Toggle Video</p>
                                     </button>
-                                    <button class="transform transition-all duration-500 ease-in-out items-center justify-center opacity-50 hover:opacity-100 group flex flex-col" on:click={toggleVideo}>
-                                        <video class="h-20 rounded-full border-white border-2 mx-auto group-hover:-translate-y-1 transform transition-all duration-1000 ease-in-out" src="/videos/clouds.mp4" autoplay loop muted>
-                                        <input type="radio">
-                                        <p class="font-serif -tracking-widest italic">Toggle Video</p>
-                                    </button>
+                                    
                                 </div>
                             </div>
                         {/if}
