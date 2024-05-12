@@ -1,5 +1,7 @@
 import { writable } from "svelte/store";
-import type { Message } from "$lib/types";
+import { defaultSettings, type Message, type Settings } from "$lib/types";
+
+export let userSettings = writable<Settings>(defaultSettings);
 
 export let currentVoiceID = writable<string>('286VLndcKwmm1RxLQoOn');
 export let currentThread = writable<string>('');

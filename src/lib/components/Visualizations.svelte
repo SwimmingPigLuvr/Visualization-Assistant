@@ -4,6 +4,7 @@
     import { currentThread, userThreads } from "$lib/stores";
     import { arrayRemove, doc, getFirestore, setDoc, updateDoc } from "firebase/firestore";
     import { onMount } from "svelte";
+    import { writable } from "svelte/store";
     import { docStore, userStore } from "sveltefire";
     import { map } from "zod";
 
@@ -11,7 +12,8 @@
 
     let showDeleteButton = false;
 
-    let firstMessage: string;
+    let firstMessage = writable<string>('');
+    
     export let threadID: string;
 
     async function getThreadMessages() {
@@ -28,12 +30,7 @@
 
             const data = await response.json();
             
-            firstMessage = data.body?.data?.[1]?.content?.[0]?.text?.value ?? `invalid threadID: ${threadID}`;
-
-            if (data.body?.data) {
-                const messages = data.body.data.map((message: { content: any[]; }) => message.content?.map(content => content.text?.value).join('') || 'No content');
-            } else {
-            }  
+            firstMessage.set(data.body?.data?.[1]?.content?.[0]?.text?.value ?? '');
         }
          catch (error) {
             console.error('error fetching thread messages', error);
@@ -82,13 +79,15 @@
 
 </script>
 
-<button 
-    on:mouseenter={() => showDeleteButton = true} 
-    on:mouseleave={() => showDeleteButton = false} 
-    on:click={() => setThread(threadID)} 
-    class="rounded-xl hover:bg-sky-400 w-full max-w-80 text-left relative p-2">
-        <p class="w-full">{firstMessage}</p>
-        {#if showDeleteButton}
-            <button on:click={() => deleteThread(threadID)} class="absolute h-7 w-10 px-2 top-0 right-0 bg-white text-black text-xs bg-opacity-100 border-black">del</button>
-        {/if}
-</button>
+{#if $firstMessage !== ''}
+    <button 
+        on:mouseenter={() => showDeleteButton = true} 
+        on:mouseleave={() => showDeleteButton = false} 
+        on:click={() => setThread(threadID)} 
+        class="rounded-xl hover:bg-sky-400 w-full max-w-80 text-left relative p-2">
+                <p class="w-full">{$firstMessage}</p>
+            {#if showDeleteButton}
+                <button on:click={() => deleteThread(threadID)} class="absolute h-7 w-10 px-2 top-0 right-0 bg-white text-black text-xs bg-opacity-100 border-black">del</button>
+            {/if}
+    </button>
+{/if}

@@ -22,13 +22,7 @@
 </script>
 
     <button class="transform transition-all duration-500 ease-in-out items-center justify-center opacity-50 hover:opacity-100 group" on:click={() => updateVoiceID(voice.id)}>
-        {#if !updateSuccess}
-            <div class="rounded-full border-white border-2 w-20 h-20 flex items-center justify-center">
-                <span class="text-5xl">✔️</span>
-            </div>
-        {:else}
-            <img class="h-24 rounded-full border-white border-2 mx-auto group-hover:-translate-y-1 transform transition-all duration-1000 ease-in-out" src={voice.imageURL} alt="">
-        {/if}
+        <img class="bg-gradient-to-b from-lime-400 to-white h-24 max-w-24 rounded-full border-white border-2 mx-auto group-hover:-translate-y-1 transform transition-all duration-1000 ease-in-out" src={voice.imageURL} alt="">
         <p class="font-serif -tracking-widest italic">{voice.name}</p>
     </button>
 

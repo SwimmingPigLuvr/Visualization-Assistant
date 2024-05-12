@@ -48,3 +48,11 @@ export interface ContentDelta {
 }
 
 // export type Events = MessageEvent[];
+
+export interface Settings {
+    voiceID: string,
+}
+
+export const defaultSettings: Settings = {
+    voiceID: '286VLndcKwmm1RxLQoOn'
+}

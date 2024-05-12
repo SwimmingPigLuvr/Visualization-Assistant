@@ -6,22 +6,7 @@
     import { get } from "svelte/store";
     import { onMount } from "svelte";
 
-    // get user store
-    const user = userStore(auth);
-    const userDoc = docStore(db, `users/${$user!.uid}`);
-
-    let threads: string[] = [];
-    $: threads = $userDoc?.threads || [];
-
-    // update threads store
-    $: {
-        if (threads) {
-            userThreads.set([...threads]);
-        }
-    }
-
     let myThreads = get(userThreads);
-
 
 </script>
 

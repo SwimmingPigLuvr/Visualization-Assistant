@@ -84,13 +84,6 @@
         <p>{thread}</p>
     {/each} -->
     <div class="px-4">
-        <p>threads: <span class="text-white">
-            {#each myThreads as thread}
-                {thread}
-                <hr>
-            {/each}
-            {threads}
-        </span></p>
         <p>signed in as <span class="text-white">{username}</span></p>
             <form class="flex flex-col space-y-2 w-full" on:submit|preventDefault={confirmUsername}>
                 <div class="flex space-x-2">

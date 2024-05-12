@@ -2,12 +2,14 @@
     import MessageTools from './MessageTools.svelte';
     import { blur, fade, fly, slide } from "svelte/transition";
     import { currentThread, userPfp, assistantPfp, userNameStore, messagesStore, isThinking, currentRun, partialMessage, completedMessage } from "$lib/stores";
-    import { get } from "svelte/store";
+    import { get, writable } from "svelte/store";
     import { cubicInOut } from 'svelte/easing';
     import { SignedIn } from 'sveltefire';
     import type { Event, Message, Delta, ContentDelta } from '$lib/types';
-    import { cancelRun, createAndRun, retrieveAndRun } from '$lib/api';
+    import { cancelRun, createAndRun, createMessage, retrieveAndRun, run } from '$lib/api';
     import { browser } from '$app/environment';
+
+    let sendTooltip = false;
 
 
     function formatText(inputText: string) {
@@ -27,59 +29,66 @@
     
     let threadID: string | undefined = get(currentThread);
     let runID: string | undefined = get(currentRun);
-    let userInput: string = '';
+    let userInput = writable<string>('');
 
-    $: isTouched = userInput.length > 0;
+    $: isTouched = $userInput.length > 0;
+    $: inputLength = $userInput.length;
+
+    $: rows = Math.ceil(inputLength / 71);
+
 
     // adapt these for useAssistant() (doesn't exist for svelte yet)
     // const { input, handleSubmit, messages } = useChat();
 
-    function autoScroll() {
-        // if $messagesStore changes at all {
-            const container = document.getElementById('chat-container');
-            if (container) {
-                container.scrollTop = container.scrollHeight;
-            }
-        // }
-    }
 
+    let currentlyScrolling = false;
     $: if ($partialMessage) {
         if (browser) {
             const container = document.getElementById('chat-container');
             if (container) {
-                container.scrollTop = container.scrollHeight;
+                container.addEventListener('scroll', () => {
+                    currentlyScrolling = true;
+                });
+                if (!currentlyScrolling) {
+                    container.scrollTop = container.scrollHeight;
+                }
             }
         }
     }
 
+    
 
-    async function handleSubmit (userInput: string) {
-        if (!userInput) return;
 
-        // if no thread => createAndRun
+    async function handleSubmit () {
+        sendTooltip = false;
+        if (!$userInput) return;
+
+        // if no thread, create & run new thread
         if ($currentThread === '') {
 
-            // userInput as first message
+            // set userinput as first message
             const initialMessage: Message = {
                 id: 'initial message',
-                content: userInput,
+                content: $userInput,
                 role: 'user',
                 createdAt: new Date()
             }
 
-            // set initial message first
             messagesStore.set([initialMessage, ...$messagesStore]);
 
             // create & run new Thread
-            createAndRun(userInput);
+            createAndRun($userInput);
 
             // reset input
-            userInput = '';
+            userInput.set('');
         }
 
         // if thread => run
         if ($currentThread !== '') {
-            retrieveAndRun($currentThread, userInput);
+            // retrieve thread
+            console.log('running and creating message please');
+            createMessage($userInput, $currentThread);
+            run($currentThread);
         }
     }
 
@@ -103,7 +112,7 @@
     // show suggested prompts
     // implement prompts on click
     function useExamplePrompt(examplePrompt: string) {
-        userInput = examplePrompt
+        $userInput = examplePrompt
     }
 
     const randomPrompts = [
@@ -267,7 +276,7 @@
                 </ul>
             {:else}
                 <div class="w-full h-screen flex flex-col items-center space-y-4">
-                    <h2 class="font-mono p-8 absolute bottom-40 md:bottom-24 -tracking-widest font-black text-3xl text-center">What would you like to visualize today?</h2>
+                    <!-- <h2 class="font-mono p-8 absolute bottom-40 md:bottom-24 -tracking-widest font-black text-3xl text-center">What would you like to visualize today?</h2> -->
                 </div>
                 
             {/if}
@@ -275,45 +284,63 @@
         
         
 
-        {#if $messagesStore.length === 0}
+        <!-- input -->
+        <div class=" max-w-3xl w-full fixed bottom-0 left-1/2 -translate-x-1/2">
+            {#if $messagesStore.length === 0}
+                <!-- example prompts -->
+                <form on:submit={() => handleSubmit()} class="text-sm flex w-full flex-col space-y-2 md:flex-row md:space-x-2 md:space-y-0 px-2">
+                    <button 
+                        on:click={() => useExamplePrompt(randomSelectedPromptsAsStrings[0])} 
+                        class="hover:bg-gray-900 rounded-lg p-3 border-slate-500 border-[1px] w-full md:w-1/2 text-left focus:ring-0 outline-none bg-black bg-opacity-50 flex flex-col">
+                        <span class="text-white">{randomSelectedPrompts[0]?.prompt}</span>
+                        <span class="text-gray-500">{randomSelectedPrompts[0]?.details}</span>
+                    </button>
+                    <button 
+                        on:mouseenter={() => showSubmitButton = true}
+                        on:mouseleave={() => showSubmitButton = false}
+                        on:click={() => useExamplePrompt(randomSelectedPromptsAsStrings[1])} 
+                        class="hover:bg-slate-800 rounded-lg p-3 border-slate-500 border-[1px] w-full md:w-1/2 text-left focus:ring-0 outline-none bg-black bg-opacity-50 flex flex-col items-start">
+                        
+                        <span class="text-white">{randomSelectedPrompts[1]?.prompt}</span>
+                        <span class="text-gray-500">{randomSelectedPrompts[1]?.details}</span>
 
-            <!-- example prompts -->
-            <form on:submit={() => handleSubmit(userInput)} class="max-w-3xl left-1/2 -translate-x-1/2 text-sm flex w-full flex-col space-y-2 md:flex-row md:space-x-2 md:space-y-0 absolute bottom-16 px-2">
-                <button 
-                    on:click={() => useExamplePrompt(randomSelectedPromptsAsStrings[0])} 
-                    class="hover:bg-gray-900 rounded-lg p-3 border-neutral-700 border-[1px] w-full md:w-1/2 text-left focus:ring-0 outline-none bg-black flex flex-col">
-                    <span class="text-white">{randomSelectedPrompts[0]?.prompt}</span>
-                    <span class="text-gray-500">{randomSelectedPrompts[0]?.details}</span>
-                </button>
-                <button 
-                    on:mouseenter={() => showSubmitButton = true}
-                    on:mouseleave={() => showSubmitButton = false}
-                    on:click={() => useExamplePrompt(randomSelectedPromptsAsStrings[1])} 
-                    class="hover:bg-gray-900 rounded-lg p-3 border-neutral-700 border-[1px] w-full md:w-1/2 text-left focus:ring-0 outline-none bg-black flex flex-col items-start">
-                    
-                    <span class="text-white">{randomSelectedPrompts[1]?.prompt}</span>
-                    <span class="text-gray-500">{randomSelectedPrompts[1]?.details}</span>
+                    </button>
+                </form>
+            {/if}
+            
+            <!-- user input -->
+            <form on:submit|preventDefault={() => handleSubmit()} class="flex items-center justify-between p-2 w-full">
 
-                </button>
+                <!-- allow more height for long inputs stay normal height for normal inputs -->
+                <textarea bind:value={$userInput} placeholder="Input message..." rows={rows || 1} class="resize-none w-full pr-12 focus:ring-0 outline-none bg-black bg-opacity-50 rounded-lg relative p-4 border-slate-500 border-[1px] overflow-y-auto max-h-40"></textarea>
+
+                <!-- submit button -->
+                {#if !$isThinking}
+                    <button 
+                        on:mouseenter={() => sendTooltip = true}
+                        on:mouseleave={() => sendTooltip = false}
+                        type="submit" class="{isTouched ? ' bg-white text-black hover:bg-neutral-400 ' : ' bg-neutral-700 text-neutral-800'} w-8 h-8 absolute bottom-5 right-5 rounded-lg text-2xl flex items-center justify-center transform transition-all duration-500 ease-in-out">
+                        {#if sendTooltip && isTouched}
+                            <span class="text-sm w-32 absolute left-1/2 bottom-10 -translate-x-1/2 tooltip rounded shadow-lg px-2 pt-2 p-1 bg-black bg-opacity-25 border-white border-[1px] backdrop-blur text-white mt-8">send message</span>
+                        {/if}
+                        ⏎
+                    </button>
+                {:else}
+                    <!-- cancel button -->
+                    {#if $currentRun !== ''}
+                        <button on:click={() => cancelRun(threadID, runID)} class="text-black hover:bg-neutral-400 w-8 h-8 absolute bottom-5 right-5 rounded-lg text-2xl flex items-center justify-center transform transition-all duration-500 ease-in-out">
+                            ⏹️
+                        </button>
+                    {/if}
+
+                {/if}
             </form>
-        {/if}
+        </div>
+       
 
         
 
-        <!-- create and run thread -->
-        <form on:submit={() => createAndRun(userInput)} class="flex max-w-3xl items-center justify-between p-2 fixed left-1/2 -translate-x-1/2 bottom-0 w-full my-2">
-            <input bind:value={userInput} placeholder="Input message..." class="w-full focus:ring-0 outline-none bg-black rounded-lg relative p-3 border-neutral-700 border-[1px] overflow-x-hidden overflow-y-auto">
-            <!-- submit button -->
-            {#if !$isThinking}
-                <button type="submit" class="{isTouched ? 'bg-white text-black hover:bg-neutral-400 ' : 'bg-neutral-700 text-neutral-800'}  w-8 h-8 absolute right-4 rounded-lg text-2xl flex items-center justify-center transform transition-all duration-500 ease-in-out">⏎</button>
-            {:else}
-                <!-- cancel button -->
-                {#if $currentRun !== ''}
-                    <button on:click={() => cancelRun(threadID, runID)} class="bg-white text-black hover:bg-neutral-400 w-8 h-8 absolute right-4 rounded-lg text-2xl flex items-center justify-center transform transition-all duration-500 ease-in-out">⏹️</button>
-                {/if}
-
-            {/if}
-        </form>
+        
 
         <!-- chat completions input -->
         <!-- <form on:submit={handleSubmit} class="flex max-w-3xl items-center justify-between p-2 fixed left-1/2 -translate-x-1/2 bottom-0 w-full my-2">

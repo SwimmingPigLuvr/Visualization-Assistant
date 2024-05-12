@@ -27,7 +27,7 @@
     }
 </style>
 
-<body class="w-full h-screen font-mono text-neutral-100">
+<body class="background-video w-full h-screen font-mono bg-slate-700 text-neutral-100">
     
     {#if browser}
         {#if $bgMode === 'video'}
@@ -44,11 +44,6 @@
         <Profile />
     </div>
 
-    <!-- <div class="z-50">
-        <Test />
-    </div> -->
-
-
     <div class="z-10">
         <Menu />
     </div>
@@ -61,12 +56,12 @@
             Your browser does not support the video tag.
         </video>
     </div>
-    <div>
+    <!-- <div>
         <audio id="background-audio" autoplay loop>
             <source src="/sounds/alima.mp3" type="audio/mp3">
             Your browser does not support the audio tag.
         </audio>
-    </div>
+    </div> -->
     
     
 </body>

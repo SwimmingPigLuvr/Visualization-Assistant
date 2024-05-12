@@ -37,7 +37,7 @@
         },
         {
             id: '7Uw4vgM4Qb1qiwwUnu15',
-            name: 'Soothing Sam',
+            name: 'Sam',
             imageURL: '/images/voices/soothing-sam.png',
         },
         {
@@ -51,9 +51,14 @@
             imageURL: '/images/voices/bleakoffHandDox.png',
         },
         {
-            id: 'Xb3zeLrTi6F4ziIcXdwk',
-            name: 'Zoomer',
+            id: 'FVQMzxJGPUBtfz1Azdoy',
+            name: 'Danielle',
             imageURL: '/images/voices/zoomer.png',
+        },
+        {
+            id: '4JVOFy4SLQs9my0OLhEw',
+            name: 'Luca',
+            imageURL: '/images/voices/snow-leopard.png',
         },
     ];
 
@@ -146,56 +151,17 @@
                         Voice
 
                         <!-- voice settings -->
-                        {#if showVoiceSettings}
-                            <div 
-                                in:slide={{duration: 300, easing: cubicInOut}}
-                                out:slide={{duration: 300, easing: cubicInOut}}
-                                class="flex flex-wrap gap-8 p-8 w-full overflow-x-auto">
-                                {#each voices as voice}
-                                    <Voice voice={voice} />
-                                {/each}
-                            </div>
-                        {/if}
+                        <div 
+                            in:slide={{duration: 300, easing: cubicInOut}}
+                            out:slide={{duration: 300, easing: cubicInOut}}
+                            class="flex space-x-4 p-2 w-full overflow-x-auto">
+                            {#each voices as voice}
+                                <Voice voice={voice} />
+                            {/each}
+                        </div>
                     </button>
 
-                    <!-- profile -->
-                    <!-- <button class="-tracking-widest text-xl text-left">Profile</button> -->
-
-                    <!-- appearance -->
-                    <button 
-                        on:mouseenter={() =>showAppearanceSettings = true} 
-                        on:mouseleave={() =>showAppearanceSettings = false} 
-                        class="-tracking-widest text-xl text-left">
-                        Appearance
-
-                        <!-- voice settings -->
-                        {#if showAppearanceSettings}
-                            <div 
-                                in:slide={{duration: 300, easing: cubicInOut}}
-                                out:slide={{duration: 300, easing: cubicInOut}}
-                                class="flex flex-col space-y-2">
-
-                                <!-- video -->
-                                <h2>Background</h2>
-                                <div class="flex space-x-2">
-                                    <h3>Image</h3>
-                                    {#each wallpapers as wallpaper}
-                                        <button class="transform transition-all duration-500 ease-in-out items-center justify-center opacity-50 hover:opacity-100 group flex flex-col" on:click={() => setWallpaper(wallpaper.src, 'image')}>
-                                            <img class="h-20 rounded-full border-white border-2 mx-auto group-hover:-translate-y-1 transform transition-all duration-1000 ease-in-out" src={wallpaper.src} alt={wallpaper.alt}>
-                                        </button>
-                                    {/each}
-
-                                    <h3>Video</h3>
-                                    {#each videos as video}
-                                        <button class="transform transition-all duration-500 ease-in-out items-center justify-center opacity-50 hover:opacity-100 group flex flex-col" on:click={() => setWallpaper(video, 'video')}>
-                                            <video class="h-20 rounded-full border-white border-2 mx-auto group-hover:-translate-y-1 transform transition-all duration-1000 ease-in-out" src={video} autoplay loop muted>
-                                        </button>
-                                    {/each}
-                                    
-                                </div>
-                            </div>
-                        {/if}
-                    </button>
+                    
 
                 </div>
             {/if}

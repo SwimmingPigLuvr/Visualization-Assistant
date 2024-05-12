@@ -1,21 +1,16 @@
-import { get } from "svelte/store";
-import { responseText, messagesStore, currentThread, isThinking, currentRun, partialMessage, completedMessage } from "./stores";
+import { doc, writeBatch } from "firebase/firestore";
+import { responseText, messagesStore, currentThread, isThinking, currentRun, partialMessage, completedMessage, userThreads } from "./stores";
+import { db } from "./firebase";
 
-
-
+async function addThread(threadID: string) {
+    userThreads.update(userThreads => [...userThreads, threadID]);
+    console.log('updated list of user threads: ', userThreads);
+    console.log('newest thread', threadID);
+}
 
 export async function createAndRun(userInput: string) {
     isThinking.set(true);
 
-    // userinput is the first message
-    // messagesStore.update(messages => [...messages, {
-    //     id: 'initial message',
-    //     content: userInput,
-    //     role: 'user',
-    //     createdAt: new Date()
-    // }]);
-
-  
     try {
       const response = await fetch('/api/threads/createAndRun', {
         method: 'POST',
@@ -87,6 +82,7 @@ export async function createAndRun(userInput: string) {
             else if (event.event === 'thread.created') {
               const threadID = event.data.id;
               currentThread.set(threadID || '');
+              addThread(threadID);
             }
             // Run ID
             else if (event.event === 'thread.run.created') {
@@ -103,28 +99,148 @@ export async function createAndRun(userInput: string) {
       console.error('Error creating and running thread:', error);
       isThinking.set(false);
     }
-  }
+}
 
-export async function retrieveAndRun(threadID: string, userInput: string) {
-    isThinking.set(true);
+export async function createMessage(userInput: string, threadID: string) {
+    console.log("Thread ID:", threadID);
+    console.log("User Input:", userInput);
     try {
-        const response = await fetch(`https://api.openai.com/v1/threads/${threadID}/runs`, {
+        const response = await fetch('/api/threads/createMessage', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                thread_id: threadID,
+                threadID: threadID,
                 message: {
-                    role: 'user',
+                    role: "user",
                     content: userInput,
                 }
-            }),
+            })
         });
 
-        const data = await response.json();
-        const messages = data.messages || [];
-        messagesStore.set(messages);
+        if (response.ok) {
+            const message = await response.json();
+            console.log('message:', message);
+
+            const messageID = message?.id;
+            console.log('message id:', messageID);
+
+            // Update the $messagesStore with the completed message
+            messagesStore.update(messages => [...messages, {
+                id: messageID,
+                content: userInput,
+                role: 'user',
+                createdAt: new Date()
+            }]);
+        } else {
+            console.error('failed to create message:', response.statusText);
+        }
+    } catch (error) {
+        console.error('request failed', error);
+    }
+}
+
+export async function run(threadID: string) {
+    isThinking.set(true);
+
+    try {
+        const response = await fetch('/api/threads/run', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ threadID }),
+        });
+
+        if (response.body) {
+            const reader = response.body.getReader();
+            let result = '';
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+
+                const chunk = new TextDecoder().decode(value);
+                result += chunk;
+
+                // Handle event
+                const eventStart = chunk.indexOf('data: ');
+                if (eventStart !== -1) {
+                    const eventEnd = chunk.indexOf('\n\n', eventStart);
+                    if (eventEnd !== -1) {
+                        const eventData = chunk.slice(eventStart + 6, eventEnd).trim();
+                        const event = JSON.parse(eventData);
+                        console.log('Event:', event); // Log the event for testing
+
+
+                        // start
+                        // Partial message
+                        if (event.event === 'thread.message.delta') {
+                            const delta = event.data.delta;
+
+                            if (delta.content && delta.content.length > 0 && delta.content[0].text) {
+                                const newText = delta.content[0].text.value;
+                                partialMessage.update(currentMessage => ({
+                                    ...currentMessage,
+                                    content: currentMessage.content + newText
+                                }));
+                            }
+                        }
+                        // Completed message
+                        else if (event.event === 'thread.message.completed') {
+                            const message = event.data;
+
+                            // Update the $messagesStore with the completed message
+                            messagesStore.update(messages => [...messages, {
+                                id: message.id,
+                                content: message.content[0].text.value,
+                                role: 'assistant',
+                                createdAt: new Date()
+                            }]);
+
+                            // Clear partial message
+                            partialMessage.set({
+                                id: '',
+                                content: '',
+                                role: 'assistant',
+                            });
+                        }
+                        // Run ID
+                        else if (event.event === 'thread.run.created') {
+                            const runID = event.data.id;
+                            currentRun.set(runID || '');
+                        }
+                        // end
+
+
+                    }
+                }
+            }
+
+            console.log('Final response:', result);
+        }
+    } catch (error) {
+        console.error('Error running thread:', error);
+    } finally {
+        isThinking.set(false);
+    }
+}
+
+
+export async function retrieveAndRun() {
+    isThinking.set(true);
+    console.log('from inside r and run');
+    try {
+        const response = await fetch('/api/threads/retrieveAndRun', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+          });
+        
+        console.log(response);
+
     } catch (error) {
         console.error('Error running existing thread:', error);
     }
