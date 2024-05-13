@@ -1,11 +1,23 @@
-import { doc, writeBatch } from "firebase/firestore";
+import { doc, updateDoc, writeBatch } from "firebase/firestore";
 import { responseText, messagesStore, currentThread, isThinking, currentRun, partialMessage, completedMessage, userThreads } from "./stores";
-import { db } from "./firebase";
+import { auth, db } from "./firebase";
+import { get } from "svelte/store";
 
 async function addThread(threadID: string) {
-    userThreads.update(userThreads => [...userThreads, threadID]);
+    userThreads.update(userThreads => [threadID, ...userThreads]);
     console.log('updated list of user threads: ', userThreads);
     console.log('newest thread', threadID);
+}
+
+export async function syncThreadData() {
+    const currentUserThreads = get(userThreads);
+    if (auth.currentUser) {
+        console.log('Syncing thread data to Firestore', currentUserThreads);
+        const userRef = doc(db, `users/${auth.currentUser.uid}`);
+        await updateDoc(userRef, {
+            threads: currentUserThreads
+        });
+    }
 }
 
 export async function createAndRun(userInput: string) {
@@ -83,6 +95,7 @@ export async function createAndRun(userInput: string) {
               const threadID = event.data.id;
               currentThread.set(threadID || '');
               addThread(threadID);
+              syncThreadData();
             }
             // Run ID
             else if (event.event === 'thread.run.created') {

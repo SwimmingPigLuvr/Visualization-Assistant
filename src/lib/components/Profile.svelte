@@ -13,6 +13,12 @@
         const user = await signInWithPopup(auth, provider);
     }
 
+    async function signInWithMoogle() {
+        const provider = new GoogleAuthProvider();
+        const user = await signInWithRedirect(auth, provider);
+    }
+
+
     let showUserState = false;
     let showUserInfo = false;
 
@@ -67,6 +73,6 @@
     </SignedIn>
 
     <SignedOut>
-        <button class="p-2 px-4 bg-white bg-opacity-50 rounded-xl" on:click={signInWithGoogle}>sign in</button>
+        <button class="p-2 px-4 bg-white bg-opacity-50 rounded-xl" on:click={signInWithMoogle}>sign in</button>
     </SignedOut>
 </div>

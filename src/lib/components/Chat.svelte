@@ -1,7 +1,7 @@
 <script lang="ts">
     import MessageTools from './MessageTools.svelte';
     import { blur, fade, fly, slide } from "svelte/transition";
-    import { currentThread, userPfp, assistantPfp, userNameStore, messagesStore, isThinking, currentRun, partialMessage, completedMessage } from "$lib/stores";
+    import { currentThread, userPfp, assistantPfp, userNameStore, messagesStore, isThinking, currentRun, partialMessage, completedMessage, userThreads } from "$lib/stores";
     import { get, writable } from "svelte/store";
     import { cubicInOut } from 'svelte/easing';
     import { SignedIn } from 'sveltefire';
@@ -89,6 +89,7 @@
             console.log('running and creating message please');
             createMessage($userInput, $currentThread);
             run($currentThread);
+            userInput.set('');
         }
     }
 
@@ -191,8 +192,8 @@
             <!-- threadID & runID -->
             <div class="fixed top-4 left-1/4 -translate-x-1/4 flex flex-col max-w-xl text-left text-xs opacity-50">
                 {#if $currentThread !== ''}
-                    <p in:fade>
-                        Thread ID: {$currentThread}
+                    <p in:blur>
+                        current Thread ID: {$currentThread}
                     </p>
                 {/if}
                 
@@ -200,6 +201,15 @@
                     <p in:blur>
                         Run ID: {$currentRun}
                     </p>
+                {/if}
+                {#if $userThreads.length > 0}
+                    <div in:blur>
+
+                        <p>user Threads store: </p>
+                        {#each $userThreads as thread}
+                            <p>{thread}</p>
+                        {/each}
+                    </div>
                 {/if}
             </div>
 
@@ -276,7 +286,7 @@
                 </ul>
             {:else}
                 <div class="w-full h-screen flex flex-col items-center space-y-4">
-                    <!-- <h2 class="font-mono p-8 absolute bottom-40 md:bottom-24 -tracking-widest font-black text-3xl text-center">What would you like to visualize today?</h2> -->
+                    <h2 class="font-mono p-8 absolute bottom-40 md:bottom-24 -tracking-widest font-black text-3xl text-center">What would you like to visualize today?</h2>
                 </div>
                 
             {/if}

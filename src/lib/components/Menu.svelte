@@ -1,14 +1,16 @@
 <script lang="ts">
-    import { fade, fly, slide } from "svelte/transition";
-    import Voice from "./Voice.svelte";
-    import { cubicInOut, cubicIn, cubicOut } from "svelte/easing";
+    import { fade, fly, slide, blur } from "svelte/transition";
+    import VoiceData from "./VoiceData.svelte";
+    import { cubicInOut, cubicIn, cubicOut, backIn, backOut } from "svelte/easing";
     import { writable } from "svelte/store";
     import Visualizations from "./Visualizations.svelte";
-    import { bgMode, currentThread, userThreads, wallpaper } from "$lib/stores";
+    import { bgMode, currentThread, userThreads, v, wallpaper } from "$lib/stores";
     import { SignedIn, SignedOut, Doc, collectionStore, docStore, userStore } from "sveltefire";
     import { auth, db } from "$lib/firebase";
     import { onDestroy } from "svelte";
     import Threads from "./Threads.svelte";
+    import type { Voice } from "$lib/types";
+
 
     let wallpapers = [
         { 
@@ -29,40 +31,46 @@
         "/videos/clouds.mp4",
     ];
 
-    let voices = [
+    let voices: Voice[] = [
         {
             id: 'Atp5cNFg1Wj5gyKD7HWV',
             name: 'Natasha',
             imageURL: '/images/voices/natasha.png',
+            audioPreviewURL: '/sounds/voice-previews/natasha.mp3'
         },
         {
             id: '7Uw4vgM4Qb1qiwwUnu15',
             name: 'Sam',
             imageURL: '/images/voices/soothing-sam.png',
+            audioPreviewURL: '/sounds/voice-previews/sam.mp3'
         },
         {
             id: '286VLndcKwmm1RxLQoOn',
-            name: 'Materialize',
+            name: 'Matthew',
             imageURL: '/images/voices/materializePath.png',
+            audioPreviewURL: '/sounds/voice-previews/matthew.mp3'
         },
         {
             id: 'aOcS60CY8CoaVaZfqqb5',
             name: 'Bleakoff',
             imageURL: '/images/voices/bleakoffHandDox.png',
+            audioPreviewURL: '/sounds/voice-previews/bleakoff.mp3'
         },
         {
             id: 'FVQMzxJGPUBtfz1Azdoy',
             name: 'Danielle',
             imageURL: '/images/voices/zoomer.png',
+            audioPreviewURL: '/sounds/voice-previews/danielle.mp3'
         },
         {
             id: '4JVOFy4SLQs9my0OLhEw',
             name: 'Luca',
             imageURL: '/images/voices/snow-leopard.png',
+            audioPreviewURL: '/sounds/voice-previews/luca.mp3'
         },
     ];
 
-    let isMenuOpen = false;
+    let isMenuOpen = true;
 
     function openMenu() {
         isMenuOpen = true;
@@ -115,10 +123,7 @@
         <!-- click anywhere but menu to close menu -->
         <button on:click={() => closeMenu()} class="z-20 inset-10 h-screen w-screen fixed top-0 left-0"></button>
         <!-- settings -->
-        <div
-            in:fly={{x: -200, duration: 500}}
-            out:fly={{x: -200, duration: 500}}
-            class="h-screen max-w-sm w-[70%] z-30 bg-black bg-opacity-50 backdrop-blur-2xl fixed top-0 p-2 flex flex-col space-y-2 items-start">
+        <div class="h-screen max-w-sm w-[70%] z-30 bg-black bg-opacity-50 backdrop-blur-2xl fixed top-0 p-2 flex flex-col space-y-2 items-start">
 
             <!-- close button -->
             <button on:click={() => closeMenu()} class="absolute w-10 items-center flex justify-center h-10 top-0 right-2 font-mono text-sm">⬅</button>
@@ -154,9 +159,10 @@
                         <div 
                             in:slide={{duration: 300, easing: cubicInOut}}
                             out:slide={{duration: 300, easing: cubicInOut}}
-                            class="flex space-x-4 p-2 w-full overflow-x-auto">
-                            {#each voices as voice}
-                                <Voice voice={voice} />
+                            class="bg-sky-800 flex flex-wrap gap-2 p-2 w-full justify-center overflow-x-auto">
+                            <!-- hovered voice goes here -->
+                            {#each voices as voice, index}
+                                <VoiceData voice={voice} i={index} />
                             {/each}
                         </div>
                     </button>

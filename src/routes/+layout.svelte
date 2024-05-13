@@ -1,8 +1,8 @@
 <script lang="ts">
     import "../app.css"
-    import { FirebaseApp, SignedIn, docStore, userStore } from "sveltefire";
+    import { FirebaseApp, SignedIn, SignedOut, docStore, userStore } from "sveltefire";
     import { initializeApp } from "firebase/app";
-    import { doc, getDoc, getFirestore, writeBatch } from "firebase/firestore";
+    import { doc, getDoc, getFirestore, updateDoc, writeBatch } from "firebase/firestore";
     import { getAuth, onAuthStateChanged } from "firebase/auth";
     import { db } from "$lib/firebase";
     import { currentThread, userNameStore, userSettings, userThreads } from "$lib/stores";
@@ -37,8 +37,12 @@
                 if (docSnap.exists()) {
                     const userData = docSnap.data();
                     userNameStore.set(userData.username);
-                    userThreads.set(userData.threads);
+
                     userSettings.set(userData.settings);
+
+                    // setting userThreads with the data from the db
+                    userThreads.set(userData.threads);
+
                     loadingUserData.set(false);
                 } else {
                     console.log("No such document!");
@@ -52,23 +56,18 @@
         }
     });
 
-    async function syncThreadData() {
-        console.log('hello from sync thread data, $userThreads: ', $userThreads);
-        const batch = writeBatch(db);
-        batch.set(doc(db, `users/${$user!.uid}`), {
-            threads: $userThreads
-        }, { merge: true });
-
-        await batch.commit();
-    }
+    
 
 </script>
 
 <FirebaseApp {auth} {firestore}>
     <slot />
     <SignedIn let:user>
-        howdy
+        <!-- you're signed in -->
     </SignedIn>
+    <SignedOut >
+        <!-- you're not signed in -->
+    </SignedOut>
 </FirebaseApp>
 
 <!-- user layout to import the settings and data of a signed in user -->

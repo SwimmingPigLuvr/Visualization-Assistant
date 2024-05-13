@@ -56,3 +56,10 @@ export interface Settings {
 export const defaultSettings: Settings = {
     voiceID: '286VLndcKwmm1RxLQoOn'
 }
+
+export interface Voice {
+    name: string;
+    id: string;
+    imageURL: string;
+    audioPreviewURL: string;
+}

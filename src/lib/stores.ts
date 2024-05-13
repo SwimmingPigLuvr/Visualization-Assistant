@@ -17,15 +17,13 @@ export let partialMessage = writable<Message>({ content: '', role: 'assistant', 
 export let completedMessage = writable<string>('');
 export let messagesStore = writable<Message[]>([]);
 
-export interface Voice {
-    name: string;
-    id: string;
-    imageURL: string;
-}
+
 
 export let userNameStore = writable<string>('');
 export let userPfp = writable<string>('/pfps/field-aura.png');
 export let assistantPfp = writable<string>('/pfps/gigaBubble.png');
 
 export let isThinking = writable<boolean>(false);
+
+export let v = writable<number>(0);
 
