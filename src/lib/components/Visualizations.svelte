@@ -16,7 +16,7 @@
     
     export let threadID: string;
 
-    async function getThreadMessages() {
+    async function getFirstMessage() {
         try {
             const response = await fetch('/api/threads/messages', {
                 method: 'POST',
@@ -75,19 +75,20 @@
         currentThread.set(threadID);
     }
 
-    getThreadMessages();
+    getFirstMessage();
 
 </script>
+
 
 {#if $firstMessage !== ''}
     <button 
         on:mouseenter={() => showDeleteButton = true} 
         on:mouseleave={() => showDeleteButton = false} 
         on:click={() => setThread(threadID)} 
-        class="rounded-xl hover:bg-sky-400 w-full max-w-80 text-left relative p-2">
+        class="rounded-xl hover:bg-sky-400 hover:bg-opacity-50 w-full max-w-80 text-left relative p-2">
                 <p class="w-full">{$firstMessage}</p>
             {#if showDeleteButton}
-                <button on:click={() => deleteThread(threadID)} class="absolute h-7 w-10 px-2 top-0 right-0 bg-white text-black text-xs bg-opacity-100 border-black">del</button>
+                <button on:click={() => deleteThread(threadID)} class="absolute h-7 w-10 px-2 top-0 right-0 bg-white text-black text-xs bg-opacity-100 border-black">🗑️</button>
             {/if}
     </button>
 {/if}

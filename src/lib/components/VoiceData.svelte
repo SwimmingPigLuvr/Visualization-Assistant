@@ -9,7 +9,8 @@
     let updatingVoice = false;
     let updateSuccess = true;
 
-    let audio = writable<HTMLAudioElement>(new Audio());
+    let audio = new Audio();
+    let currentAudio = writable('');
 
     function updateVoiceID(idString: string) {
         console.log('calling update voice function with voiceID: ', idString);
@@ -23,12 +24,20 @@
     }
 
     function playVoicePreview(audioURL: string) {
-        audio.update(currentAudio => {
-            currentAudio.pause();
-            currentAudio.currentTime = 0;
-            currentAudio.src = audioURL;
-            currentAudio.play().catch(error => console.error('error playing audio: ', error));
-            return currentAudio;
+        // Check if the same audio is already playing
+        currentAudio.update(url => {
+            if (url !== audioURL) {
+                audio.pause();
+                audio.src = audioURL;
+                audio.play().catch(error => console.error('Error playing audio:', error));
+            } else {
+                if (audio.paused) {
+                    audio.play().catch(error => console.error('Error resuming audio:', error));
+                } else {
+                    audio.pause();
+                }
+            }
+            return audioURL;
         });
     }
 

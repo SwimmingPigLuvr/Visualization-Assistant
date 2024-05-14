@@ -4,13 +4,14 @@
     import { cubicInOut, cubicIn, cubicOut, backIn, backOut } from "svelte/easing";
     import { writable } from "svelte/store";
     import Visualizations from "./Visualizations.svelte";
-    import { bgMode, currentThread, userThreads, v, wallpaper } from "$lib/stores";
+    import { bgMode, currentThread, messagesStore, userThreads, v, wallpaper } from "$lib/stores";
     import { SignedIn, SignedOut, Doc, collectionStore, docStore, userStore } from "sveltefire";
     import { auth, db } from "$lib/firebase";
     import { onDestroy } from "svelte";
     import Threads from "./Threads.svelte";
     import type { Voice } from "$lib/types";
 
+    let showCreateButton = false;
 
     let wallpapers = [
         { 
@@ -84,7 +85,7 @@
         showSettings = !showSettings;
     }
 
-    let showSettings = true;
+    let showSettings = false;
     let showAssistantSettings = false;
     let showVoiceSettings = false;
     let showProfileSettings = false;
@@ -111,6 +112,12 @@
     }
 
 
+    function handleCreateNewThread() {
+        currentThread.set('');
+        messagesStore.set([]);
+    }
+
+
 </script>
 
 
@@ -131,6 +138,17 @@
             <!-- visualizations -->
             <h2 class="p-2 text-xl">Visualizations</h2>
             <div class="flex flex-col p-2">
+                <!-- create new thread -->
+                <button 
+                    on:mouseenter={() => showCreateButton = true}
+                    on:mouseleave={() => showCreateButton = false}
+                    on:click={() => handleCreateNewThread()} 
+                    class="rounded-none  hover:bg-sky-300 hover:bg-opacity-30 w-full max-w-80 text-left relative p-2">
+                        <p class="w-full">Create a New Thread</p>
+                        {#if showCreateButton}
+                            <button class="absolute text-xl right-4"></button>
+                        {/if}
+                </button>
                 <Threads />
             </div>
 
@@ -159,10 +177,13 @@
                         <div 
                             in:slide={{duration: 300, easing: cubicInOut}}
                             out:slide={{duration: 300, easing: cubicInOut}}
-                            class="bg-sky-800 flex flex-wrap gap-2 p-2 w-full justify-center overflow-x-auto">
+                            class="flex flex-wrap gap-2 p-2 w-full justify-evenly overflow-x-auto">
+                            <img class="w-full my-4 max-h-80 rounded-[10%]" src={voices[$v].imageURL} alt="">
                             <!-- hovered voice goes here -->
                             {#each voices as voice, index}
-                                <VoiceData voice={voice} i={index} />
+                                <button>
+                                    <VoiceData voice={voice} i={index} />
+                                </button>
                             {/each}
                         </div>
                     </button>

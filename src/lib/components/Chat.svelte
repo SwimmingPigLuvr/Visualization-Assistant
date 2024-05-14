@@ -6,23 +6,29 @@
     import { cubicInOut } from 'svelte/easing';
     import { SignedIn } from 'sveltefire';
     import type { Event, Message, Delta, ContentDelta } from '$lib/types';
-    import { cancelRun, createAndRun, createMessage, retrieveAndRun, run } from '$lib/api';
+    import { cancelRun, createAndRun, createMessage, formatText, getThreadMessages, retrieveAndRun, run } from '$lib/api';
     import { browser } from '$app/environment';
 
     let sendTooltip = false;
 
-
-    function formatText(inputText: string) {
-        let formattedText = inputText;
-        
-        // Replace double newlines with HTML line breaks
-        formattedText = formattedText.replace(/\n\n/g, '<br><br>');
-
-        // Replace Markdown-like bold syntax
-        formattedText = formattedText.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-
-        return formattedText;
+    $: if ($currentThread) {
+        // 
+        console.log('if $currentThread changes: attempt to get messages');
+        getThreadMessages();
     }
+
+
+    // function formatText(inputText: string) {
+    //     let formattedText = inputText;
+        
+    //     // Replace double newlines with HTML line breaks
+    //     formattedText = formattedText.replace(/\n\n/g, '<br><br>');
+
+    //     // Replace Markdown-like bold syntax
+    //     formattedText = formattedText.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+
+    //     return formattedText;
+    // }
 
     $: formattedMessage = formatText($completedMessage);
     $: formattedPartial = formatText($partialMessage.content);
@@ -93,6 +99,12 @@
         }
     }
 
+    function handleKeyDown(event: KeyboardEvent) {
+        if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault();
+            handleSubmit();
+        }
+    }
 
 
     // run existing thread
@@ -322,7 +334,12 @@
             <form on:submit|preventDefault={() => handleSubmit()} class="flex items-center justify-between p-2 w-full">
 
                 <!-- allow more height for long inputs stay normal height for normal inputs -->
-                <textarea bind:value={$userInput} placeholder="Input message..." rows={rows || 1} class="resize-none w-full pr-12 focus:ring-0 outline-none bg-black bg-opacity-50 rounded-lg relative p-4 border-slate-500 border-[1px] overflow-y-auto max-h-40"></textarea>
+                <textarea 
+                    bind:value={$userInput} 
+                    placeholder="Input message..." 
+                    rows={rows || 1} 
+                    on:keydown={handleKeyDown}
+                    class="resize-none w-full pr-12 focus:ring-0 outline-none bg-black bg-opacity-50 rounded-lg relative p-4 border-slate-500 border-[1px] overflow-y-auto max-h-40"></textarea>
 
                 <!-- submit button -->
                 {#if !$isThinking}

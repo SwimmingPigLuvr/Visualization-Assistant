@@ -3,6 +3,18 @@ import { responseText, messagesStore, currentThread, isThinking, currentRun, par
 import { auth, db } from "./firebase";
 import { get } from "svelte/store";
 
+export function formatText(inputText: string) {
+    let formattedText = inputText;
+    
+    // Replace double newlines with HTML line breaks
+    formattedText = formattedText.replace(/\n\n/g, '<br><br>');
+
+    // Replace Markdown-like bold syntax
+    formattedText = formattedText.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+
+    return formattedText;
+}
+
 async function addThread(threadID: string) {
     userThreads.update(userThreads => [threadID, ...userThreads]);
     console.log('updated list of user threads: ', userThreads);
@@ -237,6 +249,38 @@ export async function run(threadID: string) {
         console.error('Error running thread:', error);
     } finally {
         isThinking.set(false);
+    }
+}
+
+export async function getThreadMessages() {
+    const threadID = get(currentThread);
+    try {
+        const response = await fetch('/api/threads/messages', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ threadID })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        const messages = result.body?.data.map((item: any) => ({
+            id: item.id,
+            content: item.content[0]?.text?.value, // Assuming text is always present and in position 0
+            createdAt: new Date(item.created_at * 1000), // Convert UNIX timestamp to JavaScript Date object
+            role: item.role as 'user' | 'assistant' | 'system' | 'function' | 'data' | 'tool' // Type casting to match Message type
+        }));
+
+        messages.reverse();
+        console.log('Fetched and transformed messages:', messages);
+        messagesStore.set(messages);
+        
+    } catch (error) {
+        console.error('Error fetching thread messages:', error);
     }
 }
 

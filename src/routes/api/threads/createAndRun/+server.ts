@@ -9,7 +9,7 @@ export async function POST({ request }) {
     const userMessage = requestBody.message;
 
     const stream = await openai.beta.threads.createAndRun({
-      model: 'gpt-4-turbo',
+      model: 'gpt-4o-2024-05-13',
       assistant_id: 'asst_VhJfolAsWeg19JwxVbYjHpqc',
       thread: {
         messages: [userMessage],
