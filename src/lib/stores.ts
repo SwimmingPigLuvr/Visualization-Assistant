@@ -1,6 +1,11 @@
 import { writable } from "svelte/store";
 import { defaultSettings, type Message, type Settings } from "$lib/types";
 
+
+export let inputFocused = writable<boolean>(false);
+
+export let isMenuOpen = writable<boolean>(true);
+
 export let userSettings = writable<Settings>(defaultSettings);
 
 export let currentVoiceID = writable<string>('286VLndcKwmm1RxLQoOn');

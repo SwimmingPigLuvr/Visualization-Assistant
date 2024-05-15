@@ -41,7 +41,7 @@
     <SignedIn let:user let:signOut>
         <button 
             on:click={() => showUserInfo = true}
-            class="z-20 transform transition-all duration-500 ease-in-out h-12 w-12 fixed top-2 right-2 border-white border-2 rounded-full  filter grayscale hover:grayscale-0 group">
+            class="z-20 transform transition-all duration-500 ease-in-out h-12 w-12 fixed top-2 right-2 border-slate-500 border-[1px] rounded-full  filter grayscale hover:grayscale-0 group">
             <!-- pfp -->
             <img class="transform transition-all duration-500 ease-in-out rounded-full filter invert group-hover:invert-0" src="/pfps/field-aura.png" alt="">
         </button>

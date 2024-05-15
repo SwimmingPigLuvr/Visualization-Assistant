@@ -4,7 +4,7 @@
     import { cubicInOut, cubicIn, cubicOut, backIn, backOut } from "svelte/easing";
     import { writable } from "svelte/store";
     import Visualizations from "./Visualizations.svelte";
-    import { bgMode, currentThread, messagesStore, userThreads, v, wallpaper } from "$lib/stores";
+    import { bgMode, currentThread, inputFocused, isMenuOpen, messagesStore, userThreads, v, wallpaper } from "$lib/stores";
     import { SignedIn, SignedOut, Doc, collectionStore, docStore, userStore } from "sveltefire";
     import { auth, db } from "$lib/firebase";
     import { onDestroy } from "svelte";
@@ -71,14 +71,13 @@
         },
     ];
 
-    let isMenuOpen = true;
 
     function openMenu() {
-        isMenuOpen = true;
+        isMenuOpen.set(true);
     }
 
     function closeMenu() {
-        isMenuOpen = false;
+        isMenuOpen.set(false);
     }
 
     function toggleSettings(event: MouseEvent) {
@@ -113,8 +112,12 @@
 
 
     function handleCreateNewThread() {
+        isMenuOpen.set(false);
         currentThread.set('');
         messagesStore.set([]);
+        // focus on input
+        inputFocused.set(true);
+        console.log('input focused: ', $inputFocused);
     }
 
 
@@ -124,35 +127,36 @@
 
 <SignedIn>
 
-    {#if isMenuOpen}
+    {#if $isMenuOpen}
 
 
         <!-- click anywhere but menu to close menu -->
         <button on:click={() => closeMenu()} class="z-20 inset-10 h-screen w-screen fixed top-0 left-0"></button>
         <!-- settings -->
-        <div class="h-screen max-w-sm w-[70%] z-30 bg-black bg-opacity-50 backdrop-blur-2xl fixed top-0 p-2 flex flex-col space-y-2 items-start">
+        <div class="h-screen overflow-y-auto max-w-sm w-[70%] z-30 bg-black border-slate-500 border-[1px] bg-opacity-50 backdrop-blur-2xl fixed top-0 p-2 flex flex-col space-y-2 items-start">
+
 
             <!-- close button -->
             <button on:click={() => closeMenu()} class="absolute w-10 items-center flex justify-center h-10 top-0 right-2 font-mono text-sm">⬅</button>
 
             <!-- visualizations -->
-            <h2 class="p-2 text-xl">Visualizations</h2>
+            <!-- <h2 class="p-2 text-xl">Visualizations</h2> -->
             <div class="flex flex-col p-2">
                 <!-- create new thread -->
                 <button 
                     on:mouseenter={() => showCreateButton = true}
                     on:mouseleave={() => showCreateButton = false}
                     on:click={() => handleCreateNewThread()} 
-                    class="rounded-none  hover:bg-sky-300 hover:bg-opacity-30 w-full max-w-80 text-left relative p-2">
-                        <p class="w-full">Create a New Thread</p>
+                    class="rounded-none  hover:border-slate-500 border-[1px] border-transparent hover:bg-opacity-30 w-full text-left relative p-2">
+                        <p class="w-full">Create a new Thread +</p>
                         {#if showCreateButton}
-                            <button class="absolute text-xl right-4"></button>
+                            <button class="absolute text-xl right-4">️</button>
                         {/if}
                 </button>
                 <Threads />
             </div>
 
-            <hr class="w-full bg-white">
+            <hr class="w-full border-[1px] border-slate-500">
 
             <button on:click={toggleSettings} class="p-2 text-xl">Settings</button>
             {#if showSettings}

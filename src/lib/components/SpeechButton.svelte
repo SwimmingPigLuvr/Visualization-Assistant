@@ -22,6 +22,7 @@
     let audioPlayer: HTMLAudioElement;
 
     async function readText(text: string, voiceID: string) {
+        console.log('readtext function: ', text);
         listenToolTip = false;
         if (!browser) return; // Ensure this runs only in the browser
 

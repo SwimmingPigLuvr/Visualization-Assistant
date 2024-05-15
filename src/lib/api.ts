@@ -17,14 +17,11 @@ export function formatText(inputText: string) {
 
 async function addThread(threadID: string) {
     userThreads.update(userThreads => [threadID, ...userThreads]);
-    console.log('updated list of user threads: ', userThreads);
-    console.log('newest thread', threadID);
 }
 
 export async function syncThreadData() {
     const currentUserThreads = get(userThreads);
     if (auth.currentUser) {
-        console.log('Syncing thread data to Firestore', currentUserThreads);
         const userRef = doc(db, `users/${auth.currentUser.uid}`);
         await updateDoc(userRef, {
             threads: currentUserThreads
@@ -66,8 +63,6 @@ export async function createAndRun(userInput: string) {
           if (eventEnd !== -1) {
             const eventData = chunk.slice(eventStart + 6, eventEnd).trim();
             const event = JSON.parse(eventData);
-  
-            console.log('Event:', event); // Log the event for testing
   
             // Partial message
             if (event.event === 'thread.message.delta') {
@@ -118,7 +113,6 @@ export async function createAndRun(userInput: string) {
         }
       }
   
-      console.log('Final response:', result);
       isThinking.set(false);
     } catch (error) {
       console.error('Error creating and running thread:', error);
@@ -127,8 +121,6 @@ export async function createAndRun(userInput: string) {
 }
 
 export async function createMessage(userInput: string, threadID: string) {
-    console.log("Thread ID:", threadID);
-    console.log("User Input:", userInput);
     try {
         const response = await fetch('/api/threads/createMessage', {
             method: 'POST',
@@ -146,10 +138,8 @@ export async function createMessage(userInput: string, threadID: string) {
 
         if (response.ok) {
             const message = await response.json();
-            console.log('message:', message);
 
             const messageID = message?.id;
-            console.log('message id:', messageID);
 
             // Update the $messagesStore with the completed message
             messagesStore.update(messages => [...messages, {
@@ -196,8 +186,6 @@ export async function run(threadID: string) {
                     if (eventEnd !== -1) {
                         const eventData = chunk.slice(eventStart + 6, eventEnd).trim();
                         const event = JSON.parse(eventData);
-                        console.log('Event:', event); // Log the event for testing
-
 
                         // start
                         // Partial message
@@ -243,7 +231,6 @@ export async function run(threadID: string) {
                 }
             }
 
-            console.log('Final response:', result);
         }
     } catch (error) {
         console.error('Error running thread:', error);
@@ -276,7 +263,6 @@ export async function getThreadMessages() {
         }));
 
         messages.reverse();
-        console.log('Fetched and transformed messages:', messages);
         messagesStore.set(messages);
         
     } catch (error) {
@@ -287,7 +273,6 @@ export async function getThreadMessages() {
 
 export async function retrieveAndRun() {
     isThinking.set(true);
-    console.log('from inside r and run');
     try {
         const response = await fetch('/api/threads/retrieveAndRun', {
             method: 'POST',
@@ -296,7 +281,6 @@ export async function retrieveAndRun() {
             },
           });
         
-        console.log(response);
 
     } catch (error) {
         console.error('Error running existing thread:', error);
@@ -313,7 +297,6 @@ export async function cancelRun(threadID: string, runID: string) {
         })
 
         if (response.ok) {
-            console.log('run cancelled');
             isThinking.set(false);
         } else {
             console.error('failed to cancel run: ', response.statusText);

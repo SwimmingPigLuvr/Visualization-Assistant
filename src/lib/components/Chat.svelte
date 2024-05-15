@@ -1,36 +1,36 @@
 <script lang="ts">
     import MessageTools from './MessageTools.svelte';
     import { blur, fade, fly, slide } from "svelte/transition";
-    import { currentThread, userPfp, assistantPfp, userNameStore, messagesStore, isThinking, currentRun, partialMessage, completedMessage, userThreads } from "$lib/stores";
+    import { currentThread, userPfp, assistantPfp, userNameStore, messagesStore, isThinking, currentRun, partialMessage, completedMessage, userThreads, inputFocused } from "$lib/stores";
     import { get, writable } from "svelte/store";
     import { cubicInOut } from 'svelte/easing';
     import { SignedIn } from 'sveltefire';
     import type { Event, Message, Delta, ContentDelta } from '$lib/types';
     import { cancelRun, createAndRun, createMessage, formatText, getThreadMessages, retrieveAndRun, run } from '$lib/api';
     import { browser } from '$app/environment';
+    import { onMount } from 'svelte';
+    import { text } from '@sveltejs/kit';
+
+    let textareaElement: HTMLElement | null = null;
+
+    $: if ($inputFocused) {
+        textareaElement?.focus();
+    }
+
+    onMount(() => {
+        if (browser) {
+            textareaElement = document.getElementById('textareaElement');
+        }
+        inputFocused.set(true);
+    });
 
     let sendTooltip = false;
 
     $: if ($currentThread) {
-        // 
-        console.log('if $currentThread changes: attempt to get messages');
         getThreadMessages();
     }
 
-
-    // function formatText(inputText: string) {
-    //     let formattedText = inputText;
-        
-    //     // Replace double newlines with HTML line breaks
-    //     formattedText = formattedText.replace(/\n\n/g, '<br><br>');
-
-    //     // Replace Markdown-like bold syntax
-    //     formattedText = formattedText.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-
-    //     return formattedText;
-    // }
-
-    $: formattedMessage = formatText($completedMessage);
+    // $: formattedMessage = formatText($completedMessage);
     $: formattedPartial = formatText($partialMessage.content);
     
     let threadID: string | undefined = get(currentThread);
@@ -105,22 +105,6 @@
             handleSubmit();
         }
     }
-
-
-    // run existing thread
-    
-
-    
-
-    // create and run new thread
-    
-
-
-
-
-
-
-
 
     // show suggested prompts
     // implement prompts on click
@@ -214,24 +198,21 @@
                         Run ID: {$currentRun}
                     </p>
                 {/if}
-                {#if $userThreads.length > 0}
-                    <div in:blur>
-
-                        <p>user Threads store: </p>
-                        {#each $userThreads as thread}
-                            <p>{thread}</p>
-                        {/each}
-                    </div>
-                {/if}
+                
             </div>
 
 
+            <!-- if there is at least one message -->
             {#if $messagesStore.length > 0}
-                <ul class="max-w-xl mx-auto p-2">
+                <ul class="max-w-xl sm:max-w-2xl mx-auto p-2">
                     {#each $messagesStore as message, index}
                         <div class="my-4">
                             <li class="relative px-8">
+
+                                <!-- user / assistant pfp -->
                                 <img class="transform transition-all duration-500 ease-in-out rounded-xl w-6 h-6 sm:w-10 sm:h-10 absolute border-white border-[1px] sm:border-2 -left-1 sm:-left-5" src={getImageUrl(message)} alt={message.role}>
+                                
+                                <!-- user / assistant title -->
                                 <span class="{message.role === 'user' ? '' : ''} capitalize font-bold">
                                     {#if message.role === 'user'}
                                         {$userNameStore}
@@ -243,25 +224,32 @@
 
                                 {#if message.role === 'assistant'}
                                     <div class="">
-                                        <span class="font-mono italic leading-8">
+                                        <span class="font-mono text-lg leading-9">
                                             {@html formatText(message.content)}
 
-                                            {#if $isThinking && index === $messagesStore.length - 1}
-                                                <span class="text-gray-400">{@html formattedPartial}</span>
-                                                <img class="w-4 h-4 rounded-full animate-pulse inline-block" src="/icons/gigaBubble.png" alt="">
-                                            {/if}
+                                            <!-- im not sure if this block even gets seen -->
+                                            <!-- {#if $isThinking && index === $messagesStore.length - 1} -->
+                                                <!-- incoming message -->
+                                                <!-- <span class="">{@html formattedPartial}</span> -->
+                                                <!-- <p class="text-5xl text-cyan-500 text-bold">TEST</p> -->
+
+                                                <!-- thinking icon -->
+                                                <!-- <img class="w-4 h-4 rounded-full animate-pulse inline-block" src="/icons/gigaBubble.png" alt=""> -->
+                                            <!-- {/if} -->
                                         </span>
 
                                     </div>
                                 {:else}
-                                    <span class="font-mono leading-8">
+
+                                    <!-- user message -->
+                                    <span class="font-mono text-lg leading-9">
                                         {message.content}
                                     </span>
                                 {/if}
 
                                 {#if message.role !== 'user'}
 
-                                    <MessageTools message={message.content}/>
+                                    <MessageTools message={formatText(message.content)}/>
                                 {/if}
                             </li>
                         </div>
@@ -282,9 +270,9 @@
                                 <br>
 
                                 <div class="">
-                                    <span class="font-mono italic leading-8">
+                                    <span class="font-mono text-lg leading-9">
                                         {#if $isThinking}
-                                            <span class="">{$partialMessage.content}</span>
+                                            <span class="">{@html formattedPartial}</span>
                                             <img class="w-4 h-4 rounded-full animate-pulse inline-block" src="/icons/gigaBubble.png" alt="">
                                         {/if}
                                     </span>
@@ -298,7 +286,7 @@
                 </ul>
             {:else}
                 <div class="w-full h-screen flex flex-col items-center space-y-4">
-                    <h2 class="font-mono p-8 absolute bottom-40 md:bottom-24 -tracking-widest font-black text-3xl text-center">What would you like to visualize today?</h2>
+                    <!-- <h2 class="font-mono p-8 absolute bottom-40 md:bottom-24 -tracking-widest font-black text-3xl text-center">What would you like to visualize today?</h2> -->
                 </div>
                 
             {/if}
@@ -331,10 +319,12 @@
             {/if}
             
             <!-- user input -->
+            <!-- focus on this @textarea -->
             <form on:submit|preventDefault={() => handleSubmit()} class="flex items-center justify-between p-2 w-full">
 
                 <!-- allow more height for long inputs stay normal height for normal inputs -->
                 <textarea 
+                    id="textareaElement"
                     bind:value={$userInput} 
                     placeholder="Input message..." 
                     rows={rows || 1} 
