@@ -1,5 +1,6 @@
 <!-- perform api call to list all of user's threads -->
 <script lang="ts">
+    import { goto } from "$app/navigation";
     import { auth, db } from "$lib/firebase";
     import { currentRun, currentThread, isMenuOpen, messagesStore, userThreads } from "$lib/stores";
     import { arrayRemove, doc, getFirestore, setDoc, updateDoc } from "firebase/firestore";
@@ -90,6 +91,10 @@
                     if (current === threadID) {
                         messagesStore.set([]);
                         currentRun.set('');
+                        
+                        // clear url
+                        goto('/', { replaceState: true });
+
                         return '';
                     }
                     return current

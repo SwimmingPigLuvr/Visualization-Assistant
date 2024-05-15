@@ -10,6 +10,8 @@
     import { browser } from '$app/environment';
     import { onMount } from 'svelte';
     import { text } from '@sveltejs/kit';
+    import { page } from '$app/stores';
+    import { goto } from '$app/navigation';
 
     let textareaElement: HTMLElement | null = null;
 
@@ -22,12 +24,19 @@
             textareaElement = document.getElementById('textareaElement');
         }
         inputFocused.set(true);
+
+        const urlThreadID = $page.url.searchParams.get('thread');
+        if (urlThreadID) {
+            currentThread.set(urlThreadID);
+        }
     });
 
     let sendTooltip = false;
 
     $: if ($currentThread) {
+        // insert thread into page params
         getThreadMessages();
+        goto(`?thread=${$currentThread}`, { replaceState: true });
     }
 
     // $: formattedMessage = formatText($completedMessage);
