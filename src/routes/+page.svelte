@@ -40,7 +40,7 @@
         {/if}
     {/if}
 
-    <div class="z-10">
+    <div class="z-20">
         <Profile />
     </div>
 

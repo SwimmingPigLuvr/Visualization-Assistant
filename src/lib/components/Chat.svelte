@@ -189,10 +189,10 @@
             <img  class="w-40 m-auto rounded-full animate-bounce" src="/pfps/gigaBubble.png" alt="">
         </div>
     {/if} -->
-    <div class="w-full m-auto flex flex-col space-y-4 overflow-y-auto overflow-x-hidden">
+    <div class=" w-full m-auto flex flex-col space-y-4 overflow-y-auto overflow-x-hidden">
 
         <!-- chat -->
-        <div id="chat-container" class="p-2 fixed h-[84vh] w-full my-20 pb-20 text-xl tracking-tight overflow-x-hidden overflow-y-auto">
+        <div id="chat-container" class=" p-2 fixed h-[84vh] w-full my-20 pb-20 text-xl tracking-tight overflow-x-hidden overflow-y-auto">
             
             <!-- threadID & runID -->
             <div class="fixed top-4 left-1/4 -translate-x-1/4 flex flex-col max-w-xl text-left text-xs opacity-50">
@@ -265,7 +265,7 @@
 
                         <!-- hide line under last message -->
                         {#if index !== $messagesStore.length - 1}
-                            <!-- <hr class="my-4 margin auto"> -->
+                            <hr class="my-4 border-slate-500 h-[0px] border-[0.5px] margin auto">
                         {/if}
                     {/each}
 

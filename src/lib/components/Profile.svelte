@@ -1,3 +1,11 @@
+<!-- todo -->
+<!-- my plan -->
+<!-- my threads -->
+<!-- settings -->
+<!-- hr -->
+<!-- logout -->
+
+
 <script lang='ts'>
     import { SignedIn, SignedOut } from "sveltefire";
 
@@ -37,7 +45,7 @@
 
 </script>
 
-<div class="fixed top-2 right-2 z-20">
+<div class="z-50">
     <SignedIn let:user let:signOut>
         <button 
             on:click={() => showUserInfo = true}
@@ -67,7 +75,7 @@
                                 </div>
 
                         </div>
-                        <button class="hover:bg-white hover:bg-opacity-25 bg-black p-2 bg-opacity-50 text-white" on:click={signOut}>Sign Out </button>
+                        <button class="hover:bg-white hover:bg-opacity-25 bg-slate-500 p-2 bg-opacity-50 text-white" on:click={signOut}>Sign Out </button>
                     </div>
                 {/if}
     </SignedIn>

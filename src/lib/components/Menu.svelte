@@ -10,6 +10,7 @@
     import { onDestroy } from "svelte";
     import Threads from "./Threads.svelte";
     import type { Voice } from "$lib/types";
+    import Profile from "./Profile.svelte";
 
     let showCreateButton = false;
 
@@ -129,11 +130,15 @@
 
     {#if $isMenuOpen}
 
+   
+
 
         <!-- click anywhere but menu to close menu -->
         <button on:click={() => closeMenu()} class="z-20 inset-10 h-screen w-screen fixed top-0 left-0"></button>
         <!-- settings -->
         <div class="h-screen overflow-y-auto max-w-sm w-[70%] z-30 bg-black border-slate-500 border-[1px] bg-opacity-50 backdrop-blur-2xl fixed top-0 p-2 flex flex-col space-y-2 items-start">
+
+            
 
 
             <!-- close button -->
@@ -178,11 +183,17 @@
                         Voice
 
                         <!-- voice settings -->
+                        <div class="flex space-x-4">
+                            <img class="w-20 h-20 my-4  rounded" src={voices[$v].imageURL} alt="">
+                            <div class="flex flex-col space-x-2">
+                                <p>{voices[$v].name}</p>
+                                <p>{voices[$v].audioPreviewURL}</p>
+                            </div>
+                        </div>
                         <div 
                             in:slide={{duration: 300, easing: cubicInOut}}
                             out:slide={{duration: 300, easing: cubicInOut}}
                             class="flex flex-wrap gap-2 p-2 w-full justify-evenly overflow-x-auto">
-                            <img class="w-full my-4 max-h-80 rounded-[10%]" src={voices[$v].imageURL} alt="">
                             <!-- hovered voice goes here -->
                             {#each voices as voice, index}
                                 <button>
@@ -191,6 +202,8 @@
                             {/each}
                         </div>
                     </button>
+
+                    
 
                     
 

@@ -292,9 +292,16 @@ export async function retrieveAndRun() {
 
 export async function cancelRun(threadID: string, runID: string) {
     try {
-        const response = await fetch(`/api/threads/${threadID}/runs/${runID}`, {
-            method: 'DELETE',
-        })
+        const response = await fetch(`/api/threads/cancelRun`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                threadID: threadID,
+                runID: runID
+            })
+        });
 
         if (response.ok) {
             isThinking.set(false);
@@ -302,9 +309,10 @@ export async function cancelRun(threadID: string, runID: string) {
             console.error('failed to cancel run: ', response.statusText);
         }
     } catch (error) {
-        console.error('error during deletion: ', error);
+        console.error('error during cancellation: ', error);
     }
 }
+
 
 // export function extractMessages(events: Events): Message[] {
 //     return events
