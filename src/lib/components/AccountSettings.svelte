@@ -1,7 +1,7 @@
 <script lang="ts">
     import { auth, db } from "$lib/firebase";
     import { currentThread, userNameStore, userThreads } from "$lib/stores";
-    import { doc, getDoc, writeBatch } from "firebase/firestore";
+    import { collection, doc, getDoc, getDocs, writeBatch } from "firebase/firestore";
     import { get, writable } from "svelte/store";
     import { slide } from "svelte/transition";
     import { SignedIn, docStore, userStore } from "sveltefire";
@@ -51,8 +51,18 @@
     }
 
     async function confirmUsername() {
-
+        const currentUid = $user?.uid;
         const batch = writeBatch(db);
+
+        // Check if the current UID already has a username
+        const usernamesSnapshot = await getDocs(collection(db, "usernames"));
+        const existingUsernameDoc = usernamesSnapshot.docs.find(doc => doc.data().uid === currentUid);
+
+        if (existingUsernameDoc) {
+            // If the UID already has a username, delete the old one
+            batch.delete(existingUsernameDoc.ref);
+        }
+
         batch.set(doc(db, "usernames", newUsername), { uid: $user?.uid });
         batch.update(doc(db, "users", $user!.uid), {
             username: newUsername,

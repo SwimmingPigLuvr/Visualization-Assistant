@@ -1,5 +1,5 @@
 import { doc, updateDoc, writeBatch } from "firebase/firestore";
-import { responseText, messagesStore, currentThread, isThinking, currentRun, partialMessage, completedMessage, userThreads } from "./stores";
+import { responseText, messagesStore, currentThread, isThinking, currentRun, partialMessage, completedMessage, userThreads, currentTechnique, customInstruct } from "./stores";
 import { auth, db } from "./firebase";
 import { get } from "svelte/store";
 
@@ -29,8 +29,25 @@ export async function syncThreadData() {
     }
 }
 
+function setCustomInstructions() {
+    const technique = get(currentTechnique);
+    if (technique === 'affirmation') {
+        customInstruct.set("Your role is my affirmation assistant. An affirmation is a short statement. Create an affirmation based on the user's desired outcome. the affirmation will be in the present tense and will be a positive statement that assumes their desire is fulfilled");
+    } else if (technique === 'meditation') {
+        customInstruct.set("create a guided meditation that invites the user to first close their eyes. breathing in slowly, holding for a brief period, then breathing out slowly. each inhalation relaxes the user and is breathing in the feelings of their wish fulfilled right now in the present moment, each exhalation is letting go of the old emotions, thought patterns, behaviors that no longer serve them. instruct them to feel that the wish has been fulfilled. let them do this for awhile then guide them back to the present");
+    } else if (technique === 'revision') {
+        customInstruct.set("Guide the user through the technique of revision. Ask them to review an event that didn't go the way they wanted it to go, without judgment, just review it. Instruct them to rewrite and revise the event in their imagination the way they wish it would have gone. Then, guide them to get into the state akin to sleep (SATS), where they feel completely relaxed. Tell them to relive the revised event in their imagination over and over again until it starts feeling as though it actually happened that way. They should continue this until they either fall asleep or wake up from the drowsy state knowing that the revision is done. Emphasize that through this method, they can revise any unwanted event and will notice changes for the better in the coming days and weeks.");
+    } else if (technique === 'visualization') {
+        customInstruct.set(null);
+    }
+}
+
 export async function createAndRun(userInput: string) {
     isThinking.set(true);
+
+    setCustomInstructions();
+    const instructions = get(customInstruct);
+    console.log("Sending Custom Instructions:", instructions);
 
     try {
       const response = await fetch('/api/threads/createAndRun', {
@@ -43,6 +60,7 @@ export async function createAndRun(userInput: string) {
             role: 'user',
             content: userInput,
           },
+          instructions: instructions,
         }),
       });
   
@@ -159,13 +177,20 @@ export async function createMessage(userInput: string, threadID: string) {
 export async function run(threadID: string) {
     isThinking.set(true);
 
+    setCustomInstructions();
+    const instructions = get(customInstruct);
+    console.log("sending custom instructions:", instructions);
+
     try {
         const response = await fetch('/api/threads/run', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ threadID }),
+            body: JSON.stringify({
+                threadID,
+                instructions: instructions
+            }),
         });
 
         if (response.body) {

@@ -7,10 +7,12 @@ export async function POST({ request }) {
   try {
     const requestBody = await request.json();
     const threadID = requestBody.threadID;
+    const instructions = requestBody.instructions;
 
     const stream = await openai.beta.threads.runs.create(threadID, { 
-            assistant_id: 'asst_VhJfolAsWeg19JwxVbYjHpqc', 
-            stream: true 
+      assistant_id: 'asst_VhJfolAsWeg19JwxVbYjHpqc', 
+      instructions: instructions,
+      stream: true 
     });
 
     const readableStream = new ReadableStream({

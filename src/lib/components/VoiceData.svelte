@@ -9,8 +9,7 @@
     let updatingVoice = false;
     let updateSuccess = true;
 
-    let audio = new Audio();
-    let currentAudio = writable('');
+    
 
     function updateVoiceID(idString: string) {
         console.log('calling update voice function with voiceID: ', idString);
@@ -23,23 +22,7 @@
         setTimeout(() => {updateSuccess = false; updatingVoice = false}, 1000);
     }
 
-    function playVoicePreview(audioURL: string) {
-        // Check if the same audio is already playing
-        currentAudio.update(url => {
-            if (url !== audioURL) {
-                audio.pause();
-                audio.src = audioURL;
-                audio.play().catch(error => console.error('Error playing audio:', error));
-            } else {
-                if (audio.paused) {
-                    audio.play().catch(error => console.error('Error resuming audio:', error));
-                } else {
-                    audio.pause();
-                }
-            }
-            return audioURL;
-        });
-    }
+    
 
 
 </script>
@@ -47,9 +30,8 @@
 
 
 <button 
-    on:mouseenter={() => v.set(i)}
-    on:click={() => playVoicePreview(voice.audioPreviewURL)}
-    class="flex flex-col space-y-2 transform transition-all duration-200 ease-in-out items-center justify-start opacity-50 hover:opacity-100 group" on:click={() => updateVoiceID(voice.id)}>
+    on:click={() => v.set(i)}
+    class="flex flex-col space-y-2 transform transition-all duration-200 ease-in-out items-center justify-start opacity-50 hover:opacity-100 {$currentVoiceID === voice.id ? 'opacity-100' : ''} group" on:click={() => updateVoiceID(voice.id)}>
     <img class="bg-gradient-to-b from-lime-400 to-white h-24 max-w-24 rounded-full border-white border-[1px] group-hover:-translate-y-1 transform transition-all duration-1000 ease-in-out" src={voice.imageURL} alt="profile picture of ${voice.name}">
     <p class="font-serif -tracking-widest italic">{voice.name}</p>
 </button>

@@ -1,16 +1,34 @@
 <script lang="ts">
+  import Voices from './Voices.svelte';
+
     import { fade, fly, slide, blur } from "svelte/transition";
     import VoiceData from "./VoiceData.svelte";
     import { cubicInOut, cubicIn, cubicOut, backIn, backOut } from "svelte/easing";
     import { writable } from "svelte/store";
     import Visualizations from "./Visualizations.svelte";
-    import { bgMode, currentThread, inputFocused, isMenuOpen, messagesStore, userThreads, v, wallpaper } from "$lib/stores";
+    import { bgMode, customInstruct, currentTechnique, currentThread, inputFocused, isMenuOpen, messagesStore, userThreads, v, wallpaper } from "$lib/stores";
     import { SignedIn, SignedOut, Doc, collectionStore, docStore, userStore } from "sveltefire";
     import { auth, db } from "$lib/firebase";
     import { onDestroy } from "svelte";
     import Threads from "./Threads.svelte";
     import type { Voice } from "$lib/types";
     import Profile from "./Profile.svelte";
+    import Techniques from "./Techniques.svelte";
+
+    $: if ($currentTechnique) {
+        if ($currentTechnique === 'affirmation') {
+            customInstruct.set("Your role is my affirmation assistant. An affirmation is a short statement. Create an affirmation based on the user's desired outcome. the affirmation will be in the present tense and will be a positive statement that assumes their desire is fulfilled");
+        }
+        if ($currentTechnique === 'meditation') {
+            customInstruct.set("create a guided meditation that invites the user to first close their eyes. breathing in slowly, holding for a brief period, then breathing out slowly. each inhalation relaxes the user and is breathing in the feelings of their wish fulfilled right now in the present moment, each exhalation is letting go of the old emotions, thought patterns, behaviors that no longer serve them. instruct them to feel that the wish has been fulfilled. let them do this for awhile then guide them back to the present");
+        }
+        if ($currentTechnique === 'revision') {
+            customInstruct.set("Guide the user through the technique of revision. Ask them to review an event that didn't go the way they wanted it to go, without judgment, just review it. Instruct them to rewrite and revise the event in their imagination the way they wish it would have gone. Then, guide them to get into the state akin to sleep (SATS), where they feel completely relaxed. Tell them to relive the revised event in their imagination over and over again until it starts feeling as though it actually happened that way. They should continue this until they either fall asleep or wake up from the drowsy state knowing that the revision is done. Emphasize that through this method, they can revise any unwanted event and will notice changes for the better in the coming days and weeks.");
+        }
+        if ($currentTechnique === 'visualization') {
+            customInstruct.set(null)
+        }
+    }
 
     let showCreateButton = false;
 
@@ -152,10 +170,10 @@
                     on:mouseenter={() => showCreateButton = true}
                     on:mouseleave={() => showCreateButton = false}
                     on:click={() => handleCreateNewThread()} 
-                    class="rounded-none  hover:border-slate-500 border-[1px] border-transparent hover:bg-opacity-30 w-full text-left relative p-2">
-                        <p class="w-full">Create a new Thread +</p>
+                    class="rounded-xl  hover:border-slate-500 border-[1px] border-transparent hover:bg-opacity-30 w-full text-left relative p-2">
+                        <p class="w-full">Start a new Visualization</p>
                         {#if showCreateButton}
-                            <button class="absolute text-xl right-4">️</button>
+                            <button on:click|preventDefault={() => handleCreateNewThread()} class="hover:bg-white hover:border-black hover:text-black px-2 rounded-full bg-black border-slate-500 border-[1px] absolute -top-2 -right-1 font-bold text-xl">+</button>
                         {/if}
                 </button>
                 <Threads />
@@ -164,51 +182,11 @@
             <hr class="w-full border-[1px] border-slate-500">
 
             <button on:click={toggleSettings} class="p-2 text-xl">Settings</button>
-            {#if showSettings}
-                <div
-                    in:slide={{duration: 500, easing: cubicInOut}} 
-                    out:slide={{duration: 500, easing: cubicInOut}} 
-                    class="flex flex-col text-left w-full p-2">
 
-                    <!-- <hr class="w-full max-w-xl py-2"> -->
+            <Techniques />
 
-                    <!-- assistant -->
-                    <!-- <button class="-tracking-widest text-xl text-left">Assitant</button> -->
+            <Voices />
 
-                    <!-- voice -->
-                    <button 
-                        on:mouseenter={() =>showVoiceSettings = true} 
-                        on:mouseleave={() =>showVoiceSettings = false} 
-                        class="-tracking-widest text-xl text-left">
-                        Voice
-
-                        <!-- voice settings -->
-                        <div class="flex space-x-4">
-                            <img class="w-20 h-20 my-4  rounded" src={voices[$v].imageURL} alt="">
-                            <div class="flex flex-col space-x-2">
-                                <p>{voices[$v].name}</p>
-                                <p>{voices[$v].audioPreviewURL}</p>
-                            </div>
-                        </div>
-                        <div 
-                            in:slide={{duration: 300, easing: cubicInOut}}
-                            out:slide={{duration: 300, easing: cubicInOut}}
-                            class="flex flex-wrap gap-2 p-2 w-full justify-evenly overflow-x-auto">
-                            <!-- hovered voice goes here -->
-                            {#each voices as voice, index}
-                                <button>
-                                    <VoiceData voice={voice} i={index} />
-                                </button>
-                            {/each}
-                        </div>
-                    </button>
-
-                    
-
-                    
-
-                </div>
-            {/if}
             
         </div>
     {:else}

@@ -5,7 +5,7 @@
     import { doc, getDoc, getFirestore, updateDoc, writeBatch } from "firebase/firestore";
     import { getAuth, onAuthStateChanged } from "firebase/auth";
     import { db } from "$lib/firebase";
-    import { currentThread, userNameStore, userSettings, userThreads } from "$lib/stores";
+    import { currentThread, accountType, userNameStore, userSettings, userThreads } from "$lib/stores";
     import { onMount } from "svelte";
     import { writable } from "svelte/store";
 
@@ -42,6 +42,8 @@
 
                     // setting userThreads with the data from the db
                     userThreads.set(userData.threads);
+
+                    accountType.set(userData.accountType);
 
                     loadingUserData.set(false);
                 } else {

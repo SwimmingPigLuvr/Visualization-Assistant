@@ -7,10 +7,15 @@ export async function POST({ request }) {
   try {
     const requestBody = await request.json();
     const userMessage = requestBody.message;
+    const instructions = requestBody.instructions;
+
+    console.log("Sending Custom Instructions:", instructions);
+
 
     const stream = await openai.beta.threads.createAndRun({
       model: 'gpt-4o-2024-05-13',
       assistant_id: 'asst_VhJfolAsWeg19JwxVbYjHpqc',
+      instructions: instructions,
       thread: {
         messages: [userMessage],
       },

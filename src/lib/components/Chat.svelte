@@ -1,7 +1,7 @@
 <script lang="ts">
     import MessageTools from './MessageTools.svelte';
     import { blur, fade, fly, slide } from "svelte/transition";
-    import { currentThread, userPfp, assistantPfp, userNameStore, messagesStore, isThinking, currentRun, partialMessage, completedMessage, userThreads, inputFocused } from "$lib/stores";
+    import { currentThread, userPfp, assistantPfp, userNameStore, messagesStore, isThinking, currentRun, partialMessage, completedMessage, userThreads, inputFocused, currentTechnique, customInstruct } from "$lib/stores";
     import { get, writable } from "svelte/store";
     import { cubicInOut } from 'svelte/easing';
     import { SignedIn } from 'sveltefire';
@@ -91,6 +91,7 @@
 
             messagesStore.set([initialMessage, ...$messagesStore]);
 
+            // use custom instructions
             // create & run new Thread
             createAndRun($userInput);
 
@@ -207,6 +208,10 @@
                         Run ID: {$currentRun}
                     </p>
                 {/if}
+
+                {#if $customInstruct !== ''}
+                    Custom Instructions: {$customInstruct}
+                {/if}
                 
             </div>
 
@@ -226,7 +231,7 @@
                                     {#if message.role === 'user'}
                                         {$userNameStore}
                                     {:else}
-                                        {message.role}
+                                        {$currentTechnique} {message.role}
                                     {/if}
                                 </span>
                                 <br>
@@ -257,7 +262,6 @@
                                 {/if}
 
                                 {#if message.role !== 'user'}
-
                                     <MessageTools message={formatText(message.content)}/>
                                 {/if}
                             </li>
@@ -265,7 +269,7 @@
 
                         <!-- hide line under last message -->
                         {#if index !== $messagesStore.length - 1}
-                            <hr class="my-4 border-slate-500 h-[0px] border-[0.5px] margin auto">
+                            <hr class="my-4 border-white h-[0px] border-[0.5px] margin auto">
                         {/if}
                     {/each}
 
