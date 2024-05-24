@@ -16,33 +16,38 @@
 <div class="p-2">
     <h2 class="text-xl">Technique</h2>
 
+    <!-- pay now button -->
+    <p>for dev purposes only</p>
+
     {#if $accountType === 'paid'}
-        <div class="p-2 flex flex-wrap gap-2">
+    <button class="p-4 bg-sky-700 text-sky-200" on:click={() => accountType.set('free')}>downgrade?</button>
+        <div class="-tracking-widest mt-3 relative p-2 flex flex-wrap gap-2">
             <button 
-                class="w-[48%] rounded-xl px-3 p-1 bg-black bg-opacity-30 border-white text-white border-[1px]"
+                class="rounded-xl px-3 p-1  border-[1px] {$currentTechnique === 'visualization' ? 'border-white  text-white' : 'border-slate-600 text-slate-600'} transform transition-all duration-300 ease-in-out"
                 on:click={() => chooseTechnique('visualization')}>
                 Visualization
             </button>
             <button 
-                class="rounded-xl px-3 p-1 border-white border-[1px] {$currentTechnique === 'revision' ? 'bg-white  text-black' : 'text-slate-300'}   hover:bg-white hover:text-black transform transition-all duration-300 ease-in-out"
+                class="rounded-xl px-3 p-1  border-[1px] {$currentTechnique === 'revision' ? 'border-white  text-white' : 'border-slate-600 text-slate-600'} transform transition-all duration-300 ease-in-out"
                 on:click={() => chooseTechnique('revision')}>
                 Revision
             </button>
             <button 
-                class="rounded-xl px-3 p-1 border-white border-[1px] {$currentTechnique === 'affirmation' ? 'bg-white  text-black' : 'text-slate-300'}   hover:bg-white hover:text-black transform transition-all duration-300 ease-in-out"
+                class="rounded-xl px-3 p-1  border-[1px] {$currentTechnique === 'affirmation' ? 'border-white  text-white' : 'border-slate-600 text-slate-600'} transform transition-all duration-300 ease-in-out"
                 on:click={() => chooseTechnique('affirmation')}>
                 Affirmation
             </button>
             <button 
-                class="rounded-xl px-3 p-1 border-white border-[1px] {$currentTechnique === 'meditation' ? 'bg-white  text-black' : 'text-slate-300'}   hover:bg-white hover:text-black transform transition-all duration-300 ease-in-out"
+                class="rounded-xl px-3 p-1  border-[1px] {$currentTechnique === 'meditation' ? 'border-white  text-white' : 'border-slate-600 text-slate-600'} transform transition-all duration-300 ease-in-out"
                 on:click={() => chooseTechnique('meditation')}>
                 Meditation
             </button>
             <input type="text" 
-                class="bg-black rounded-xl px-3 p-1 border-white border-[1px] {$currentTechnique === 'meditation' ? 'bg-white  text-black' : 'text-slate-300'}  hover:text-black transform transition-all duration-300 ease-in-out"
-                on:click={() => chooseTechnique('meditation')} placeholder="custom">
+                class="rounded-xl bg-transparent px-3 p-1 border-slate-600 border-[1px] {$currentTechnique === 'custom' ? 'bg-white text-black' : 'text-slate-300'} transform transition-all duration-300 ease-in-out"
+                on:click={() => chooseTechnique('custom')} placeholder="custom">
         </div> 
     {:else if $accountType === 'free'}
+    <button on:click={() => accountType.set('paid')}>upgrade for free?</button>
         <div class="-tracking-widest mt-3 relative p-2 flex flex-wrap gap-2">
             <button 
                 on:click={() => showPricingTable.set(true)}

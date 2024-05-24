@@ -68,7 +68,7 @@
         <!-- you're signed in -->
     </SignedIn>
     <SignedOut >
-        <!-- you're not signed in -->
+        <!-- <div>user not signed in</div> -->
     </SignedOut>
 </FirebaseApp>
 
