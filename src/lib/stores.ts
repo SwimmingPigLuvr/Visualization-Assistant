@@ -1,6 +1,9 @@
 import { writable } from "svelte/store";
 import { defaultSettings, type Message, type Settings } from "$lib/types";
 
+export let showPricingTable = writable<boolean>(false);
+export let showStats = writable<boolean>(false);
+
 export let accountType = writable<string>('free');
 
 export let currentTechnique = writable<string>('visualization');

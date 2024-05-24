@@ -1,7 +1,7 @@
 <script lang="ts">
     import MessageTools from './MessageTools.svelte';
     import { blur, fade, fly, slide } from "svelte/transition";
-    import { currentThread, userPfp, assistantPfp, userNameStore, messagesStore, isThinking, currentRun, partialMessage, completedMessage, userThreads, inputFocused, currentTechnique, customInstruct } from "$lib/stores";
+    import { currentThread, userPfp, assistantPfp, userNameStore, messagesStore, isThinking, currentRun, partialMessage, completedMessage, userThreads, inputFocused, currentTechnique, customInstruct, showPricingTable, showStats } from "$lib/stores";
     import { get, writable } from "svelte/store";
     import { cubicInOut } from 'svelte/easing';
     import { SignedIn } from 'sveltefire';
@@ -12,6 +12,8 @@
     import { text } from '@sveltejs/kit';
     import { page } from '$app/stores';
     import { goto } from '$app/navigation';
+    import PricingTable from './PricingTable.svelte';
+
 
     let textareaElement: HTMLElement | null = null;
 
@@ -185,35 +187,38 @@
 </script>
 
 <SignedIn let:user>
-    <!-- {#if $isThinking}
-        <div class="flex w-screen h-screen">
-            <img  class="w-40 m-auto rounded-full animate-bounce" src="/pfps/gigaBubble.png" alt="">
-        </div>
-    {/if} -->
+
+    <!-- pricing table -->
+    {#if $showPricingTable}
+        <PricingTable />
+    {/if}
+
     <div class=" w-full m-auto flex flex-col space-y-4 overflow-y-auto overflow-x-hidden">
 
         <!-- chat -->
         <div id="chat-container" class=" p-2 fixed h-[84vh] w-full my-20 pb-20 text-xl tracking-tight overflow-x-hidden overflow-y-auto">
             
             <!-- threadID & runID -->
-            <div class="fixed top-4 left-1/4 -translate-x-1/4 flex flex-col max-w-xl text-left text-xs opacity-50">
-                {#if $currentThread !== ''}
-                    <p in:blur>
-                        current Thread ID: {$currentThread}
-                    </p>
-                {/if}
-                
-                {#if $currentRun !== ''}
-                    <p in:blur>
-                        Run ID: {$currentRun}
-                    </p>
-                {/if}
+            {#if $showStats}
+                <div class="fixed top-4 left-1/4 -translate-x-1/4 flex flex-col max-w-xl text-left text-xs opacity-50">
+                    {#if $currentThread !== ''}
+                        <p in:blur>
+                            current Thread ID: {$currentThread}
+                        </p>
+                    {/if}
+                    
+                    {#if $currentRun !== ''}
+                        <p in:blur>
+                            Run ID: {$currentRun}
+                        </p>
+                    {/if}
 
-                {#if $customInstruct !== ''}
-                    Custom Instructions: {$customInstruct}
-                {/if}
-                
-            </div>
+                    {#if $customInstruct !== ''}
+                        Custom Instructions: {$customInstruct}
+                    {/if}
+                    
+                </div>
+            {/if}
 
 
             <!-- if there is at least one message -->

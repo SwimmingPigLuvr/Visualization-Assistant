@@ -12,6 +12,10 @@ export function formatText(inputText: string) {
     // Replace Markdown-like bold syntax
     formattedText = formattedText.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
 
+    // Replace Markdown-like heading syntax
+    formattedText = formattedText.replace(/### (.+?)(\n|$)/g, '<h3>$1</h3>');
+
+
     return formattedText;
 }
 

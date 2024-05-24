@@ -154,7 +154,7 @@
         <!-- click anywhere but menu to close menu -->
         <button on:click={() => closeMenu()} class="z-20 inset-10 h-screen w-screen fixed top-0 left-0"></button>
         <!-- settings -->
-        <div class="h-screen overflow-y-auto max-w-sm w-[70%] z-30 bg-black border-slate-500 border-[1px] bg-opacity-50 backdrop-blur-2xl fixed top-0 p-2 flex flex-col space-y-2 items-start">
+        <div class="h-screen overflow-y-auto max-w-sm z-30 bg-black border-slate-500 border-[1px] bg-opacity-50 backdrop-blur-2xl fixed top-0 p-2 flex flex-col space-y-2 items-start">
 
             
 

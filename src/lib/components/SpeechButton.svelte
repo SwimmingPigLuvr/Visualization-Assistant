@@ -48,6 +48,7 @@
         } else {
             console.error('Failed to convert text to speech:', response.statusText);
         }
+        listenToolTip = false;
     }
 
     function downloadAudio() {
@@ -125,7 +126,7 @@
             on:click={resumeAudio} 
             class="relative">
                 {#if listenToolTip}
-                    <span class="text-sm absolute left-1/2 top-0 -translate-x-1/2 tooltip rounded shadow-lg px-2 p-1 bg-black text-slate-400 mt-8">replay</span>
+                    <span class="text-sm absolute left-1/2 top-0 -translate-x-1/2 tooltip rounded shadow-lg px-2 p-1 bg-black text-slate-400 mt-8">play</span>
                 {/if}
             🎧
         </button>
@@ -161,7 +162,7 @@
         </p>
         {:else}
             {#if loopTooltip}
-                <span class="text-sm absolute left-1/2 top-0 -translate-x-1/2 tooltip rounded shadow-lg px-2 p-1 bg-black text-slate-400 mt-8">loop audio</span>
+                <span class="w-24 text-sm absolute left-1/2 top-0 -translate-x-1/2 tooltip rounded shadow-lg px-2 p-1 bg-black text-slate-400 mt-8">loop audio</span>
             {/if}
         <p class="contrast-50 hover:contrast-100 transform transition-all duration-200 ease-in-out">
             🔁
