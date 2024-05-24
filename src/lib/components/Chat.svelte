@@ -304,7 +304,7 @@
                 </ul>
             {:else}
                 <div class="w-full h-screen flex flex-col items-center space-y-4">
-                    <!-- <h2 class="font-mono p-8 absolute bottom-40 md:bottom-24 -tracking-widest font-black text-3xl text-center">What would you like to visualize today?</h2> -->
+                    <h2 class="font-mono p-8 absolute bottom-40 md:bottom-24 -tracking-widest font-black text-3xl text-center">What would you like to visualize today?</h2>
                 </div>
                 
             {/if}
