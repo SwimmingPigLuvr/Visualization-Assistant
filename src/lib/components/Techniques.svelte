@@ -39,7 +39,7 @@
                 Meditation
             </button>
             <input type="text" 
-                class="rounded-xl px-3 p-1 border-white border-[1px] {$currentTechnique === 'meditation' ? 'bg-white  text-black' : 'text-slate-300'}  hover:bg-white hover:text-black transform transition-all duration-300 ease-in-out"
+                class="bg-black rounded-xl px-3 p-1 border-white border-[1px] {$currentTechnique === 'meditation' ? 'bg-white  text-black' : 'text-slate-300'}  hover:text-black transform transition-all duration-300 ease-in-out"
                 on:click={() => chooseTechnique('meditation')} placeholder="custom">
         </div> 
     {:else if $accountType === 'free'}
