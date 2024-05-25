@@ -18,10 +18,11 @@
             if (!userDoc.exists()) {
                 console.log('Creating new user document...');
                 await setDoc(userDocRef, {
-                    username: user.displayName,
+                    username: user.displayName || "user",
                     email: user.email,
                     threads: [],
                     voiceID: "default_voice_id",  // Set default voice ID
+                    accountType: "free",  // Set default account type
                     createdAt: new Date()
                 });
                 console.log('User document created.');
@@ -42,4 +43,3 @@
 <SignedOut>
     <button class="p-2 px-4 bg-white bg-opacity-50 rounded-xl" on:click={signInWithGoogle}>Sign in here</button>
 </SignedOut>
-

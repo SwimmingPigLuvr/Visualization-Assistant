@@ -2,7 +2,7 @@
     import "../app.css"
     import { FirebaseApp, SignedIn, SignedOut, docStore, userStore } from "sveltefire";
     import { initializeApp } from "firebase/app";
-    import { doc, getDoc, getFirestore, updateDoc, writeBatch } from "firebase/firestore";
+    import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
     import { getAuth, onAuthStateChanged } from "firebase/auth";
     import { db } from "$lib/firebase";
     import { currentThread, accountType, userNameStore, userSettings, userThreads } from "$lib/stores";
@@ -11,7 +11,6 @@
 
     let loadingUserData = writable<boolean>(false);
 
-    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
     const firebaseConfig = {
         apiKey: "AIzaSyBW92KU1AP-kOvqt7Kwiip6nlOV1m_2lj8",
         authDomain: "visualization-assistant.firebaseapp.com",
@@ -22,7 +21,6 @@
         measurementId: "G-YC54QT6Z5T"
     };
 
-    // init firebase
     const app = initializeApp(firebaseConfig);
     const firestore = getFirestore(app);
     const auth = getAuth(app);
@@ -37,18 +35,36 @@
                 if (docSnap.exists()) {
                     const userData = docSnap.data();
                     userNameStore.set(userData.username);
-
                     userSettings.set(userData.settings);
-
-                    // setting userThreads with the data from the db
                     userThreads.set(userData.threads);
-
                     accountType.set(userData.accountType);
-
                     loadingUserData.set(false);
                 } else {
                     console.log("No such document!");
                     userNameStore.set('user');  // Default or error case
+                    // Create a new document for the user
+                    setDoc(userRef, {
+                        username: user.displayName || "user",
+                        email: user.email,
+                        threads: [],
+                        voiceID: "default_voice_id",  // Set default voice ID
+                        accountType: "free",  // Set default account type
+                        createdAt: new Date()
+                    }).then(() => {
+                        console.log("User document created.");
+                        // Re-fetch the user data
+                        getDoc(userRef).then(docSnap => {
+                            const userData = docSnap.data();
+                            userNameStore.set(userData?.username);
+                            userSettings.set(userData?.settings);
+                            userThreads.set(userData?.threads);
+                            accountType.set(userData?.accountType);
+                            loadingUserData.set(false);
+                        });
+                    }).catch(error => {
+                        console.error("Error creating user document:", error);
+                        loadingUserData.set(false);
+                    });
                 }
             });
             console.log('user SIGNED IN');
@@ -57,9 +73,6 @@
             userNameStore.set('');
         }
     });
-
-    
-
 </script>
 
 <FirebaseApp {auth} {firestore}>
@@ -71,5 +84,3 @@
         <!-- <div>user not signed in</div> -->
     </SignedOut>
 </FirebaseApp>
-
-<!-- user layout to import the settings and data of a signed in user -->
