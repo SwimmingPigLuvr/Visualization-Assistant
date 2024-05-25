@@ -274,7 +274,7 @@
 
                         <!-- hide line under last message -->
                         {#if index !== $messagesStore.length - 1}
-                            <hr class="my-4 border-white h-[0px] border-[0.5px] margin auto">
+                            <hr class="my-8 w-[90%] border-white h-[0px] border-[0.5px] m-auto">
                         {/if}
                     {/each}
 
