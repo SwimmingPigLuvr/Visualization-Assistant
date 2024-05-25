@@ -42,3 +42,4 @@
 <SignedOut>
     <button class="p-2 px-4 bg-white bg-opacity-50 rounded-xl" on:click={signInWithGoogle}>Sign in here</button>
 </SignedOut>
+
