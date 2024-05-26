@@ -82,7 +82,7 @@
                         Voice
 
                         <!-- voice settings -->
-                        <div class="flex items-center space-x-4">
+                        <div class="p-2 flex items-center space-x-4">
                             <img class="w-auto h-14 my-4  rounded" src={voices[$v].imageURL} alt="">
                             <div class="flex flex-col">
                                 <p>{voices[$v].name}</p>

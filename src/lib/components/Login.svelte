@@ -1,5 +1,6 @@
 <script lang="ts">
     import { auth, db } from "$lib/firebase";
+    import { defaultVoiceID } from "$lib/stores";
     import { GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
     import { doc, getDoc, setDoc } from "firebase/firestore";
     import { SignedIn, SignedOut } from "sveltefire";
@@ -21,7 +22,7 @@
                     username: user.displayName || "user",
                     email: user.email,
                     threads: [],
-                    voiceID: "default_voice_id",  // Set default voice ID
+                    voiceID: $defaultVoiceID,  // Set default voice ID
                     accountType: "free",  // Set default account type
                     createdAt: new Date()
                 });

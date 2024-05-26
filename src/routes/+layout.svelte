@@ -5,7 +5,7 @@
     import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
     import { getAuth, onAuthStateChanged } from "firebase/auth";
     import { db } from "$lib/firebase";
-    import { currentThread, accountType, userNameStore, userSettings, userThreads } from "$lib/stores";
+    import { currentThread, accountType, userNameStore, userSettings, userThreads, defaultVoiceID } from "$lib/stores";
     import { onMount } from "svelte";
     import { writable } from "svelte/store";
 
@@ -47,8 +47,10 @@
                         username: user.displayName || "user",
                         email: user.email,
                         threads: [],
-                        voiceID: "default_voice_id",  // Set default voice ID
-                        accountType: "free",  // Set default account type
+                        settings: {
+                            voiceID: $defaultVoiceID,
+                        },
+                        accountType: "paid",
                         createdAt: new Date()
                     }).then(() => {
                         console.log("User document created.");

@@ -14,6 +14,7 @@
     import type { Voice } from "$lib/types";
     import Profile from "./Profile.svelte";
     import Techniques from "./Techniques.svelte";
+    import Bugs from './Bugs.svelte';
 
     $: if ($currentTechnique) {
         if ($currentTechnique === 'affirmation') {
@@ -186,6 +187,8 @@
             <Techniques />
 
             <Voices />
+
+            <Bugs />
 
             
         </div>

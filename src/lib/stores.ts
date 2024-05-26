@@ -15,6 +15,7 @@ export let isMenuOpen = writable<boolean>(false);
 
 export let userSettings = writable<Settings>(defaultSettings);
 
+export let defaultVoiceID = writable<string>('286VLndcKwmm1RxLQoOn');
 export let currentVoiceID = writable<string>('286VLndcKwmm1RxLQoOn');
 export let currentThread = writable<string>('');
 export let currentRun = writable<string>('');

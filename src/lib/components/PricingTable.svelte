@@ -96,9 +96,9 @@
                 class="px-4 p-2 rounded-lg {$period === 'year' ? 'bg-lime-400 text-slate-900' : 'text-slate-600'}">Yearly</button>
         </div>
         <!-- three tables -->
-        <div class="m-auto w-full justify-center overflow-y-auto mt-6 flex flex-col sm:flex-row space-y-4 sm:space-x-4">
+        <div class="m-auto w-full justify-center overflow-y-auto mt-6 flex flex-col lg:flex-row space-y-4 sm:space-x-4">
             {#each tiers as tier}
-                <div class="flex even:bg-slate-800 flex-col justify-start items-start w-full sm:w-1/4 even:border-slate-600 even:border-[1px] rounded-xl p-8">
+                <div class="flex even:bg-slate-800 flex-col justify-start items-start w-full max-w-md even:border-slate-600 even:border-[1px] rounded-xl p-8">
 
                     {#if tier.flair}
                         <p class="bg-black border-slate-400 border-[1px] rounded text-xs my-2 p-1 px-2 animate-bounce">{tier.flair}</p> 
