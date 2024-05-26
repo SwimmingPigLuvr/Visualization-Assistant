@@ -1,39 +1,55 @@
 <script lang="ts">
     import { auth, db } from "$lib/firebase";
-    import { defaultVoiceID } from "$lib/stores";
-    import { GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
+    import { GoogleAuthProvider, signInWithPopup, signInWithRedirect, signOut, type User } from "firebase/auth";
     import { doc, getDoc, setDoc } from "firebase/firestore";
     import { SignedIn, SignedOut } from "sveltefire";
+    import { browser } from "$app/environment";
 
     async function signInWithGoogle() {
         const provider = new GoogleAuthProvider();
         try {
-            const userCredential = await signInWithPopup(auth, provider);
-            const user = userCredential.user;
-            console.log('User signed in:', user);
-
-            // Check if user document exists
-            const userDocRef = doc(db, `users/${user.uid}`);
-            const userDoc = await getDoc(userDocRef);
-
-            if (!userDoc.exists()) {
-                console.log('Creating new user document...');
-                await setDoc(userDocRef, {
-                    username: user.displayName || "user",
-                    email: user.email,
-                    threads: [],
-                    voiceID: $defaultVoiceID,  // Set default voice ID
-                    accountType: "free",  // Set default account type
-                    createdAt: new Date()
-                });
-                console.log('User document created.');
-            } else {
-                console.log('User document already exists.');
+            if (browser) {
+                const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+                if (isMobile) {
+                    await signInWithRedirect(auth, provider);
+                } else {
+                    const userCredential = await signInWithPopup(auth, provider);
+                    await handleUserSignIn(userCredential.user);
+                }
             }
         } catch (error) {
             console.error('Error during sign in:', error);
         }
     }
+
+    async function handleUserSignIn(user: User) {
+        console.log('User signed in:', user);
+
+        // Check if user document exists
+        const userDocRef = doc(db, `users/${user.uid}`);
+        const userDoc = await getDoc(userDocRef);
+
+        if (!userDoc.exists()) {
+            console.log('Creating new user document...');
+            await setDoc(userDocRef, {
+                username: user.displayName || "user",
+                email: user.email,
+                threads: [],
+                voiceID: "default_voice_id",  // Set default voice ID
+                accountType: "free",  // Set default account type
+                createdAt: new Date()
+            });
+            console.log('User document created.');
+        } else {
+            console.log('User document already exists.');
+        }
+    }
+
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            handleUserSignIn(user);
+        }
+    });
 </script>
 
 <SignedIn let:user let:signOut>
