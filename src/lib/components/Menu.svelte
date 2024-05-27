@@ -8,7 +8,7 @@
     import Visualizations from "./Visualizations.svelte";
     import { bgMode, customInstruct, currentTechnique, currentThread, inputFocused, isMenuOpen, messagesStore, userThreads, v, wallpaper } from "$lib/stores";
     import { SignedIn, SignedOut, Doc, collectionStore, docStore, userStore } from "sveltefire";
-    import { auth, db } from "$lib/firebase";
+    import { auth, firestore } from "$lib/firebase";
     import { onDestroy } from "svelte";
     import Threads from "./Threads.svelte";
     import type { Voice } from "$lib/types";

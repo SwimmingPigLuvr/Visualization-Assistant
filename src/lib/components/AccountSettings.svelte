@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { auth, db } from "$lib/firebase";
+    import { auth, firestore } from "$lib/firebase";
     import { currentThread, userNameStore, userThreads } from "$lib/stores";
     import { collection, doc, getDoc, getDocs, writeBatch } from "firebase/firestore";
     import { get, writable } from "svelte/store";
@@ -8,7 +8,7 @@
 
 
     const user = userStore(auth);
-    const userDoc = docStore(db, `users/${$user!.uid}`);
+    const userDoc = docStore(firestore, `users/${$user!.uid}`);
     $: username = $userDoc?.username;
 
     $: if (username) {
@@ -41,7 +41,7 @@
 
         debounceTimer = setTimeout(async () => {
 
-            const ref = doc(db, "usernames", newUsername);
+            const ref = doc(firestore, "usernames", newUsername);
             const exists = await getDoc(ref).then((doc) => doc.exists());
 
             isAvailable = !exists;
@@ -52,10 +52,10 @@
 
     async function confirmUsername() {
         const currentUid = $user?.uid;
-        const batch = writeBatch(db);
+        const batch = writeBatch(firestore);
 
         // Check if the current UID already has a username
-        const usernamesSnapshot = await getDocs(collection(db, "usernames"));
+        const usernamesSnapshot = await getDocs(collection(firestore, "usernames"));
         const existingUsernameDoc = usernamesSnapshot.docs.find(doc => doc.data().uid === currentUid);
 
         if (existingUsernameDoc) {
@@ -63,8 +63,8 @@
             batch.delete(existingUsernameDoc.ref);
         }
 
-        batch.set(doc(db, "usernames", newUsername), { uid: $user?.uid });
-        batch.update(doc(db, "users", $user!.uid), {
+        batch.set(doc(firestore, "usernames", newUsername), { uid: $user?.uid });
+        batch.update(doc(firestore, "users", $user!.uid), {
             username: newUsername,
         });
 

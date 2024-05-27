@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { auth, db } from "$lib/firebase";
+    import { auth, firestore } from "$lib/firebase";
     import { SignedIn, docStore, userStore } from "sveltefire";
     import Visualizations from "./Visualizations.svelte";
     import { userThreads } from "$lib/stores";

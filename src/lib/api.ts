@@ -1,6 +1,6 @@
 import { doc, updateDoc, writeBatch } from "firebase/firestore";
 import { responseText, messagesStore, currentThread, isThinking, currentRun, partialMessage, completedMessage, userThreads, currentTechnique, customInstruct } from "./stores";
-import { auth, db } from "./firebase";
+import { auth, firestore } from "./firebase";
 import { get } from "svelte/store";
 
 export function formatText(inputText: string) {
@@ -26,7 +26,7 @@ async function addThread(threadID: string) {
 export async function syncThreadData() {
     const currentUserThreads = get(userThreads);
     if (auth.currentUser) {
-        const userRef = doc(db, `users/${auth.currentUser.uid}`);
+        const userRef = doc(firestore, `users/${auth.currentUser.uid}`);
         await updateDoc(userRef, {
             threads: currentUserThreads
         });

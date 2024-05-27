@@ -1,7 +1,7 @@
 <!-- perform api call to list all of user's threads -->
 <script lang="ts">
     import { goto } from "$app/navigation";
-    import { auth, db } from "$lib/firebase";
+    import { auth, firestore } from "$lib/firebase";
     import { currentRun, currentThread, isMenuOpen, messagesStore, userThreads } from "$lib/stores";
     import { arrayRemove, doc, getFirestore, setDoc, updateDoc } from "firebase/firestore";
     import { onMount } from "svelte";
@@ -45,7 +45,7 @@
     async function deleteThread(threadID: string) {
         // todos
         // delete thread from userThreads store
-        // delete thread from firebase db
+        // delete thread from firestore
         console.log('hello from delete thread');
         try {
             const response = await fetch('/api/threads/delete', {
@@ -72,7 +72,7 @@
 
                 console.log('Thread successfully deleted from API. Proceeding with Firestore update.');
 
-                const userRef = doc(db, `users/${$user!.uid}`);
+                const userRef = doc(firestore, `users/${$user!.uid}`);
 
                 await updateDoc(userRef, {
                     threads: arrayRemove(threadID)

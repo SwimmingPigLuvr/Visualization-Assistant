@@ -29,6 +29,8 @@
 
 <body class="background-video w-full h-screen font-mono bg-slate-700 text-neutral-100">
     
+    <Login />
+
     {#if browser}
         {#if $bgMode === 'video'}
             <video autoplay muted loop playsinline class="background-video">
