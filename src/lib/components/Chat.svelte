@@ -186,7 +186,7 @@
 
 </script>
 
-<SignedIn let:user>
+<!-- <SignedIn let:user> -->
 
     <!-- pricing table -->
     {#if $showPricingTable}
@@ -384,4 +384,4 @@
         </form> -->
     </div>
 
-</SignedIn>
+<!-- </SignedIn> -->

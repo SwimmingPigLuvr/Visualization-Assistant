@@ -1,6 +1,6 @@
 <script lang="ts">
     import { auth, firestore } from "$lib/firebase";
-    import { GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, type User } from "firebase/auth";
+    import { GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, type User, createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword } from "firebase/auth";
     import { doc, getDoc, setDoc } from "firebase/firestore";
     import { SignedIn, SignedOut } from "sveltefire";
     import { browser } from "$app/environment";
@@ -11,6 +11,36 @@
     // easy!
 
     let modalOpen = false;
+    let email = '';
+    let password = '';
+    let isSignUp = false;
+
+    async function handleFormSubmit(event: SubmitEvent) {
+        event.preventDefault();
+        if (isSignUp) {
+            await emailSignUp(email, password);
+        } else {
+            await emailSignIn(email, password);
+        }
+    }
+
+    async function emailSignUp(email: string, password: string) {
+        try {
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            await handleUserSignIn(userCredential.user);
+        } catch (error) {
+            console.error('error during email sign up: ', error);
+        }
+    }
+
+    async function emailSignIn(email: string, password: string) {
+        try {
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            await handleUserSignIn(userCredential.user);
+        } catch (error) {
+            console.error('Error during email sign in:', error);
+        }
+    }
 
     async function signInWithGoogle() {
         const provider = new GoogleAuthProvider();
@@ -44,7 +74,7 @@
                 email: user.email,
                 threads: [],
                 voiceID: $defaultVoiceID,
-                accountType: "free",
+                accountType: "paid",
                 createdAt: new Date(),
             });
             console.log('User document created.');
@@ -66,31 +96,33 @@
             }
         }
     });
+
 </script>
 
-<SignedIn let:user let:signOut>
-    <p>Hello {user.displayName}</p>
-    <button on:click={signOut}>Sign Out</button>
-</SignedIn>
+<!-- <SignedIn let:user let:signOut> -->
+    <!-- <p>Hello {user.displayName}</p> -->
+    <!-- <button on:click={signOut}>Sign Out</button> -->
+<!-- </SignedIn> -->
 
-<SignedOut>
+<!-- <SignedOut> -->
     <button on:click={() => modalOpen = true}>Sign In</button>
 
     <!-- sign in with email -->
     {#if modalOpen}
         <div class="flex flex-col space-y-2 max-w-[15rem] relative m-auto p-8 border-white border-[1px]">
-            <form class="flex flex-col space-y-2"  action="submit">
+            <form class="flex flex-col space-y-2" on:submit|preventDefault={handleFormSubmit}>
                 <button class="absolute top-0 right-0 rounded-none p-2 text-xs border-white border-[1px]" on:click={() => modalOpen = false}>X</button>
                 <label for="email">email</label>
-                <input class="text-black px-2 p-1" type="email" name="email" id="email">
+                <input class="text-black px-2 p-1" type="email" name="email" id="email" bind:value={email}>
                 <label for="password">password</label>
-                <input class="text-black px-2 p-1" type="password" name="password" id="password">
+                <input class="text-black px-2 p-1" type="password" name="password" id="password" bind:value={password}>
                 <button class="border-white border-[1px] p-1" type="submit">submit</button>
             </form>
 
+            <p>{isSignUp ? "Already have an account?" : "Don't have an account?"} <a href="#" on:click={() => isSignUp = !isSignUp}>{isSignUp ? "Sign In" : "Sign Up"}</a></p>
             <p>or</p>
             <!-- google -->
             <button class="p-2 px-4 bg-slate-400 text-white rounded-xl" on:click={signInWithGoogle}>Google</button>
         </div>
     {/if}
-</SignedOut>
+<!-- </SignedOut> -->
