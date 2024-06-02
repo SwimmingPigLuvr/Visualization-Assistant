@@ -7,6 +7,10 @@
     import { currentThread, accountType, userNameStore, userSettings, userThreads, defaultVoiceID } from "$lib/stores";
     import { onMount } from "svelte";
     import { get, writable } from "svelte/store";
+    import { inject } from '@vercel/analytics'
+    import { dev } from "$app/environment";
+
+    inject({ mode: dev ? 'development' : 'production' });
 
     let loadingUserData = writable<boolean>(false);
 
