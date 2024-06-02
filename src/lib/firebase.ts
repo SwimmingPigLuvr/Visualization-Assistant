@@ -6,7 +6,7 @@ import { getStorage } from "firebase/storage";
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
     apiKey: "AIzaSyBW92KU1AP-kOvqt7Kwiip6nlOV1m_2lj8",
-    authDomain: "visualization-assistant.firebase.app",
+    authDomain: "visualization-assistant.web.app",
     projectId: "visualization-assistant",
     storageBucket: "visualization-assistant.appspot.com",
     messagingSenderId: "905179929921",

@@ -40,3 +40,5 @@ export let isThinking = writable<boolean>(false);
 
 export let v = writable<number>(0);
 
+export let signInModalOpen = writable(false);
+

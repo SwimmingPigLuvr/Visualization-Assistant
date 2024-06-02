@@ -5,12 +5,12 @@
     import { SignedIn, SignedOut } from "sveltefire";
     import { browser } from "$app/environment";
     import { onMount } from "svelte";
-    import { defaultVoiceID } from "$lib/stores";
+    import { defaultVoiceID, signInModalOpen } from "$lib/stores";
+    import { writable } from "svelte/store";
 
     // https://firebase.google.com/docs/auth/web/email-link-auth?hl=en&authuser=0&_gl=1*2fpshk*_ga*MTE1ODg4MzE0My4xNzE1Mzk1ODE4*_ga_CW55HF8NVT*MTcxNjgyMjIxOC4zMC4xLjE3MTY4MjIzMDEuNTguMC4w
     // easy!
 
-    let modalOpen = false;
     let email = '';
     let password = '';
     let isSignUp = false;
@@ -99,19 +99,21 @@
 
 </script>
 
-<!-- <SignedIn let:user let:signOut> -->
+<SignedIn let:user let:signOut>
     <!-- <p>Hello {user.displayName}</p> -->
     <!-- <button on:click={signOut}>Sign Out</button> -->
-<!-- </SignedIn> -->
+</SignedIn>
 
-<!-- <SignedOut> -->
-    <button on:click={() => modalOpen = true}>Sign In</button>
+<SignedOut>
+    <button on:click={() => signInModalOpen.set(true)}>Sign In</button>
 
     <!-- sign in with email -->
-    {#if modalOpen}
-        <div class="flex flex-col space-y-2 max-w-[15rem] relative m-auto p-8 border-white border-[1px]">
-            <form class="flex flex-col space-y-2" on:submit|preventDefault={handleFormSubmit}>
-                <button class="absolute top-0 right-0 rounded-none p-2 text-xs border-white border-[1px]" on:click={() => modalOpen = false}>X</button>
+    {#if signInModalOpen}
+    <button on:click={() => signInModalOpen.set(false)} class="z-40 w-full h-screen bg-black bg-opacity-30 inset-0 fixed top-0 left-0">
+
+        <div class="z-50 flex flex-col space-y-4 max-w-[24rem] relative m-auto p-8 border-white border-[1px] bg-black">
+            <form class="text-left flex flex-col space-y-2" on:submit|preventDefault={handleFormSubmit}>
+                <button class="absolute top-0 right-0 rounded-none px-4 p-2 text-xs border-white border-[1px]" on:click={() => signInModalOpen.set(false)}>X</button>
                 <label for="email">email</label>
                 <input class="text-black px-2 p-1" type="email" name="email" id="email" bind:value={email}>
                 <label for="password">password</label>
@@ -119,10 +121,11 @@
                 <button class="border-white border-[1px] p-1" type="submit">submit</button>
             </form>
 
-            <p>{isSignUp ? "Already have an account?" : "Don't have an account?"} <a href="#" on:click={() => isSignUp = !isSignUp}>{isSignUp ? "Sign In" : "Sign Up"}</a></p>
-            <p>or</p>
+            <p>or use</p>
             <!-- google -->
             <button class="p-2 px-4 bg-slate-400 text-white rounded-xl" on:click={signInWithGoogle}>Google</button>
+            <p>{isSignUp ? "Already have an account?" : "Don't have an account?"} <a href="#" on:click={() => isSignUp = !isSignUp}>{isSignUp ? "Sign In" : "Sign Up"}</a></p>
         </div>
+    </button>
     {/if}
-<!-- </SignedOut> -->
+</SignedOut>

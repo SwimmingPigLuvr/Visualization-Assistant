@@ -1,7 +1,7 @@
 <script lang="ts">
     import MessageTools from './MessageTools.svelte';
     import { blur, fade, fly, slide } from "svelte/transition";
-    import { currentThread, userPfp, assistantPfp, userNameStore, messagesStore, isThinking, currentRun, partialMessage, completedMessage, userThreads, inputFocused, currentTechnique, customInstruct, showPricingTable, showStats } from "$lib/stores";
+    import { currentThread, userPfp, assistantPfp, userNameStore, messagesStore, isThinking, currentRun, partialMessage, completedMessage, userThreads, inputFocused, currentTechnique, customInstruct, showPricingTable, showStats, signInModalOpen } from "$lib/stores";
     import { get, writable } from "svelte/store";
     import { cubicInOut } from 'svelte/easing';
     import { SignedIn } from 'sveltefire';
@@ -303,9 +303,10 @@
                     {/if}
                 </ul>
             {:else}
-                <div class="w-full h-screen flex flex-col items-center space-y-4">
-                    <h2 class="font-mono p-8 absolute bottom-40 md:bottom-24 -tracking-widest font-black text-3xl text-center">What would you like to visualize today?</h2>
-                </div>
+                {#if $signInModalOpen}
+                    
+                    <h2 class="font-mono p-8 -tracking-widest font-black text-3xl text-center">What would you like to visualize today?</h2>
+                {/if}
                 
             {/if}
         </div>
