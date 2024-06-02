@@ -108,11 +108,11 @@
 
     <!-- sign in with email -->
     {#if $signInModalOpen}
-    <button on:click={() => signInModalOpen.set(false)} class="z-40 w-full h-screen bg-black bg-opacity-30 inset-0 fixed top-0 left-0">
+    <button on:click={() => signInModalOpen.set(false)} class="z-40 w-full h-screen bg-black bg-opacity-75 inset-0 fixed top-0 left-0 p-2">
 
-        <button on:click|stopPropagation class="z-50 flex flex-col space-y-4 max-w-[24rem] relative m-auto p-8 border-white border-[1px] bg-black">
-            <form class="text-left flex flex-col space-y-2" on:submit|preventDefault={handleFormSubmit}>
-                <button class="absolute top-0 right-0 rounded-none px-4 p-2 text-xs border-white border-[1px]" on:click={() => signInModalOpen.set(false)}>X</button>
+        <button on:click|stopPropagation class="z-50 flex items-center flex-col space-y-4 w-full max-w-[24rem] relative m-auto p-8 border-white border-[1px] bg-black">
+            <form class="text-left flex flex-col space-y-2 w-full" on:submit|preventDefault={handleFormSubmit}>
+                <button class="rounded-bl-3xl absolute top-0 right-0 rounded-none px-4 p-2 text-xs border-white border-[1px]" on:click={() => signInModalOpen.set(false)}>X</button>
                 <label for="email">email</label>
                 <input class="text-black px-2 p-1" type="email" name="email" id="email" bind:value={email}>
                 <label for="password">password</label>
