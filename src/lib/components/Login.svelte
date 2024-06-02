@@ -110,7 +110,7 @@
     {#if $signInModalOpen}
     <button on:click={() => signInModalOpen.set(false)} class="z-40 w-full h-screen bg-black bg-opacity-30 inset-0 fixed top-0 left-0">
 
-        <div class="z-50 flex flex-col space-y-4 max-w-[24rem] relative m-auto p-8 border-white border-[1px] bg-black">
+        <button on:click|stopPropagation class="z-50 flex flex-col space-y-4 max-w-[24rem] relative m-auto p-8 border-white border-[1px] bg-black">
             <form class="text-left flex flex-col space-y-2" on:submit|preventDefault={handleFormSubmit}>
                 <button class="absolute top-0 right-0 rounded-none px-4 p-2 text-xs border-white border-[1px]" on:click={() => signInModalOpen.set(false)}>X</button>
                 <label for="email">email</label>
@@ -124,7 +124,7 @@
             <!-- google -->
             <button class="p-2 px-4 bg-slate-400 text-white rounded-xl" on:click={signInWithGoogle}>Google</button>
             <p>{isSignUp ? "Already have an account?" : "Don't have an account?"} <a href="#" on:click={() => isSignUp = !isSignUp}>{isSignUp ? "Sign In" : "Sign Up"}</a></p>
-        </div>
+        </button>
     </button>
     {/if}
 </SignedOut>
