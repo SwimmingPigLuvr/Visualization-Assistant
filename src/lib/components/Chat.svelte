@@ -303,7 +303,7 @@
                     {/if}
                 </ul>
             {:else}
-                {#if $signInModalOpen}
+                {#if !$signInModalOpen}
                     
                     <h2 class="font-mono p-8 -tracking-widest font-black text-3xl text-center">What would you like to visualize today?</h2>
                 {/if}

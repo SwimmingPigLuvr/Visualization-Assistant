@@ -107,7 +107,7 @@
     <button on:click={() => signInModalOpen.set(true)}>Sign In</button>
 
     <!-- sign in with email -->
-    {#if signInModalOpen}
+    {#if $signInModalOpen}
     <button on:click={() => signInModalOpen.set(false)} class="z-40 w-full h-screen bg-black bg-opacity-30 inset-0 fixed top-0 left-0">
 
         <div class="z-50 flex flex-col space-y-4 max-w-[24rem] relative m-auto p-8 border-white border-[1px] bg-black">
