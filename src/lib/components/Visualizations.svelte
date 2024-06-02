@@ -126,7 +126,7 @@
         class="group rounded-xl hover:border-slate-400 border-[1px] border-transparent w-full max-w-[22rem] text-left relative p-2">
                 <p class="truncate w-full group-hover:text-white text-slate-500">{$firstMessage}</p>
             {#if showDeleteButton}
-                <button on:click|preventDefault={() => deleteThread(threadID)} class="hover:bg-white hover:border-black px-2 p-1 rounded-full bg-black border-slate-500 border-[1px] absolute -top-2 -right-1 text-xs">❌</button>
+                <button on:click|stopPropagation={() => deleteThread(threadID)} class="hover:bg-white hover:border-black px-2 p-1 rounded-full bg-black border-slate-500 border-[1px] absolute -top-2 -right-1 text-xs">❌</button>
             {/if}
     </button>
 {/if}

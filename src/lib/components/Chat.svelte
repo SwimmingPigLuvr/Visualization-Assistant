@@ -225,7 +225,7 @@
             {#if $messagesStore.length > 0}
                 <ul class="max-w-xl sm:max-w-2xl mx-auto p-2">
                     {#each $messagesStore as message, index}
-                        <div class="my-4">
+                        <div in:fade={{duration: 1500}} class="my-4">
                             <li class="relative px-8">
 
                                 <!-- user / assistant pfp -->
