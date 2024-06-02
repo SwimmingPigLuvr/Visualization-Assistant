@@ -47,13 +47,12 @@
         try {
             if (browser) {
                 const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-                let userCredential;
                 if (isMobile) {
-                    userCredential = await signInWithRedirect(auth, provider);
+                    await signInWithRedirect(auth, provider);
                 } else {
-                    userCredential = await signInWithPopup(auth, provider);
+                    const userCredential = await signInWithPopup(auth, provider);
+                    await handleUserSignIn(userCredential.user)
                 }
-                await handleUserSignIn(userCredential.user);
             }
         } catch (error) {
             console.error('Error during sign in:', error);
