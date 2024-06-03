@@ -172,7 +172,7 @@
                     on:mouseleave={() => showCreateButton = false}
                     on:click={() => handleCreateNewThread()} 
                     class="rounded-xl  hover:border-slate-500 border-[1px] border-transparent hover:bg-opacity-30 w-full text-left relative p-2">
-                        <p class="w-full">Start a new Visualization</p>
+                        <p class="w-full">New Visualization</p>
                         {#if showCreateButton}
                             <button on:click|preventDefault={() => handleCreateNewThread()} class="hover:bg-white hover:border-black hover:text-black px-2 rounded-full bg-black border-slate-500 border-[1px] absolute -top-2 -right-1 font-bold text-xl">+</button>
                         {/if}
