@@ -1,16 +1,29 @@
 <script lang="ts">
-    import "../app.css"
-    import { FirebaseApp, SignedIn, SignedOut, docStore, userStore } from "sveltefire";
+    import "../app.css";
+    import {
+        FirebaseApp,
+        SignedIn,
+        SignedOut,
+        docStore,
+        userStore,
+    } from "sveltefire";
     import { auth, firestore } from "$lib/firebase";
     import { doc, getDoc, setDoc } from "firebase/firestore";
     import { onAuthStateChanged } from "firebase/auth";
-    import { currentThread, accountType, userNameStore, userSettings, userThreads, defaultVoiceID } from "$lib/stores";
+    import {
+        currentThread,
+        accountType,
+        userNameStore,
+        userSettings,
+        userThreads,
+        defaultVoiceID,
+    } from "$lib/stores";
     import { onMount } from "svelte";
     import { get, writable } from "svelte/store";
-    import { inject } from '@vercel/analytics'
+    import { inject } from "@vercel/analytics";
     import { dev } from "$app/environment";
 
-    inject({ mode: dev ? 'development' : 'production' });
+    inject({ mode: dev ? "development" : "production" });
 
     let loadingUserData = writable<boolean>(false);
 
@@ -31,7 +44,7 @@
                 loadingUserData.set(false);
             } else {
                 console.log("No such document!");
-                userNameStore.set('user');  // Default or error case
+                userNameStore.set("user"); // Default or error case
                 // Create a new document for the user
                 await setDoc(userRef, {
                     username: user.displayName || "user",
@@ -40,8 +53,8 @@
                     settings: {
                         voiceID: get(defaultVoiceID),
                     },
-                    accountType: "free",  // Set default account type
-                    createdAt: new Date()
+                    accountType: "free", // Set default account type
+                    createdAt: new Date(),
                 });
                 console.log("User document created.");
                 // Re-fetch the user data
@@ -53,10 +66,10 @@
                 accountType.set(newUserData?.accountType);
                 loadingUserData.set(false);
             }
-            console.log('user SIGNED IN');
+            console.log("user SIGNED IN");
         } else {
-            console.log('user SIGNED OUT');
-            userNameStore.set('');
+            console.log("user SIGNED OUT");
+            userNameStore.set("");
         }
     });
 </script>

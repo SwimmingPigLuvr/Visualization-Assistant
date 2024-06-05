@@ -6,39 +6,21 @@
     import Login from "$lib/components/Login.svelte";
     import { wallpaper, bgMode } from "$lib/stores";
     import { browser } from "$app/environment";
-
-    
-
-
-
-
-    
 </script>
 
-<style>
-    .background-video {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        z-index: -1;
-    }
-</style>
-
-<body class="background-video w-full h-screen font-mono bg-slate-700 text-neutral-100">
-    
+<body
+    class="background-video w-full h-screen font-mono bg-slate-700 text-neutral-100"
+>
     <Login />
 
     {#if browser}
-        {#if $bgMode === 'video'}
+        {#if $bgMode === "video"}
             <video autoplay muted loop playsinline class="background-video">
-                <source src={$wallpaper} type="video/mp4">
+                <source src={$wallpaper} type="video/mp4" />
                 Your browser does not support the video tag.
             </video>
-        {:else if $bgMode === 'image'}
-            <img src={$wallpaper} alt="background" class="background-image">
+        {:else if $bgMode === "image"}
+            <img src={$wallpaper} alt="background" class="background-image" />
         {/if}
     {/if}
 
@@ -54,7 +36,7 @@
     <!-- clouds -->
     <div id="video-container">
         <video id="background-video" autoplay loop muted>
-            <source src="/videos/clouds.mp4" type="video/mp4">
+            <source src="/videos/clouds.mp4" type="video/mp4" />
             Your browser does not support the video tag.
         </video>
     </div>
@@ -64,6 +46,16 @@
             Your browser does not support the audio tag.
         </audio>
     </div> -->
-    
-    
 </body>
+
+<style>
+    .background-video {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: -1;
+    }
+</style>

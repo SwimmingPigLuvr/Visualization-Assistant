@@ -3,14 +3,11 @@
     import { blur, fade } from "svelte/transition";
     import {
         currentThread,
-        userPfp,
         assistantPfp,
         messagesStore,
         isThinking,
         currentRun,
         partialMessage,
-        completedMessage,
-        userThreads,
         inputFocused,
         currentTechnique,
         customInstruct,
@@ -19,21 +16,17 @@
         signInModalOpen,
     } from "$lib/stores";
     import { get, writable } from "svelte/store";
-    import { cubicInOut } from "svelte/easing";
-    import { SignedIn } from "sveltefire";
-    import type { Event, Message, Delta, ContentDelta } from "$lib/types";
+    import type { Message } from "$lib/types";
     import {
         cancelRun,
         createAndRun,
         createMessage,
         formatText,
         getThreadMessages,
-        retrieveAndRun,
         run,
     } from "$lib/api";
     import { browser } from "$app/environment";
     import { onMount } from "svelte";
-    import { text } from "@sveltejs/kit";
     import { page } from "$app/stores";
     import { goto } from "$app/navigation";
     import PricingTable from "./PricingTable.svelte";
@@ -223,7 +216,7 @@
     <!-- chat -->
     <div
         id="chat-container"
-        class=" p-2 fixed h-[84vh] w-full my-20 pb-20 text-xl tracking-tight overflow-x-hidden overflow-y-auto"
+        class="relative p-2 h-[84vh] w-full my-20 pb-20 text-xl tracking-tight overflow-x-hidden overflow-y-auto"
     >
         <!-- threadID & runID -->
         {#if $showStats}
@@ -292,7 +285,7 @@
                             <br />
 
                             <div class="">
-                                <span class="font-mono text-lg leading-9">
+                                <span class="font-mono text-[1rem] leading-7">
                                     {#if $isThinking}
                                         <span class=""
                                             >{@html formattedPartial}</span
@@ -312,7 +305,7 @@
         {:else if !$signInModalOpen}
             <!-- set based on mode -->
             <h2
-                class="font-fira-bold p-8 -tracking-widest text-3xl text-center"
+                class="font-mono absolute top-1/4 left-1/2 -translate-x-1/2 font-black -tracking-widest text-3xl text-center"
             >
                 What would you like to
                 <span>{mode}</span>
@@ -414,4 +407,3 @@
 </div>
 
 <!-- </SignedIn> -->
-
