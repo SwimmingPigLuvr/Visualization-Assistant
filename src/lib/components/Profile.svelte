@@ -11,6 +11,7 @@
   import { fly, slide } from "svelte/transition";
   import AccountSettings from "./AccountSettings.svelte";
   import SubscriptionSettings from "./SubscriptionSettings.svelte";
+  import { goto } from "$app/navigation";
 
   async function signInWithGoogle() {
     const provider = new GoogleAuthProvider();
@@ -35,10 +36,18 @@
       showAccountSettings = false;
     }
   }
+
+  function handleSignOut() {
+    //
+
+    signOut(auth);
+    console.log("signed out user");
+    goto("/");
+  }
 </script>
 
 <div class="z-50">
-  <SignedIn let:user let:signOut>
+  <SignedIn let:user>
     <button
       on:click={() => (showUserInfo = true)}
       class="z-20 transform transition-all duration-500 ease-in-out h-12 w-12 fixed top-2 right-2 border-slate-500 border-[1px] rounded-full filter grayscale hover:grayscale-0 group"
@@ -86,7 +95,7 @@
         </div>
         <button
           class="hover:bg-white hover:bg-opacity-25 bg-slate-500 p-2 bg-opacity-50 text-white"
-          on:click={() => signOut()}>Sign Out</button
+          on:click={() => handleSignOut()}>Sign Out</button
         >
       </div>
     {/if}
@@ -96,4 +105,3 @@
     <!-- <button class="p-2 px-4 bg-white bg-opacity-50 rounded-xl" on:click={signInWithGoogle}>LOG IN</button> -->
   </SignedOut>
 </div>
-
