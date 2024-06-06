@@ -23,15 +23,14 @@
     let audioPlayer: HTMLAudioElement;
 
     async function readText(text: string, voiceID: string) {
-        console.log("readtext function: ", text);
+        // get rid of html
+        const plainText = stripHtmlTags(text);
+        console.log("readtext function: ", plainText);
         listenToolTip = false;
         if (!browser) return; // Ensure this runs only in the browser
 
         isLoading.set(true);
         isPlaying.set(false);
-
-        // get rid of html
-        const plainText = htmlGoAway(text);
 
         const response = await fetch("/api/speech", {
             method: "POST",
@@ -58,8 +57,8 @@
         listenToolTip = false;
     }
 
-    function htmlGoAway(inputText: string) {
-        return inputText.replace(/<\/?[^>]+(>|$)/g, "");
+    function stripHtmlTags(inputText: string) {
+        return inputText.replace(/<[^>]*>/g, "");
     }
 
     function downloadAudio() {
