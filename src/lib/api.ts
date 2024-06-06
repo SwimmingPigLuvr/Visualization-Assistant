@@ -4,15 +4,21 @@ import { auth, firestore } from "./firebase";
 import { get } from "svelte/store";
 
 export function formatText(inputText: string) {
+
+    if (typeof inputText !== 'string') {
+        console.error('expected inputtext to be a string');
+        return '';
+    }
+
     let formattedText = inputText;
     
-    // Replace double newlines with HTML line breaks
+    // double newlines with HTML line breaks
     formattedText = formattedText.replace(/\n\n/g, '<br><br>');
 
-    // Replace Markdown-like bold syntax
+    // Markdown-like bold syntax
     formattedText = formattedText.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
 
-    // Replace Markdown-like heading syntax
+    // Markdown-like heading syntax
     formattedText = formattedText.replace(/### (.+?)(\n|$)/g, '<h3>$1</h3>');
 
 
