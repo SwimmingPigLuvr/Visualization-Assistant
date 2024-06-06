@@ -7,7 +7,8 @@ import { getStorage } from "firebase/storage";
 const firebaseConfig = {
     apiKey: "AIzaSyBW92KU1AP-kOvqt7Kwiip6nlOV1m_2lj8",
     // authDomain: "localhost:5173",
-    authDomain: "visualization-assistant.web.app",
+    // authDomain: "visualization-assistant.web.app",
+    authDomain: "visualization-assistant.firebaseapp.com",
     projectId: "visualization-assistant",
     storageBucket: "visualization-assistant.appspot.com",
     messagingSenderId: "905179929921",
