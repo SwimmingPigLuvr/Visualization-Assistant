@@ -12,6 +12,8 @@
     let showVisualizationInfo = false;
     let showMeditationInfo = false;
 
+    let showTechniqueModal = false;
+
     let showUpgrade: boolean[] = [];
 
     function chooseTechnique(technique: string) {
@@ -21,11 +23,33 @@
 
 {#if isDropdown}
     <button
+        on:click={() => (showTechniqueModal = true)}
         class="fixed top-2 rounded-lg capitalize left-1/2 -translate-x-1/2 p-2 px-4 bg-white bg-opacity-10"
         >{$currentTechnique}</button
     >
+
     <!-- TODO -->
     <!-- implement modal to select the technique -->
+
+    <!-- technique modal -->
+    {#if showTechniqueModal}
+        <div
+            class="z-50 fixed top-20 left-1/2 -translate-x-1/2 bg-white bg-opacity-10 rounded-xl border-white border-[1px] backdrop-blur-xl w-[84vw] p-4"
+        >
+            <div class="flex justify-between">
+                <p>Technique</p>
+                <p>
+                    <span
+                        class="rounded-[100%] h-6 w-6 flex items-center justify-center font-black border-white border-[1px] text-white"
+                        >i</span
+                    >
+                </p>
+            </div>
+            <!-- TODO -->
+            <!-- list techniques -->
+            <!-- add a title and subheading -->
+        </div>
+    {/if}
 {:else}
     <div class="p-2">
         <h2 class="text-xl">Technique</h2>
