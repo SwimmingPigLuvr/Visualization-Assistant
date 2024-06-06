@@ -30,6 +30,10 @@
     import { page } from "$app/stores";
     import { goto } from "$app/navigation";
     import PricingTable from "./PricingTable.svelte";
+    import VoiceData from "./VoiceData.svelte";
+    import { cubicInOut } from "svelte/easing";
+
+    let hTwo = false;
 
     let mode: string;
 
@@ -49,6 +53,7 @@
     }
 
     onMount(() => {
+        hTwo = true;
         if (browser) {
             textareaElement = document.getElementById("textareaElement");
         }
@@ -304,17 +309,21 @@
             </ul>
         {:else if !$signInModalOpen}
             <!-- set based on mode -->
-            <h2
-                class=" absolute top-1/4 left-1/2 -translate-x-1/2 font-black -tracking-widest text-xl text-center"
-            >
-                What would you like to
-                <p
-                    class="text-lime-300 font-thin italic capitalize my-2 text-[4rem] font-serif"
+            {#if hTwo}
+                <h2
+                    in:fade={{ delay: 500, duration: 1000, easing: cubicInOut }}
+                    class=" absolute top-1/4 left-1/2 -translate-x-1/2 font-black -tracking-widest text-xl text-center"
                 >
-                    {mode}
-                </p>
-                today?
-            </h2>
+                    What would you like to
+                    <p
+                        in:fade={{ duration: 1000 }}
+                        class="text-lime-300 uppercase my-4 text-[4rem]"
+                    >
+                        {mode}
+                    </p>
+                    today?
+                </h2>
+            {/if}
         {/if}
     </div>
 
