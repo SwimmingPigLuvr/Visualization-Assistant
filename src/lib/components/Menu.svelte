@@ -39,6 +39,7 @@
     import Profile from "./Profile.svelte";
     import Techniques from "./Techniques.svelte";
     import Bugs from "./Bugs.svelte";
+    import { goto } from "$app/navigation";
 
     $: if ($currentTechnique) {
         if ($currentTechnique === "affirmation") {
@@ -163,6 +164,7 @@
         // focus on input
         inputFocused.set(true);
         console.log("input focused: ", $inputFocused);
+        goto("/", { replaceState: true });
     }
 </script>
 
