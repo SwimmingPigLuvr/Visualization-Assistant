@@ -305,11 +305,15 @@
         {:else if !$signInModalOpen}
             <!-- set based on mode -->
             <h2
-                class="font-mono absolute top-1/4 left-1/2 -translate-x-1/2 font-black -tracking-widest text-3xl text-center"
+                class=" absolute top-1/4 left-1/2 -translate-x-1/2 font-black -tracking-widest text-xl text-center"
             >
                 What would you like to
-                <span>{mode}</span>
-                <span class="text-sky-300">today</span>?
+                <p
+                    class="text-lime-300 font-thin italic capitalize my-2 text-[4rem] font-serif"
+                >
+                    {mode}
+                </p>
+                today?
             </h2>
         {/if}
     </div>
