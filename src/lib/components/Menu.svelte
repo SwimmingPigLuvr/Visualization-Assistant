@@ -217,6 +217,14 @@
 
             <Voices />
 
+            <div class="p-2 w-full">
+                <button
+                    class="w-full p-4 bg-opacity-50 text-2xl rounded bg-sky-600 border-white border-[1px] text-white"
+                >
+                    Resources
+                </button>
+            </div>
+
             <Bugs />
         </div>
     {:else}
@@ -227,4 +235,3 @@
         >
     {/if}
 </SignedIn>
-
