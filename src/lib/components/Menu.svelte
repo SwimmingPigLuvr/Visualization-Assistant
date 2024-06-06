@@ -221,7 +221,7 @@
                 <button
                     class="w-full p-4 bg-opacity-50 text-2xl rounded bg-sky-600 border-white border-[1px] text-white"
                 >
-                    Resources
+                    Education
                 </button>
             </div>
 
