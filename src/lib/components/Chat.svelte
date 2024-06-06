@@ -223,69 +223,49 @@
         id="chat-container"
         class="relative p-2 h-[84vh] w-full my-20 pb-20 text-xl tracking-tight overflow-x-hidden overflow-y-auto"
     >
-        <!-- threadID & runID -->
-        {#if $showStats}
-            <div
-                class="fixed top-4 left-1/4 -translate-x-1/4 flex flex-col max-w-xl text-left text-xs opacity-50"
-            >
-                {#if $currentThread !== ""}
-                    <p in:blur>
-                        current Thread ID: {$currentThread}
-                    </p>
-                {/if}
-
-                {#if $currentRun !== ""}
-                    <p in:blur>
-                        Run ID: {$currentRun}
-                    </p>
-                {/if}
-
-                {#if $customInstruct !== ""}
-                    Custom Instructions: {$customInstruct}
-                {/if}
-            </div>
-        {/if}
-
         <!-- if there is at least one message -->
         {#if $messagesStore.length > 0}
             <ul class="max-w-xl sm:max-w-2xl mx-auto p-2">
                 {#each $messagesStore as message, index}
-                    <div in:fade={{ duration: 1500 }} class="my-4">
-                        <li class="relative p-4 rounded-3xl rounded-br-none">
-                            <div class="font-mono text-[1rem] leading-7">
+                    <div
+                        in:fade={{ duration: 1500 }}
+                        class="my-4 flex justify-end"
+                    >
+                        <li
+                            class="relative rounded-2xl p-2 {message.role ===
+                            'user'
+                                ? 'p-4 max-w-[80%] ml-auto bg-white bg-opacity-10'
+                                : 'pl-8 pt-4'} "
+                        >
+                            <div
+                                class="font-mono text-[0.9rem] sm:text-[1.1rem] leading-6 sm:leading-8"
+                            >
                                 {#if message.role === "assistant"}
+                                    <img
+                                        class="transform transition-all duration-500 ease-in-out rounded-full w-8 h-8 sm:w-10 sm:h-10 absolute top-3 -left-2 sm:-left-6"
+                                        src={$assistantPfp}
+                                        alt="assistant"
+                                    />
+
                                     {@html formatText(message.content)}
+                                    <MessageTools
+                                        message={formatText(message.content)}
+                                    />
                                 {:else}
                                     <!-- user message -->
                                     {message.content}
                                 {/if}
                             </div>
-
-                            {#if message.role !== "user"}
-                                <MessageTools
-                                    message={formatText(message.content)}
-                                />
-                            {/if}
                         </li>
                     </div>
 
                     <!-- hide line under last message -->
-                    {#if index !== $messagesStore.length - 1}
-                        <hr
-                            class="my-8 w-[90%] border-white h-[0px] border-[0.5px] m-auto"
-                        />
-                    {/if}
                 {/each}
 
-                <!-- partial message -->
+                <!-- incoming response -->
                 {#if $partialMessage.content !== ""}
                     <div class="my-4">
                         <li class="relative px-8">
-                            <img
-                                class="transform transition-all duration-500 ease-in-out rounded-xl w-6 h-6 sm:w-10 sm:h-10 absolute border-white border-[1px] sm:border-2 -left-1 sm:-left-6"
-                                src={$assistantPfp}
-                                alt="assistant"
-                            />
                             <span class="capitalize font-bold">Assistant</span>
                             <br />
 
@@ -308,6 +288,7 @@
                 {/if}
             </ul>
         {:else if !$signInModalOpen}
+            <!-- message in the middle -->
             <!-- set based on mode -->
             {#if hTwo}
                 <h2
@@ -374,7 +355,7 @@
             <textarea
                 id="textareaElement"
                 bind:value={$userInput}
-                placeholder="Input message..."
+                placeholder="Message VisualizationGPT"
                 rows={rows || 1}
                 on:keydown={handleKeyDown}
                 class="resize-none w-full pr-12 focus:ring-0 outline-none bg-black bg-opacity-50 rounded-lg relative p-4 border-slate-500 border-[1px] overflow-y-auto max-h-40"
@@ -411,12 +392,6 @@
             {/if}
         </form>
     </div>
-
-    <!-- chat completions input -->
-    <!-- <form on:submit={handleSubmit} class="flex max-w-3xl items-center justify-between p-2 fixed left-1/2 -translate-x-1/2 bottom-0 w-full my-2">
-            <input bind:value={$input} placeholder="Input message..." class="w-full focus:ring-0 outline-none bg-black rounded-lg relative p-3 border-neutral-700 border-[1px] overflow-x-hidden overflow-y-auto">
-            <button type="submit" class="w-8 h-8 absolute right-4 rounded-lg bg-neutral-700 text-neutral-800 text-2xl flex items-center justify-center">⏎</button>
-        </form> -->
 </div>
 
 <!-- </SignedIn> -->
