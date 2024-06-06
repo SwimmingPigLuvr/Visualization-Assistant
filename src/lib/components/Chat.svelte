@@ -216,7 +216,7 @@
     <PricingTable />
 {/if}
 
-<Techniques isDropdown/>
+<Techniques isDropdown />
 
 <div
     class=" w-full m-auto flex flex-col space-y-4 overflow-y-auto overflow-x-hidden"
@@ -237,7 +237,7 @@
                         <li
                             class="relative rounded-2xl p-2 {message.role ===
                             'user'
-                                ? 'p-4 max-w-[80%] ml-auto bg-white bg-opacity-10'
+                                ? 'p-4 max-w-[80%] ml-auto bg-black bg-opacity-50 backdrop-blur-xl'
                                 : 'pl-8 pt-4'} "
                         >
                             <div

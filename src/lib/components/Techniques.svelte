@@ -4,6 +4,7 @@
         currentTechnique,
         showPricingTable,
     } from "$lib/stores";
+    import { fade } from "svelte/transition";
 
     export let isDropdown = false;
 
@@ -19,12 +20,16 @@
     function chooseTechnique(technique: string) {
         currentTechnique.set(technique);
     }
+
+    function toggleTechniqueModal() {
+        showTechniqueModal = !showTechniqueModal;
+    }
 </script>
 
 {#if isDropdown}
     <button
-        on:click={() => (showTechniqueModal = true)}
-        class="fixed top-2 rounded-lg capitalize left-1/2 -translate-x-1/2 p-2 px-4 bg-white bg-opacity-10"
+        on:click={() => toggleTechniqueModal()}
+        class="fixed top-2 rounded-lg capitalize left-1/2 -translate-x-1/2 p-2 px-4 bg-black bg-opacity-50 backdrop-blur-xl"
         >{$currentTechnique}</button
     >
 
@@ -33,21 +38,91 @@
 
     <!-- technique modal -->
     {#if showTechniqueModal}
+        <button
+            on:click={() => (showTechniqueModal = false)}
+            class="cursor-default z-40 w-full h-screen fixed top-0 left-0"
+        ></button>
         <div
-            class="z-50 fixed top-20 left-1/2 -translate-x-1/2 bg-white bg-opacity-10 rounded-xl border-white border-[1px] backdrop-blur-xl w-[84vw] p-4"
+            in:fade
+            class="z-50 fixed top-14 left-1/2 -translate-x-1/2 bg-black bg-opacity-50 rounded-xl border-white border-[1px] backdrop-blur-xl max-w-sm w-[87.5vw] p-2"
         >
-            <div class="flex justify-between">
+            <div class="flex justify-between items-center p-4">
                 <p>Technique</p>
                 <p>
-                    <span
-                        class="rounded-[100%] h-6 w-6 flex items-center justify-center font-black border-white border-[1px] text-white"
-                        >i</span
+                    <a
+                        href="/education"
+                        class="rounded-[100%] h-4 w-4 flex items-center justify-center font-black border-white border-[1px] text-xs"
+                        >i</a
                     >
                 </p>
             </div>
             <!-- TODO -->
             <!-- list techniques -->
             <!-- add a title and subheading -->
+
+            <div class="flex flex-col w-full">
+                <!-- Visualization -->
+                <button
+                    on:click={() => chooseTechnique("visualization")}
+                    class="relative flex items-center justify-start space-x-3 p-4 hover:bg-white hover:bg-opacity-20 rounded-lg group"
+                >
+                    <div
+                        class="bg-white bg-opacity-20 group-hover:bg-opacity-0 h-8 w-8 rounded-full"
+                    ></div>
+                    <div class="flex flex-col text-left">
+                        <p class="text-sm font-black">Visualization</p>
+                        <!-- description -->
+                        <p class="text-xs">Imagine living in the end</p>
+                    </div>
+                    {#if $currentTechnique === "visualization"}
+                        <p class="absolute right-4">✅</p>
+                    {/if}
+                </button>
+
+                <!-- Revision -->
+                <button
+                    on:click={() => chooseTechnique("revision")}
+                    class="relative flex items-center justify-start space-x-3 p-4 hover:bg-white hover:bg-opacity-20 rounded-lg group"
+                >
+                    <div
+                        class="bg-white bg-opacity-20 group-hover:bg-opacity-0 h-8 w-8 rounded-full"
+                    ></div>
+                    <div class="flex flex-col text-left">
+                        <p class="text-sm font-black">Revision</p>
+                        <!-- description -->
+                        <p class="text-xs">Re-imagine past events</p>
+                    </div>
+                    {#if $currentTechnique === "revision"}
+                        <p class="absolute right-4">✅</p>
+                    {/if}
+                </button>
+
+                <!-- Affirmation -->
+                <button
+                    on:click={() => chooseTechnique("affirmation")}
+                    class="relative flex items-center justify-start space-x-3 p-4 hover:bg-white hover:bg-opacity-20 rounded-lg group"
+                >
+                    <div
+                        class="bg-white bg-opacity-20 group-hover:bg-opacity-0 h-8 w-8 rounded-full"
+                    ></div>
+                    <div class="flex flex-col text-left">
+                        <p class="text-sm font-black">Affirmation</p>
+                        <!-- description -->
+                        <p class="text-xs">Solidify your beliefs</p>
+                    </div>
+                    {#if $currentTechnique === "affirmation"}
+                        <p class="absolute right-4">✅</p>
+                    {/if}
+                </button>
+            </div>
+
+            <hr class="w-[90%] m-auto" />
+
+            <div
+                class="flex items-center text-center justify-center p-4 text-xs"
+            >
+                <p>More Techniques coming soon!</p>
+            </div>
         </div>
     {/if}
 {:else}

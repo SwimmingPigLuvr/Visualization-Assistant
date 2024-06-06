@@ -6,7 +6,6 @@
         <button class="bg-slate-600"></button>
     </div>
 
-    --reddit embed --reddit embed
     <div>
         <blockquote
             class="reddit-embed-bq"
