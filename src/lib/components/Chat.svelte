@@ -309,7 +309,7 @@
             >
                 What would you like to
                 <span>{mode}</span>
-                today?
+                <span class="text-sky-300">today</span>?
             </h2>
         {/if}
     </div>

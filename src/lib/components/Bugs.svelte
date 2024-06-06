@@ -1,10 +1,14 @@
 <script lang="ts">
     let reportBugWindowOpen = false;
+
+    function toggleReportWindow() {
+        reportBugWindowOpen = !reportBugWindowOpen;
+    }
 </script>
 
 <div class="w-full p-2">
     <button
-        on:click={() => (reportBugWindowOpen = true)}
+        on:click={() => toggleReportWindow()}
         class="animate-bounce text-3xl w-full text-right">🐛</button
     >
 </div>
@@ -16,4 +20,3 @@
         <p>please kindly message m3.</p>
     </div>
 {/if}
-
