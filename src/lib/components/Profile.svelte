@@ -50,7 +50,7 @@
   <SignedIn let:user>
     <button
       on:click={() => (showUserInfo = true)}
-      class="z-20 transform transition-all duration-500 ease-in-out h-12 w-12 fixed top-2 right-2 border-slate-500 border-[1px] rounded-full filter grayscale hover:grayscale-0 group"
+      class="z-20 transform transition-all duration-500 ease-in-out h-10 w-10 fixed top-2 right-2 border-slate-500 border-[1px] rounded-full filter grayscale hover:grayscale-0 group"
     >
       <!-- pfp -->
       <img

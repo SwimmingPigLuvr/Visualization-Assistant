@@ -32,6 +32,7 @@
     import PricingTable from "./PricingTable.svelte";
     import VoiceData from "./VoiceData.svelte";
     import { cubicInOut } from "svelte/easing";
+    import Techniques from "./Techniques.svelte";
 
     let hTwo = false;
 
@@ -215,13 +216,15 @@
     <PricingTable />
 {/if}
 
+<Techniques isDropdown/>
+
 <div
     class=" w-full m-auto flex flex-col space-y-4 overflow-y-auto overflow-x-hidden"
 >
     <!-- chat -->
     <div
         id="chat-container"
-        class="relative p-2 h-[84vh] w-full my-20 pb-20 text-xl tracking-tight overflow-x-hidden overflow-y-auto"
+        class="relative p-2 h-[84vh] w-full my-14 pb-20 text-xl tracking-tight overflow-x-hidden overflow-y-auto"
     >
         <!-- if there is at least one message -->
         {#if $messagesStore.length > 0}
