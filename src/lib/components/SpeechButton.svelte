@@ -30,12 +30,15 @@
         isLoading.set(true);
         isPlaying.set(false);
 
+        // get rid of html
+        const plainText = htmlGoAway(text);
+
         const response = await fetch("/api/speech", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ text, voiceID }),
+            body: JSON.stringify({ text: plainText, voiceID }),
         });
 
         isLoading.set(false);
@@ -53,6 +56,10 @@
             );
         }
         listenToolTip = false;
+    }
+
+    function htmlGoAway(inputText: string) {
+        return inputText.replace(/<\/?[^>]+(>|$)/g, "");
     }
 
     function downloadAudio() {
