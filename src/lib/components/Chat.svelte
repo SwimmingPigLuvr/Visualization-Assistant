@@ -269,8 +269,8 @@
                 {#if $partialMessage.content !== ""}
                     <div class="my-4">
                         <li class="relative px-8">
-                            <span class="capitalize font-bold">Assistant</span>
-                            <br />
+                            <!-- <span class="capitalize font-bold">Assistant</span>
+                            <br /> -->
 
                             <div class="">
                                 <span class="font-mono text-[1rem] leading-7">
