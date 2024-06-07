@@ -22,8 +22,12 @@
     const isLoading = writable(false);
     let audioPlayer: HTMLAudioElement;
 
-    async function readText(text: string, voiceID: string) {
-        // get rid of html
+    async function readText(
+        text: string,
+        voiceID: string,
+        retries: number = 3,
+    ) {
+        // Strip HTML tags from the text
         const plainText = stripHtmlTags(text);
         console.log("readtext function: ", plainText);
         listenToolTip = false;
@@ -32,29 +36,43 @@
         isLoading.set(true);
         isPlaying.set(false);
 
-        const response = await fetch("/api/speech", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ text: plainText, voiceID }),
-        });
+        for (let attempt = 1; attempt <= retries; attempt++) {
+            try {
+                const response = await fetch("/api/speech", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ text: plainText, voiceID }),
+                });
 
-        isLoading.set(false);
-
-        if (response.ok) {
-            // Create a blob from the response and set it as the source for an audio element
-            const blob = await response.blob();
-            const url = URL.createObjectURL(blob);
-            audioSource.set(url);
-            isPlaying.set(true);
-        } else {
-            console.error(
-                "Failed to convert text to speech:",
-                response.statusText,
-            );
+                if (response.ok) {
+                    // Create a blob from the response and set it as the source for an audio element
+                    const blob = await response.blob();
+                    const url = URL.createObjectURL(blob);
+                    audioSource.set(url);
+                    isPlaying.set(true);
+                    isLoading.set(false);
+                    return; // Exit the function after a successful request
+                } else {
+                    console.error(
+                        "Failed to convert text to speech:",
+                        response.statusText,
+                    );
+                }
+            } catch (error) {
+                console.error(`Attempt ${attempt} failed:`, error);
+                if (attempt < retries) {
+                    console.log(`Retrying... (${attempt}/${retries})`);
+                    await new Promise((res) => setTimeout(res, 1000)); // Wait 1 second before retrying
+                } else {
+                    isLoading.set(false);
+                    console.error(
+                        "Failed to convert text to speech after multiple attempts.",
+                    );
+                }
+            }
         }
-        listenToolTip = false;
     }
 
     function stripHtmlTags(inputText: string) {
