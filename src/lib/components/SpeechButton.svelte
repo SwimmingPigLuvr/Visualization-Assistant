@@ -228,7 +228,7 @@
         <button
             on:mouseenter={() => (listenToolTip = true)}
             on:mouseleave={() => (listenToolTip = false)}
-            on:click={() => readTextFile(formatText(message), $currentVoiceID)}
+            on:click={() => readText(formatText(message), $currentVoiceID)}
             class="relative"
         >
             {#if listenToolTip}
