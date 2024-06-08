@@ -219,7 +219,6 @@
 
             <Voices />
 
-
             <Bugs />
         </div>
     {:else}
