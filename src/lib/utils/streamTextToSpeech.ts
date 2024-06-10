@@ -10,7 +10,7 @@ async function streamTextToSpeech(
 ) {
     const plainText = stripHtmlTags(text);
     console.log("streamTextToSpeech function: ", plainText);
-    listenToolTip = false;
+    // listenToolTip = false;
     if (!browser) return;
 
     isLoading.set(true);
