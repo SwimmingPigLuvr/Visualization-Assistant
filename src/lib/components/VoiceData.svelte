@@ -6,6 +6,7 @@
         showVoiceModal,
     } from "$lib/stores";
     import type { Voice } from "$lib/types";
+    import { onDestroy } from "svelte";
     import { writable, get } from "svelte/store";
 
     export let voice: Voice;
@@ -43,7 +44,7 @@
             audio.src = audioURL;
         }
 
-        if (audio.paused && $showVoiceModal) {
+        if (audio.paused) {
             audio
                 .play()
                 .catch((error) =>
@@ -56,6 +57,18 @@
         // update store
         currentAudio.set(audio);
     }
+
+    // pause audio if voice modal is closed
+    $: {
+        if (!get(showVoiceModal)) {
+            audio.pause();
+        }
+    }
+
+    // stop audio when component is unmounted
+    onDestroy(() => {
+        audio.pause();
+    });
 </script>
 
 <button

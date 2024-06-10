@@ -75,59 +75,6 @@
         }
     }
 
-    // New function to read text using the new endpoint
-    async function readTextFile(
-        text: string,
-        voiceID: string,
-        retries: number = 3,
-    ) {
-        // Strip HTML tags from the text
-        const plainText = stripHtmlTags(text);
-        console.log("readTextFile function: ", plainText);
-        listenToolTip = false;
-        if (!browser) return; // Ensure this runs only in the browser
-
-        isLoading.set(true);
-        isPlaying.set(false);
-
-        for (let attempt = 1; attempt <= retries; attempt++) {
-            try {
-                const response = await fetch("/api/speech-file", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ text: plainText, voiceID }),
-                });
-
-                if (response.ok) {
-                    const blob = await response.blob();
-                    const url = URL.createObjectURL(blob);
-                    audioSource.set(url);
-                    isPlaying.set(true);
-                    isLoading.set(false);
-                    return; // Exit the function after a successful request
-                } else {
-                    console.error(
-                        "Failed to convert text to speech:",
-                        response.statusText,
-                    );
-                }
-            } catch (error) {
-                console.error(`Attempt ${attempt} failed:`, error);
-                if (attempt < retries) {
-                    console.log(`Retrying... (${attempt}/${retries})`);
-                    await new Promise((res) => setTimeout(res, 1000)); // Wait 1 second before retrying
-                } else {
-                    isLoading.set(false);
-                    console.error(
-                        "Failed to convert text to speech after multiple attempts.",
-                    );
-                }
-            }
-        }
-    }
-
     function stripHtmlTags(inputText: string) {
         return inputText.replace(/<[^>]*>/g, "");
     }
