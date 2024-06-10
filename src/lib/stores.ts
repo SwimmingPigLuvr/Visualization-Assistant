@@ -1,6 +1,11 @@
 import { writable } from "svelte/store";
 import { defaultSettings, type Message, type Settings } from "$lib/types";
 
+export let audioSource = writable<string>("");
+export let currentVoiceID = writable<string>('286VLndcKwmm1RxLQoOn');
+export let isLoading = writable<boolean>(false);
+export let isPlaying = writable<boolean>(false);
+
 
 export let currentAudio = writable<Audio | null>(null);
 
@@ -21,7 +26,6 @@ export let isMenuOpen = writable<boolean>(false);
 export let userSettings = writable<Settings>(defaultSettings);
 
 export let defaultVoiceID = writable<string>('286VLndcKwmm1RxLQoOn');
-export let currentVoiceID = writable<string>('286VLndcKwmm1RxLQoOn');
 export let currentThread = writable<string>('');
 export let currentRun = writable<string>('');
 

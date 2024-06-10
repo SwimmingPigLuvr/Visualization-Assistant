@@ -1,9 +1,12 @@
 <script lang="ts">
-    import { browser } from "$app/environment";
-    import { currentVoiceID } from "$lib/stores";
-    import { get, writable } from "svelte/store";
+    import {
+        currentVoiceID,
+        audioSource,
+        isLoading,
+        isPlaying,
+    } from "$lib/stores";
     import { formatText } from "$lib/api";
-    import { streamTextToSpeech } from "$lib/utils/streamTextToSpeech"; // Adjust the import path as necessary
+    import { streamTextToSpeech } from "$lib/utils/streamTextToSpeech";
 
     export let message: string;
 
@@ -18,9 +21,6 @@
     let loopTooltip = false;
     let isLooped = false;
 
-    const audioSource = writable("");
-    const isPlaying = writable(false);
-    const isLoading = writable(false);
     let audioPlayer: HTMLAudioElement;
 
     function stripHtmlTags(inputText: string) {
