@@ -3,6 +3,7 @@
     import { currentVoiceID } from "$lib/stores";
     import { get, writable } from "svelte/store";
     import { formatText } from "$lib/api";
+    import { streamTextToSpeech } from "$lib/utils/streamTextToSpeech"; // Adjust the import path as necessary
 
     export let message: string;
 
@@ -21,59 +22,6 @@
     const isPlaying = writable(false);
     const isLoading = writable(false);
     let audioPlayer: HTMLAudioElement;
-
-    async function streamTextToSpeech(
-        text: string,
-        voiceID: string,
-        retries: number = 3,
-    ) {
-        // Strip HTML tags from the text
-        const plainText = stripHtmlTags(text);
-        console.log("readtext function: ", plainText);
-        listenToolTip = false;
-        if (!browser) return; // Ensure this runs only in the browser
-
-        isLoading.set(true);
-        isPlaying.set(false);
-
-        for (let attempt = 1; attempt <= retries; attempt++) {
-            try {
-                const response = await fetch("/api/speech", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ text: plainText, voiceID }),
-                });
-
-                if (response.ok) {
-                    // Create a blob from the response and set it as the source for an audio element
-                    const blob = await response.blob();
-                    const url = URL.createObjectURL(blob);
-                    audioSource.set(url);
-                    isPlaying.set(true);
-                    isLoading.set(false);
-                    return; // Exit the function after a successful request
-                } else {
-                    console.error(
-                        "Failed to convert text to speech:",
-                        response.statusText,
-                    );
-                }
-            } catch (error) {
-                console.error(`Attempt ${attempt} failed:`, error);
-                if (attempt < retries) {
-                    console.log(`Retrying... (${attempt}/${retries})`);
-                    await new Promise((res) => setTimeout(res, 1000)); // Wait 1 second before retrying
-                } else {
-                    isLoading.set(false);
-                    console.error(
-                        "Failed to convert text to speech after multiple attempts.",
-                    );
-                }
-            }
-        }
-    }
 
     function stripHtmlTags(inputText: string) {
         return inputText.replace(/<[^>]*>/g, "");
@@ -122,7 +70,6 @@
 
 <div>
     {#if $isLoading}
-        <!-- Loading indicator -->
         <button
             on:mouseenter={() => (loadingSpeechTooltip = true)}
             on:mouseleave={() => (loadingSpeechTooltip = false)}
@@ -137,7 +84,6 @@
             <p class="animate-spin">💿</p>
         </button>
     {:else if $isPlaying}
-        <!-- Pause button -->
         <button
             on:mouseenter={() => (pauseTooltip = true)}
             on:mouseleave={() => (pauseTooltip = false)}
@@ -153,7 +99,6 @@
             ⏸️
         </button>
     {:else if $audioSource}
-        <!-- Resume button if audio is loaded but not playing -->
         <button
             on:mouseenter={() => (listenToolTip = true)}
             on:mouseleave={() => (listenToolTip = false)}
@@ -169,9 +114,6 @@
             🎧
         </button>
     {:else}
-        <!-- paste this back in if needed (original readText function) -->
-        <!-- on:click={() => readText(formatText(message), $currentVoiceID)} -->
-        <!-- Read text button if audio hasn't been loaded -->
         <button
             on:mouseenter={() => (listenToolTip = true)}
             on:mouseleave={() => (listenToolTip = false)}

@@ -23,6 +23,9 @@ export const POST: RequestHandler = async ({ request }) => {
       model_id: "eleven_monolingual_v1",
     };
 
+    console.log('Sending request to ElevenLabs with data:', data);
+
+
     const response = await axios({
       method: 'post',
       url: url,
@@ -30,6 +33,9 @@ export const POST: RequestHandler = async ({ request }) => {
       data: data,
       responseType: 'stream'
     });
+
+    console.log('Received response from ElevenLabs', response.status);
+
 
     // Pipe the response data stream to the response
     response.data.pipe(res);
