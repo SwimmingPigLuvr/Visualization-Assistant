@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { browser } from '$app/environment';
-import { get } from 'svelte/store';
 import { currentAudio, isLoading, isPlaying, audioSource } from '$lib/stores';
 
 async function streamTextToSpeech(

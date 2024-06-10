@@ -1,12 +1,11 @@
 // routes/api/xi-stream/+server.ts
 import { XI_API_KEY } from '$env/static/private';
-import axios from 'axios';
 import type { RequestHandler } from '@sveltejs/kit';
 
 export const POST: RequestHandler = async ({ request }) => {
   try {
     const { text, voiceID } = await request.json();
-    console.log('Received request to /api/speech. VoiceID:', voiceID, 'Text:', text);
+    console.log('Received request to /api/xi-stream. VoiceID:', voiceID, 'Text:', text);
 
     // ElevenLabs API URL with voice ID path parameter
     const url = `https://api.elevenlabs.io/v1/text-to-speech/${voiceID}/stream`;
@@ -23,31 +22,35 @@ export const POST: RequestHandler = async ({ request }) => {
       model_id: "eleven_monolingual_v1",
     };
 
-    console.log('Sending request to ElevenLabs with data:', data);
-
-
-    const response = await axios({
-      method: 'post',
-      url: url,
+    const response = await fetch(url, {
+      method: 'POST',
       headers: headers,
-      data: data,
-      responseType: 'stream'
+      body: JSON.stringify(data)
     });
 
-    console.log('Received response from ElevenLabs', response.status);
-
-
-    // Pipe the response data stream to the response
-    response.data.pipe(res);
-  } catch (error) {
-    console.error('Error in /api/speech handler:', error);
-    if (axios.isAxiosError(error)) {
-      const status = error.response?.status || 500;
-      const statusText = error.response?.statusText || 'Internal Server Error';
-      return new Response(JSON.stringify({ error: statusText }), { status });
+    if (!response.ok) {
+      console.error('Error response from ElevenLabs API:', response.status, response.statusText);
+      return new Response(JSON.stringify({ error: 'Failed to convert text to speech' }), { status: response.status });
     }
+
+    const reader = response.body?.getReader();
+    const chunks = [];
+    if (reader) {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        chunks.push(value);
+      }
+    }
+
+    const audioBuffer = new Blob(chunks);
+    return new Response(audioBuffer, {
+      headers: {
+        'Content-Type': 'audio/mpeg'
+      }
+    });
+  } catch (error) {
+    console.error('Error in /api/xi-stream handler:', error);
     return new Response(JSON.stringify({ error: 'Internal Server Error' }), { status: 500 });
   }
 };
-
-
