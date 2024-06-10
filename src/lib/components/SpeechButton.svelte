@@ -22,7 +22,7 @@
     const isLoading = writable(false);
     let audioPlayer: HTMLAudioElement;
 
-    async function readText(
+    async function streamTextToSpeech(
         text: string,
         voiceID: string,
         retries: number = 3,
@@ -72,6 +72,57 @@
                     );
                 }
             }
+        }
+    }
+
+    async function readText(text: string, voiceID: string) {
+        console.log("readtext function: ", text);
+        listenToolTip = false;
+        if (!browser) return; // Ensure this runs only in the browser
+
+        isLoading.set(true);
+        isPlaying.set(false);
+
+        // Strip HTML tags from the text
+        const plainText = stripHtmlTags(text);
+
+        try {
+            const response = await fetch("/api/xi-stream", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ text: plainText, voiceID }),
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to convert text to speech");
+            }
+
+            const reader = response.body.getReader();
+            const audioContext = new (window.AudioContext ||
+                window.webkitAudioContext)();
+            const source = audioContext.createBufferSource();
+            const audioChunks = [];
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                audioChunks.push(value);
+            }
+
+            const audioBuffer = await audioContext.decodeAudioData(
+                new Blob(audioChunks).arrayBuffer(),
+            );
+            source.buffer = audioBuffer;
+            source.connect(audioContext.destination);
+            source.start();
+
+            isLoading.set(false);
+            isPlaying.set(true);
+        } catch (error) {
+            console.error("Failed to convert text to speech:", error);
+            isLoading.set(false);
         }
     }
 

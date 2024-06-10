@@ -1,6 +1,11 @@
 import { writable } from "svelte/store";
 import { defaultSettings, type Message, type Settings } from "$lib/types";
 
+
+export let currentAudio = writable<Audio | null>(null);
+
+export let showVoiceModal = writable<boolean>(false);
+
 export let showPricingTable = writable<boolean>(false);
 export let showStats = writable<boolean>(false);
 

@@ -215,11 +215,11 @@
                 >Settings</button
             >
 
-            <Techniques />
-
             <Voices />
 
-            <Bugs />
+            <div class="absolute bottom-0">
+                <Bugs />
+            </div>
         </div>
     {:else}
         <button
