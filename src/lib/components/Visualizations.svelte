@@ -136,10 +136,10 @@
         on:mouseenter={() => (showDeleteButton = true)}
         on:mouseleave={() => (showDeleteButton = false)}
         on:click={() => setThread(threadID)}
-        class="group rounded-xl hover:border-slate-400 border-[1px] border-transparent w-full max-w-[22rem] text-left relative p-2 hover:glow"
+        class="rounded-xl hover:border-slate-400 border-[1px] border-transparent w-full max-w-[22rem] text-left relative p-2 hover:glow"
     >
         <p
-            class="peer-last-of-type:opacity-50 truncate -tracking-widest w-full group-hover:text-white text-slate-500"
+            class="peer-last-of-type:opacity-50 truncate -tracking-widest w-full text-white"
         >
             {$firstMessage}
         </p>

@@ -120,6 +120,10 @@
         },
     ];
 
+    function toggleMenu() {
+        isMenuOpen.set(!$isMenuOpen);
+    }
+
     function openMenu() {
         isMenuOpen.set(true);
     }
@@ -170,25 +174,29 @@
 
 <SignedIn>
     {#if $isMenuOpen}
-        <!-- click anywhere but menu to close menu -->
+        <!-- bg overlay -->
         <button
             on:click={() => closeMenu()}
             class="z-20 inset-10 h-screen w-screen fixed top-0 left-0"
         ></button>
-        <!-- settings -->
+
+        <!-- menu -->
         <div
-            class="h-screen overflow-y-auto max-w-sm z-30 bg-black border-slate-500 border-[1px] bg-opacity-50 backdrop-blur-2xl fixed top-0 p-2 flex flex-col space-y-2 items-start"
+            class="h-screen overflow-y-auto w-full sm:w-[390px] z-30 bg-blue-700 border-slate-500 border-[1px] bg-opacity-50 backdrop-blur-2xl relative top-0 p-2 flex flex-col space-y-2 items-start"
         >
-            <!-- close button -->
+            <!-- new visualization button -->
             <button
-                on:click={() => closeMenu()}
-                class="absolute w-10 items-center flex justify-center h-10 top-0 right-2 font-mono text-sm"
-                >⬅</button
+                on:click={() => handleCreateNewThread()}
+                class="transform z-50 transition-all duration-500 ease-in-out hover:scale-110 absolute top-3 right-3 font-mono text-3xl font-black hover:text-white text-slate-400 -tracking-widest"
+                >📝</button
             >
 
             <!-- visualizations -->
             <!-- <h2 class="p-2 text-xl">Visualizations</h2> -->
-            <div class="flex flex-col p-2">
+            <h2 class="pt-16 p-2 font-black -tracking-widest">
+                Visualizations
+            </h2>
+            <div class="my-4 flex flex-col p-">
                 <!-- create new thread -->
                 <button
                     on:mouseenter={() => (showCreateButton = true)}
@@ -196,7 +204,7 @@
                     on:click={() => handleCreateNewThread()}
                     class="rounded-xl hover:border-slate-500 border-[1px] border-transparent hover:bg-opacity-30 w-full text-left relative p-2"
                 >
-                    <p class="w-full">New Visualization</p>
+                    <p class="">New Visualization</p>
                     {#if showCreateButton}
                         <button
                             on:click|preventDefault={() =>
@@ -209,11 +217,7 @@
                 <Threads />
             </div>
 
-            <hr class="w-full border-[1px] border-slate-500" />
-
-            <button on:click={toggleSettings} class="p-2 text-xl"
-                >Settings</button
-            >
+            <h2 class="pt-8 px-2 -tracking-widest font-black">Settings</h2>
 
             <Voices />
 
@@ -221,11 +225,10 @@
                 <Bugs />
             </div>
         </div>
-    {:else}
-        <button
-            on:click={() => openMenu()}
-            class="transform transition-all duration-500 ease-in-out hover:scale-110 fixed top-0 left-2 font-mono text-5xl font-black hover:text-white text-slate-400 -tracking-widest"
-            >✦</button
-        >
     {/if}
+    <button
+        on:click={() => toggleMenu()}
+        class="transform z-50 transition-all duration-500 ease-in-out hover:scale-110 fixed top-0 left-2 font-mono text-5xl font-black hover:text-white text-slate-400 -tracking-widest"
+        >✦</button
+    >
 </SignedIn>

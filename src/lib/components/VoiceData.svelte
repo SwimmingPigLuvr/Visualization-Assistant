@@ -1,5 +1,10 @@
 <script lang="ts">
-    import { currentVoiceID, v, currentAudio } from "$lib/stores";
+    import {
+        currentVoiceID,
+        v,
+        currentAudio,
+        showVoiceModal,
+    } from "$lib/stores";
     import type { Voice } from "$lib/types";
     import { writable, get } from "svelte/store";
 
@@ -38,12 +43,16 @@
             audio.src = audioURL;
         }
 
-        if (audio.paused) {
-            audio.play().catch((error) => console.error("error playing audio: ", error));
+        if (audio.paused && $showVoiceModal) {
+            audio
+                .play()
+                .catch((error) =>
+                    console.error("error playing audio: ", error),
+                );
         } else {
             audio.pause();
         }
-        
+
         // update store
         currentAudio.set(audio);
     }

@@ -56,7 +56,7 @@
         Voice
 
         <!-- current voice -->
-        <div class="flex text-xl items-center space-x-4">
+        <div class="flex text-xl items-center space-x-2">
             <img
                 class="h-10 w-10 rounded-full"
                 src={voices[$v].imageURL}
@@ -69,19 +69,23 @@
     <!-- voice selection modal -->
     {#if $showVoiceModal}
         <!-- bg overlay -->
-        <div
-            class="bg-black bg-opacity-50 p-2 h-screen fixed w-full z-50 top-0 left-0 flex justify-center items-end"
+        <button
+            in:fade={{duration: 250}}
+            on:click={() => showVoiceModal.set(false)}
+            class="bg-black bg-opacity-50 backdrop-blur-2xl p-2 h-screen fixed w-full z-50 top-0 left-0 flex justify-center items-center"
         >
             <!-- modal -->
-            <div
-                class="flex bg-black flex-col p-2 w-full items-center justify-evenly overflow-x-auto"
+            <button
+                in:slide={{duration: 250}}
+                on:click|stopPropagation
+                class="flex border-white border-[1px] bg-black flex-col p-4 w-full items-center justify-evenly overflow-x-auto"
             >
                 <!-- header -->
                 <div
-                    class="mb-auto flex justify-between w-full items-center p-2 my-4"
+                    class="mb-auto flex justify-between w-full items-center"
                 >
                     <p>Choose a voice</p>
-                    <button on:click={() => showVoiceModal.set(false)} class=""
+                    <button on:click={() => showVoiceModal.set(false)} class="border-white border-[1px] px-3 hover:bg-white hover:bg-opacity-30 p-1"
                         >X</button
                     >
                 </div>
@@ -102,7 +106,7 @@
                         </button>
                     {/each}
                 </div>
-            </div>
-        </div>
+            </button>
+        </button>
     {/if}
 </div>
