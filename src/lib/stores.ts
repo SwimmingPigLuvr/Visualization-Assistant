@@ -21,7 +21,7 @@ export let customInstruct = writable<string | null>(null);
 
 export let inputFocused = writable<boolean>(false);
 
-export let isMenuOpen = writable<boolean>(true);
+export let isMenuOpen = writable<boolean>(false);
 
 export let userSettings = writable<Settings>(defaultSettings);
 
