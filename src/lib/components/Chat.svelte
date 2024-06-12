@@ -219,16 +219,16 @@
 <Techniques isDropdown />
 
 <div
-    class=" w-full m-auto flex flex-col space-y-4 overflow-y-auto overflow-x-hidden"
+    class="fixed top-0 left-0 py-16 w-full m-auto  items-center justify-center flex flex-col h-screen"
 >
     <!-- chat -->
     <div
         id="chat-container"
-        class="relative p-2 h-[84vh] w-full my-14 pb-20 text-xl tracking-tight overflow-x-hidden overflow-y-auto"
+        class="relative m-auto p-2 w-full text-xl tracking-tight overflow-x-hidden overflow-y-auto"
     >
         <!-- if there is at least one message -->
         {#if $messagesStore.length > 0}
-            <ul class="max-w-xl sm:max-w-2xl mx-auto p-2">
+            <ul class="max-w-xl sm:max-w-2xl mx-auto py-0">
                 {#each $messagesStore as message, index}
                     <div
                         in:fade={{ duration: 1500 }}

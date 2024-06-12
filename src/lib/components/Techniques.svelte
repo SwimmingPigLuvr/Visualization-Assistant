@@ -1,10 +1,11 @@
 <script lang="ts">
     import {
         accountType,
+        isMenuOpen,
         currentTechnique,
         showPricingTable,
     } from "$lib/stores";
-    import { fade } from "svelte/transition";
+    import { blur, fade, slide } from "svelte/transition";
 
     export let isDropdown = false;
 
@@ -15,10 +16,15 @@
 
     let showTechniqueModal = false;
 
+    $: if ($isMenuOpen) {
+        showTechniqueModal = false;
+    }
+
     let showUpgrade: boolean[] = [];
 
     function chooseTechnique(technique: string) {
         currentTechnique.set(technique);
+        showTechniqueModal = false;
     }
 
     function toggleTechniqueModal() {
@@ -26,12 +32,14 @@
     }
 </script>
 
+<!-- dropdown picker  -->
 {#if isDropdown}
     <button
         on:click={() => toggleTechniqueModal()}
-        class="fixed top-2 rounded-lg capitalize left-1/2 -translate-x-1/2 p-2 px-4 bg-black bg-opacity-50 backdrop-blur-xl"
-        >{$currentTechnique}</button
-    >
+        class="sm:left-16  sm:-translate-x-0 relative border-transparent hover:border-white border-[1px] top-3 rounded-lg capitalize left-1/2 -translate-x-1/2 p-2 px-4 bg-black bg-opacity-100 backdrop-blur-xl"
+        >{$currentTechnique}
+        ✦
+    </button>
 
     <!-- TODO -->
     <!-- implement modal to select the technique -->
@@ -44,7 +52,7 @@
         ></button>
         <div
             in:fade
-            class="z-50 fixed top-14 left-1/2 -translate-x-1/2 bg-black bg-opacity-50 rounded-xl border-white border-[1px] backdrop-blur-xl max-w-sm w-[87.5vw] p-2"
+            class="z-50 absolute top-16 sm:left-4 sm:-translate-x-0 left-1/2 -translate-x-1/2 bg-black bg-opacity-50 rounded-xl border-white border-[1px] backdrop-blur-xl max-w-sm w-[87.5vw] p-2"
         >
             <div class="flex justify-between items-center p-4">
                 <p>Technique</p>

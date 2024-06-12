@@ -23,20 +23,20 @@ body {
     background-position: center;
   }
   
-  #video-container {
+#video-container {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -1; /* Ensure it is behind other content */
-    overflow: hidden; /* Ensures the video does not exceed the container */
+    z-index: -1;
+    overflow: hidden;
 }
 
 #background-video {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Cover the entire container without losing aspect ratio */
+    object-fit: cover;
     object-position: top;
 }
 
@@ -48,7 +48,7 @@ body {
     width: 100%;
     height: 100%;
     background: radial-gradient(rgba(0, 100, 0, 0.65) 0%, rgba(0, 0, 0, 1) 100%); 
-    z-index: 1; /* Above the video, but still within the container */
+    z-index: 1;
 }
 
 

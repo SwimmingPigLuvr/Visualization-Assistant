@@ -35,7 +35,7 @@
 
     <!-- clouds -->
     <div id="video-container">
-        <video id="background-video" autoplay loop muted>
+        <video id="background-video" autoplay loop muted playsinline>
             <source src="/videos/clouds.mp4" type="video/mp4" />
             Your browser does not support the video tag.
         </video>

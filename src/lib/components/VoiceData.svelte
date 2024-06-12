@@ -77,7 +77,7 @@
     class="flex justify-between text-left p- w-full items-center {$currentVoiceID ===
     voice.id
         ? 'opacity-100'
-        : 'opacity-20 hover:opacity-50'} group"
+        : 'opacity-25 hover:opacity-75'} group"
     on:click={() => updateVoiceID(voice.id)}
 >
     <p class="font-serif text-3xl -tracking-widest italic">{voice.name}</p>

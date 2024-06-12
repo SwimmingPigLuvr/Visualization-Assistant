@@ -201,8 +201,8 @@
 
                 {#if newVisualizationToolTip}
                     <span
-                        in:fly={{duration: 200, y: -10}}
-                        class="text-sm absolute top-3 right-0 tooltip rounded shadow-lg px-2 pt-2 p-1 bg-black border-white border-[1px] text-white mt-8"
+                        in:fly={{ duration: 200, y: -10 }}
+                        class="text-sm absolute top-3 right-0 tooltip rounded shadow-lg px-2 p-1 bg-black border-white border-[1px] text-white mt-8"
                         >new {$currentTechnique}</span
                     >
                 {/if}
@@ -212,8 +212,6 @@
             <div class="pt-12 flex flex-col p-">
                 <Threads />
             </div>
-
-            <h2 class="pt-8 px-2 -tracking-widest font-black">Settings</h2>
 
             <Voices />
 
@@ -226,14 +224,17 @@
         on:mouseenter={() => (toggleMenuToolTip = true)}
         on:mouseleave={() => (toggleMenuToolTip = false)}
         on:click={() => toggleMenu()}
-        class="transform z-50 transition-all duration-500 ease-in-out group fixed top-2 left-4 font-mono text-5xl font-black hover:text-white text-slate-400"
+        class="transform z-50 transition-all duration-500 ease-in-out group fixed top-4 left-4 font-mono text-3xl font-black hover:text-white text-slate-400"
     >
-        <p class="group-hover:scale-110">✦</p>
+        <p class="group-hover:scale-110">
+            🌸
+            <!-- ✦ -->
+        </p>
 
         {#if toggleMenuToolTip}
             <span
-                in:fly={{duration: 200, y: -10}}
-                class="text-sm absolute top-5 left-0 tooltip w-32 rounded shadow-lg px-2 pt-2 p-1 bg-black border-white border-[1px] text-white mt-8"
+                in:fly={{ duration: 200, y: -10 }}
+                class="z-50 flex justify-center items-center text-sm absolute top-5 left-0 tooltip w-32 rounded shadow-lg px-2 p-1 bg-black border-white border-[1px] text-white mt-8"
             >
                 {#if $isMenuOpen}
                     close menu

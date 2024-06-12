@@ -9,6 +9,7 @@
         messagesStore,
         userThreads,
     } from "$lib/stores";
+    import { fade, fly, slide } from "svelte/transition";
     import {
         arrayRemove,
         doc,
@@ -19,15 +20,17 @@
     import { onMount } from "svelte";
     import { get, writable } from "svelte/store";
     import { docStore, userStore } from "sveltefire";
-    import { map } from "zod";
+    import { cubicInOut } from "svelte/easing";
+    import ThreadOptions from "./ThreadOptions.svelte";
 
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
     const user = userStore(auth);
 
+    let showThreadOptions = false;
+
     let showDeleteToolTip = false;
     let showDeleteButton = false;
-
     let showOptions = false;
 
     let firstMessage = writable<string>("");
@@ -141,53 +144,24 @@
         class="group rounded-xl hover:border-slate-400 border-[1px] border-transparent w-[370px] text-left relative p-2 hover:glow"
     >
         <p
-            class="group-hover:text-opacity-100 text-opacity-75 overflow-hidden text-ellipsis -tracking-widest w-full text-white"
-            style="
-                display: -webkit-box;
-                -webkit-line-clamp: 1;
-                -webkit-box-orient: vertical;
-                white-space: normal;
-                padding-right: 24px; /* Adjust padding to account for the emoji */
-                max-width: calc(100% - 24px); /* Ensure it does not overlap with the emoji */
-            "
+            class="z-20 group-hover:text-opacity-100 text-opacity-75 overflow-hidden truncate -tracking-widest w-full text-white"
         >
             {$firstMessage}
         </p>
 
         {#if showOptions || isMobile}
             <button
-                on:click|stopPropagation={() => deleteThread(threadID)}
-                class="items-center opacity-75 hover:opacity-100 h-full absolute top-0 right-2"
-                >🌎</button
+                class="bg-black h-full text-xs group w-10 rounded-e-xl top-0 right-0 font-black z-50 items-center bg-opacity-100 absolute"
             >
-        {/if}
-    </button>
-{/if}
-{#if $firstMessage !== ""}
-    <button
-        on:mouseenter={() => (showOptions = true)}
-        on:mouseleave={() => (showOptions = false)}
-        on:click={() => setThread(threadID)}
-        class="group rounded-xl hover:border-slate-400 border-[1px] border-transparent w-[370px] text-left relative p-2 hover:glow"
-    >
-        <p
-            class="group-hover:text-opacity-100 text-opacity-75 overflow-hidden text-ellipsis -tracking-widest w-full text-white"
-            style="
-            display: -webkit-box;
-            -webkit-line-clamp: 1;
-            -webkit-box-orient: vertical;
-            white-space: normal;
-        "
-        >
-            {$firstMessage}
-        </p>
-
-        {#if showOptions || isMobile}
-            <button
-                on:click|stopPropagation={() => deleteThread(threadID)}
-                class="items-center opacity-75 hover:opacity-100 h-full absolute top-0 right-2"
-                >🌎</button
-            >
+                <button
+                    on:click|stopPropagation={() => (showThreadOptions = true)}
+                    class="relative"
+                    >✦✦✦
+                    {#if showThreadOptions}
+                        <ThreadOptions />
+                    {/if}
+                </button>
+            </button>
         {/if}
     </button>
 {/if}

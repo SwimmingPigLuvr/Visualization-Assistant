@@ -44,14 +44,18 @@
             audioPreviewURL: "/sounds/voice-previews/luca.mp3",
         },
     ];
+
+    $: if (!$isMenuOpen) {
+        showVoiceModal.set(false);
+    }
 </script>
 
 <!-- voices -->
-<div class="flex flex-col text-left w-full p-2">
+<div class="flex flex-col text-left w-full">
     <!-- voice -->
     <button
         on:click={() => showVoiceModal.set(true)}
-        class="p-2 px-4 rounded-xl hover:bg-white hover:bg-opacity-10 hover:border-white border-[1px] border-transparent flex justify-between items-center -tracking-widest text-xl text-left"
+        class="p-2 rounded-xl hover:bg-white hover:bg-opacity-10 hover:border-white border-[1px] border-transparent flex justify-between items-center -tracking-widest text-xl text-left"
     >
         Voice
 
@@ -70,22 +74,22 @@
     {#if $showVoiceModal}
         <!-- bg overlay -->
         <button
-            in:fade={{duration: 250}}
+            in:fade={{ duration: 250 }}
             on:click={() => showVoiceModal.set(false)}
             class="bg-black bg-opacity-50 backdrop-blur p-2 h-screen fixed w-full z-50 top-0 left-0 flex justify-center items-center"
         >
             <!-- modal -->
             <button
-                in:slide={{duration: 250}}
+                in:slide={{ duration: 250 }}
                 on:click|stopPropagation
                 class="flex border-white border-[1px] bg-blue-800 flex-col p-4 w-full items-center justify-evenly overflow-x-auto"
             >
                 <!-- header -->
-                <div
-                    class="mb-auto flex justify-between w-full items-center"
-                >
+                <div class="mb-auto flex justify-between w-full items-center">
                     <p>Choose a voice</p>
-                    <button on:click={() => showVoiceModal.set(false)} class="border-white border-[1px] px-3 hover:bg-white hover:bg-opacity-30 p-1"
+                    <button
+                        on:click={() => showVoiceModal.set(false)}
+                        class="border-white border-[1px] px-3 hover:bg-black hover:bg-opacity-50 p-1"
                         >X</button
                     >
                 </div>
