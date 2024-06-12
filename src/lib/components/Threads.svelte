@@ -11,7 +11,7 @@
 </script>
 
 <SignedIn>
-    <div class="w-full flex flex-col">
+    <div class="flex flex-col">
         {#each myThreads as thread}
             <Visualizations threadID={thread} />
         {/each}

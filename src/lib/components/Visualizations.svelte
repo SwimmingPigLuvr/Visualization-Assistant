@@ -28,6 +28,8 @@
     let showDeleteToolTip = false;
     let showDeleteButton = false;
 
+    let showOptions = false;
+
     let firstMessage = writable<string>("");
 
     export let threadID: string;
@@ -133,22 +135,58 @@
 
 {#if $firstMessage !== ""}
     <button
-        on:mouseenter={() => (showDeleteButton = true)}
-        on:mouseleave={() => (showDeleteButton = false)}
+        on:mouseenter={() => (showOptions = true)}
+        on:mouseleave={() => (showOptions = false)}
         on:click={() => setThread(threadID)}
-        class="rounded-xl hover:border-slate-400 border-[1px] border-transparent w-full max-w-[22rem] text-left relative p-2 hover:glow"
+        class="group rounded-xl hover:border-slate-400 border-[1px] border-transparent w-[370px] text-left relative p-2 hover:glow"
     >
         <p
-            class="peer-last-of-type:opacity-50 truncate -tracking-widest w-full text-white"
+            class="group-hover:text-opacity-100 text-opacity-75 overflow-hidden text-ellipsis -tracking-widest w-full text-white"
+            style="
+                display: -webkit-box;
+                -webkit-line-clamp: 1;
+                -webkit-box-orient: vertical;
+                white-space: normal;
+                padding-right: 24px; /* Adjust padding to account for the emoji */
+                max-width: calc(100% - 24px); /* Ensure it does not overlap with the emoji */
+            "
         >
             {$firstMessage}
         </p>
 
-        {#if showDeleteButton || isMobile}
+        {#if showOptions || isMobile}
             <button
                 on:click|stopPropagation={() => deleteThread(threadID)}
-                class="hover:bg-white hover:border-black px-2 p-1 rounded-full bg-black border-slate-500 border-[1px] absolute -top-2 -right-1 text-xs"
-                >❌</button
+                class="items-center opacity-75 hover:opacity-100 h-full absolute top-0 right-2"
+                >🌎</button
+            >
+        {/if}
+    </button>
+{/if}
+{#if $firstMessage !== ""}
+    <button
+        on:mouseenter={() => (showOptions = true)}
+        on:mouseleave={() => (showOptions = false)}
+        on:click={() => setThread(threadID)}
+        class="group rounded-xl hover:border-slate-400 border-[1px] border-transparent w-[370px] text-left relative p-2 hover:glow"
+    >
+        <p
+            class="group-hover:text-opacity-100 text-opacity-75 overflow-hidden text-ellipsis -tracking-widest w-full text-white"
+            style="
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            white-space: normal;
+        "
+        >
+            {$firstMessage}
+        </p>
+
+        {#if showOptions || isMobile}
+            <button
+                on:click|stopPropagation={() => deleteThread(threadID)}
+                class="items-center opacity-75 hover:opacity-100 h-full absolute top-0 right-2"
+                >🌎</button
             >
         {/if}
     </button>

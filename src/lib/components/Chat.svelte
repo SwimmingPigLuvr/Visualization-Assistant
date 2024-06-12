@@ -358,7 +358,7 @@
             <textarea
                 id="textareaElement"
                 bind:value={$userInput}
-                placeholder="Message VisualizationGPT"
+                placeholder="send message"
                 rows={rows || 1}
                 on:keydown={handleKeyDown}
                 class="resize-none w-full pr-12 focus:ring-0 outline-none bg-black bg-opacity-50 rounded-lg relative p-4 border-slate-500 border-[1px] overflow-y-auto max-h-40"

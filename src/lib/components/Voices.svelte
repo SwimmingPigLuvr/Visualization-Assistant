@@ -1,7 +1,7 @@
 <script lang="ts">
     import VoiceData from "./VoiceData.svelte";
     import type { Voice } from "$lib/types";
-    import { v, showVoiceModal } from "$lib/stores";
+    import { v, showVoiceModal, isMenuOpen } from "$lib/stores";
     import { writable } from "svelte/store";
     import { fade, slide } from "svelte/transition";
     import { cubicInOut } from "svelte/easing";
@@ -72,13 +72,13 @@
         <button
             in:fade={{duration: 250}}
             on:click={() => showVoiceModal.set(false)}
-            class="bg-black bg-opacity-50 backdrop-blur-2xl p-2 h-screen fixed w-full z-50 top-0 left-0 flex justify-center items-center"
+            class="bg-black bg-opacity-50 backdrop-blur p-2 h-screen fixed w-full z-50 top-0 left-0 flex justify-center items-center"
         >
             <!-- modal -->
             <button
                 in:slide={{duration: 250}}
                 on:click|stopPropagation
-                class="flex border-white border-[1px] bg-black flex-col p-4 w-full items-center justify-evenly overflow-x-auto"
+                class="flex border-white border-[1px] bg-blue-800 flex-col p-4 w-full items-center justify-evenly overflow-x-auto"
             >
                 <!-- header -->
                 <div

@@ -185,31 +185,31 @@
 
         <!-- menu -->
         <div
-            class="h-screen overflow-y-auto w-full sm:w-[390px] z-30 bg-blue-950 border-slate-500 border-[1px] bg-opacity-30 backdrop-blur-2xl relative top-0 p-2 flex flex-col space-y-2 items-start"
+            class="h-screen overflow-y-auto w-full sm:w-[390px] z-30 bg-blue-700 border-slate-500 border-[1px] bg-opacity-10 backdrop-blur relative top-0 p-2 flex flex-col space-y-2 items-start"
         >
             <!-- new visualization button -->
             <button
-                on:mouseenter={() => newVisualizationToolTip = true}
-                on:mouseleave={() => newVisualizationToolTip = false}
+                on:mouseenter={() => (newVisualizationToolTip = true)}
+                on:mouseleave={() => (newVisualizationToolTip = false)}
                 on:click={() => handleCreateNewThread()}
-                class=" z-50 group absolute top-3 right-3 font-mono text-3xl font-black hover:text-white text-slate-400"
-                ><p class="transform transition-all duration-500 ease-in-out group-hover:scale-110">📝</p>
+                class=" z-50 group absolute top-4 right-4 font-mono text-3xl font-black hover:text-white text-slate-400"
+                ><p
+                    class="transform transition-all duration-500 ease-in-out group-hover:scale-110"
+                >
+                    📝
+                </p>
 
                 {#if newVisualizationToolTip}
                     <span
-                        class="text-sm absolute top-3 right-0 tooltip rounded shadow-lg px-2 pt-2 p-1 bg-black bg-opacity-25 border-white border-[1px] backdrop-blur text-white mt-8"
+                        in:fly={{duration: 200, y: -10}}
+                        class="text-sm absolute top-3 right-0 tooltip rounded shadow-lg px-2 pt-2 p-1 bg-black border-white border-[1px] text-white mt-8"
                         >new {$currentTechnique}</span
                     >
                 {/if}
-
             </button>
 
             <!-- visualizations -->
-            <!-- <h2 class="p-2 text-xl">Visualizations</h2> -->
-            <h2 class="pt-16 p-2 font-black -tracking-widest">
-                Threads
-            </h2>
-            <div class="my-4 flex flex-col p-">
+            <div class="pt-12 flex flex-col p-">
                 <Threads />
             </div>
 
@@ -223,26 +223,24 @@
         </div>
     {/if}
     <button
-        on:mouseenter={() => toggleMenuToolTip = true}
-        on:mouseleave={() => toggleMenuToolTip = false}
+        on:mouseenter={() => (toggleMenuToolTip = true)}
+        on:mouseleave={() => (toggleMenuToolTip = false)}
         on:click={() => toggleMenu()}
-        class="transform z-50 transition-all duration-500 ease-in-out group fixed top-0 left-2 font-mono text-5xl font-black hover:text-white text-slate-400"
-        >
+        class="transform z-50 transition-all duration-500 ease-in-out group fixed top-2 left-4 font-mono text-5xl font-black hover:text-white text-slate-400"
+    >
         <p class="group-hover:scale-110">✦</p>
 
         {#if toggleMenuToolTip}
             <span
-                class="text-sm absolute top-3 left-0 tooltip w-32 rounded shadow-lg px-2 pt-2 p-1 bg-black bg-opacity-25 border-white border-[1px] backdrop-blur text-white mt-8"
-                >
+                in:fly={{duration: 200, y: -10}}
+                class="text-sm absolute top-5 left-0 tooltip w-32 rounded shadow-lg px-2 pt-2 p-1 bg-black border-white border-[1px] text-white mt-8"
+            >
                 {#if $isMenuOpen}
                     close menu
                 {:else}
                     open menu
                 {/if}
-            </span
-            >
+            </span>
         {/if}
-
-    </button
-    >
+    </button>
 </SignedIn>
