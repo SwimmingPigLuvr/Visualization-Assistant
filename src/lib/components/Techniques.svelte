@@ -36,7 +36,7 @@
 {#if isDropdown}
     <button
         on:click={() => toggleTechniqueModal()}
-        class="sm:left-16  sm:-translate-x-0 relative border-transparent hover:border-white border-[1px] top-3 rounded-lg capitalize left-1/2 -translate-x-1/2 p-2 px-4 bg-black bg-opacity-100 backdrop-blur-xl"
+        class="sm:left-16 z-50 sm:-translate-x-0 relative border-transparent hover:border-white border-[1px] top-3 rounded-lg capitalize left-1/2 -translate-x-1/2 p-2 px-4 bg-black bg-opacity-100 backdrop-blur-xl"
         >{$currentTechnique}
         ✦
     </button>
@@ -51,7 +51,7 @@
             class="cursor-default z-40 w-full h-screen fixed top-0 left-0"
         ></button>
         <div
-            in:fade
+            in:fade out:fade={{ duration: 100 }}
             class="z-50 absolute top-16 sm:left-4 sm:-translate-x-0 left-1/2 -translate-x-1/2 bg-black bg-opacity-50 rounded-xl border-white border-[1px] backdrop-blur-xl max-w-sm w-[87.5vw] p-2"
         >
             <div class="flex justify-between items-center p-4">
@@ -72,10 +72,10 @@
                 <!-- Visualization -->
                 <button
                     on:click={() => chooseTechnique("visualization")}
-                    class="relative flex items-center justify-start space-x-3 p-4 hover:bg-white hover:bg-opacity-20 rounded-lg group"
+                    class="relative flex items-center justify-start space-x-3 p-4 hover:bg-lime-700 hover:bg-opacity-100 rounded-lg group"
                 >
                     <div
-                        class="bg-white bg-opacity-20 group-hover:bg-opacity-0 h-8 w-8 rounded-full"
+                        class="bg-lime-400 bg-opacity-50 group-hover:bg-opacity-100 h-8 w-8 rounded-full"
                     ></div>
                     <div class="flex flex-col text-left">
                         <p class="text-sm font-black">Visualization</p>
@@ -90,10 +90,10 @@
                 <!-- Revision -->
                 <button
                     on:click={() => chooseTechnique("revision")}
-                    class="relative flex items-center justify-start space-x-3 p-4 hover:bg-white hover:bg-opacity-20 rounded-lg group"
+                    class="relative flex items-center justify-start space-x-3 p-4 hover:bg-rose-700 hover:bg-opacity-100 rounded-lg group"
                 >
                     <div
-                        class="bg-white bg-opacity-20 group-hover:bg-opacity-0 h-8 w-8 rounded-full"
+                        class="bg-rose-400 bg-opacity-50 group-hover:bg-opacity-100 h-8 w-8 rounded-full"
                     ></div>
                     <div class="flex flex-col text-left">
                         <p class="text-sm font-black">Revision</p>
@@ -108,10 +108,10 @@
                 <!-- Affirmation -->
                 <button
                     on:click={() => chooseTechnique("affirmation")}
-                    class="relative flex items-center justify-start space-x-3 p-4 hover:bg-white hover:bg-opacity-20 rounded-lg group"
+                    class="relative flex items-center justify-start space-x-3 p-4 hover:bg-blue-700 hover:bg-opacity-100 rounded-lg group"
                 >
                     <div
-                        class="bg-white bg-opacity-20 group-hover:bg-opacity-0 h-8 w-8 rounded-full"
+                        class="bg-blue-400 bg-opacity-50 group-hover:bg-opacity-100 h-8 w-8 rounded-full"
                     ></div>
                     <div class="flex flex-col text-left">
                         <p class="text-sm font-black">Affirmation</p>

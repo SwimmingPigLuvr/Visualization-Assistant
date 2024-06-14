@@ -224,7 +224,7 @@
     <!-- chat -->
     <div
         id="chat-container"
-        class="relative m-auto p-2 w-full text-xl tracking-tight overflow-x-hidden overflow-y-auto"
+        class="relative h-full m-auto p-2 w-full text-xl tracking-tight overflow-x-hidden overflow-y-auto"
     >
         <!-- if there is at least one message -->
         {#if $messagesStore.length > 0}

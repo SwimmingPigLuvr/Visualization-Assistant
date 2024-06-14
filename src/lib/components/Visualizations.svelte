@@ -144,7 +144,7 @@
         class="group rounded-xl hover:border-slate-400 border-[1px] border-transparent w-[370px] text-left relative p-2 hover:glow"
     >
         <p
-            class="z-20 group-hover:text-opacity-100 text-opacity-75 overflow-hidden truncate -tracking-widest w-full text-white"
+            class="z-20 group-hover:text-opacity-100 text-opacity-75 overflow-hidden truncate tracking w-full text-white"
         >
             {$firstMessage}
         </p>
