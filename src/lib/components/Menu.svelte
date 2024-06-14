@@ -125,6 +125,7 @@
 
     function toggleMenu() {
         isMenuOpen.set(!$isMenuOpen);
+        toggleMenuToolTip = false;
     }
 
     function openMenu() {
@@ -185,14 +186,15 @@
 
         <!-- menu -->
         <div
-            class="h-screen overflow-y-auto w-full sm:w-[390px] z-30 bg-blue-700 border-slate-500 border-[1px] bg-opacity-10 backdrop-blur relative top-0 p-2 flex flex-col space-y-2 items-start"
+            in:fly={{x: -100, duration: 100, easing: cubicInOut}}
+            class="h-screen overflow-y-auto w-full sm:w-[390px] z-30 bg-blue-700 border-slate-500 border-[1px] bg-opacity-30 backdrop-blur relative top-0 p-2 flex flex-col space-y-2 items-start"
         >
             <!-- new visualization button -->
             <button
                 on:mouseenter={() => (newVisualizationToolTip = true)}
                 on:mouseleave={() => (newVisualizationToolTip = false)}
                 on:click={() => handleCreateNewThread()}
-                class=" z-50 group absolute top-4 right-4 font-mono text-3xl font-black hover:text-white text-slate-400"
+                class=" z-10 group absolute top-4 right-4 font-mono text-3xl font-black hover:text-white text-slate-400"
                 ><p
                     class="transform transition-all duration-500 ease-in-out group-hover:scale-110"
                 >

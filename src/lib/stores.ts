@@ -21,7 +21,7 @@ export let customInstruct = writable<string | null>(null);
 
 export let inputFocused = writable<boolean>(false);
 
-export let isMenuOpen = writable<boolean>(false);
+export let isMenuOpen = writable<boolean>(true);
 
 export let userSettings = writable<Settings>(defaultSettings);
 
@@ -40,6 +40,7 @@ export let completedMessage = writable<string>('');
 export let messagesStore = writable<Message[]>([]);
 
 
+export let threadOptionIndex = writable<number | null>(null);
 
 export let userNameStore = writable<string>('');
 export let userPfp = writable<string>('/pfps/field-aura.png');

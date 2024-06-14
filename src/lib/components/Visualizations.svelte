@@ -8,6 +8,7 @@
         isMenuOpen,
         messagesStore,
         userThreads,
+        threadOptionIndex,
     } from "$lib/stores";
     import { fade, fly, slide } from "svelte/transition";
     import {
@@ -27,8 +28,6 @@
 
     const user = userStore(auth);
 
-    let showThreadOptions = false;
-
     let showDeleteToolTip = false;
     let showDeleteButton = false;
     let showOptions = false;
@@ -36,6 +35,7 @@
     let firstMessage = writable<string>("");
 
     export let threadID: string;
+    export let index: number;
 
     async function getFirstMessage() {
         try {
@@ -134,34 +134,92 @@
     }
 
     getFirstMessage();
+
+    // close thread options by clicking anything else
+    const handleClickOutside = (event: MouseEvent) => {
+        const target = event.target as Element | null;
+        if (
+            target &&
+            !target.closest(".options-modal") &&
+            $threadOptionIndex === index
+        ) {
+            threadOptionIndex.set(-1);
+        }
+    };
+
+    onMount(() => {
+        document.addEventListener("click", handleClickOutside);
+        return () => {
+            document.removeEventListener("click", handleClickOutside);
+        };
+    });
 </script>
 
 {#if $firstMessage !== ""}
+    <!-- choose thread button -->
     <button
         on:mouseenter={() => (showOptions = true)}
         on:mouseleave={() => (showOptions = false)}
         on:click={() => setThread(threadID)}
-        class="group rounded-xl hover:border-slate-400 border-[1px] border-transparent w-[370px] text-left relative p-2 hover:glow"
+        class="group hover:border-slate-400 rounded-xl border-[1px] border-transparent w-[370px] text-left relative p-2 hover:glow"
     >
+        <!-- preview thread content -->
         <p
             class="z-20 group-hover:text-opacity-100 text-opacity-75 overflow-hidden truncate tracking w-full text-white"
         >
             {$firstMessage}
         </p>
 
-        {#if showOptions || isMobile}
-            <button
-                class="bg-black h-full text-xs group w-10 rounded-e-xl top-0 right-0 font-black z-50 items-center bg-opacity-100 absolute"
+        <!-- open thread options button -->
+        {#if $threadOptionIndex === index || showOptions || isMobile}
+            <div
+                class="bg-opacity-100 bg-black h-full text-xs px-4 group rounded-e-xl top-0 right-0 flex justify-center font-black z-10 items-center absolute"
             >
                 <button
-                    on:click|stopPropagation={() => (showThreadOptions = true)}
-                    class="relative"
-                    >✦✦✦
-                    {#if showThreadOptions}
-                        <ThreadOptions />
+                    on:click|stopPropagation={() =>
+                        threadOptionIndex.set(index)}
+                    class=""
+                    ><span class="">🚪</span>
+
+                    <!-- options modal -->
+                    {#if $threadOptionIndex === index}
+                        <!-- thread options -->
+                        <button
+                            in:slide
+                            class="z-50 absolute right-0 text-sm flex flex-col items-center p-2 rounded-2xl bg-black bg-opacity-100 backdrop-blur-2xl border-white border-[1px]"
+                        >
+                            <!-- share -->
+                            <button
+                                class="w-full p-3 rounded-xl hover:bg-blue-700 flex justify-start space-x-2"
+                            >
+                                <p>⭐️</p>
+                                <p>Favorite</p>
+                            </button>
+                            <!-- rename -->
+                            <button
+                                class="w-full p-3 rounded-xl hover:bg-blue-700 flex justify-start space-x-2"
+                            >
+                                <p>🤔</p>
+                                <p>Rename</p>
+                            </button>
+                            <!-- archive -->
+                            <button
+                                class="w-full p-3 rounded-xl hover:bg-blue-700 flex justify-start space-x-2"
+                            >
+                                <p>🗂️</p>
+                                <p>Archive</p>
+                            </button>
+                            <!-- delete -->
+                            <button
+                                class="w-full p-3 rounded-xl hover:bg-red-700 flex justify-start space-x-2"
+                            >
+                                <p>🚮</p>
+                                <p>Delete</p>
+                            </button>
+                        </button>
                     {/if}
                 </button>
-            </button>
+            </div>
         {/if}
     </button>
 {/if}
