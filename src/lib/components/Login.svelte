@@ -126,7 +126,7 @@
 </SignedIn>
 
 <SignedOut>
-    <button on:click={() => signInModalOpen.set(true)}>Sign In</button>
+    <button class="z-50 absolute top-2 right-3" on:click={() => signInModalOpen.set(true)}>Sign In</button>
 
     <!-- sign in with email -->
     {#if $signInModalOpen}

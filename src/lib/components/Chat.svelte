@@ -33,6 +33,7 @@
     import VoiceData from "./VoiceData.svelte";
     import { cubicInOut } from "svelte/easing";
     import Techniques from "./Techniques.svelte";
+    import { SignedIn } from "sveltefire";
 
     let hTwo = false;
 
@@ -216,7 +217,9 @@
     <PricingTable />
 {/if}
 
-<Techniques isDropdown />
+<SignedIn>
+    <Techniques isDropdown />
+</SignedIn>
 
 <div
     class="fixed top-0 left-0 py-16 w-full m-auto  items-center justify-center flex flex-col h-screen"

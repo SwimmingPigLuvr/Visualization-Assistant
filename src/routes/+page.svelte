@@ -11,7 +11,9 @@
 <body
     class="background-video w-full h-screen font-mono bg-slate-700 text-neutral-100"
 >
-    <Login />
+    <div class="z-50">
+        <Login />
+    </div>
 
     {#if browser}
         {#if $bgMode === "video"}
@@ -56,7 +58,7 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
-        z-index: -1;
+        z-index: -2;
     }
 
 </style>

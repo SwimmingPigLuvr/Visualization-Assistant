@@ -217,7 +217,7 @@
 
             <Voices />
 
-            <div class="absolute bottom-0">
+            <div class="p-2 w-full m-auto left-0 absolute bottom-0">
                 <Bugs />
             </div>
         </div>
