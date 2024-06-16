@@ -222,7 +222,7 @@
 </SignedIn>
 
 <div
-    class="fixed top-0 left-0 py-16 w-full m-auto  items-center justify-center flex flex-col h-screen"
+    class="fixed top-0 left-0 py-16 w-full m-auto items-center justify-center flex flex-col h-screen"
 >
     <!-- chat -->
     <div
@@ -241,7 +241,7 @@
                             class="relative rounded-2xl p-2 {message.role ===
                             'user'
                                 ? 'p-4 max-w-[80%] ml-auto bg-black bg-opacity-50 backdrop-blur-xl'
-                                : 'pl-8 pt-4'} "
+                                : 'pl-8 pt-4 mr-auto'} "
                         >
                             <div
                                 class="font-mono text-[0.9rem] sm:text-[1.1rem] leading-6 sm:leading-8"
@@ -254,6 +254,7 @@
                                     />
 
                                     {@html formatText(message.content)}
+
                                     <MessageTools
                                         message={formatText(message.content)}
                                     />
