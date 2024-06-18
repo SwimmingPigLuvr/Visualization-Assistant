@@ -40,10 +40,10 @@
     let mode: string;
 
     const modeMap: { [key: string]: string } = {
-        visualization: "visualize",
+        visualization: "Visualize your future",
         meditation: "meditate on",
-        revision: "revise",
-        affirmation: "affirm",
+        revision: "Revise an event from your past",
+        affirmation: "affirm your desire has been fulfilled",
     };
 
     $: mode = modeMap[$currentTechnique] || "";
