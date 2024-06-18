@@ -1,12 +1,12 @@
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { getAuth, setPersistence, browserSessionPersistence } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
     apiKey: "AIzaSyBW92KU1AP-kOvqt7Kwiip6nlOV1m_2lj8",
-    authDomain: "visualization-assistant.firebaseapp.com",
+    authDomain: "visualization-assistant.vercel.app",
     projectId: "visualization-assistant",
     storageBucket: "visualization-assistant.appspot.com",
     messagingSenderId: "905179929921",
@@ -19,3 +19,5 @@ export const app = initializeApp(firebaseConfig);
 export const firestore = getFirestore(app);
 export const auth = getAuth(app);
 export const storage = getStorage(app);
+
+setPersistence(auth, browserSessionPersistence);

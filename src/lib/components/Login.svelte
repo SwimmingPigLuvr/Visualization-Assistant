@@ -9,7 +9,7 @@
         signInWithEmailAndPassword,
         setPersistence,
         onAuthStateChanged,
-        browserSessionPersistence
+        browserSessionPersistence,
     } from "firebase/auth";
     import { doc, getDoc, setDoc } from "firebase/firestore";
     import { SignedIn, SignedOut } from "sveltefire";
@@ -25,19 +25,6 @@
     let password = "";
     let isSignUp = false;
     let emailInput: HTMLElement | null = null;
-
-    setPersistence(auth, browserSessionPersistence).then(() => {
-        const provider = new GoogleAuthProvider();
-        return signInWithRedirect(auth, provider);
-    });
-
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            console.log('user in:', user);
-        } else {
-            console.log('user out:', user);
-        }
-    });
 
     async function handleFormSubmit(event: SubmitEvent) {
         event.preventDefault();
@@ -80,6 +67,7 @@
 
     async function signInWithGoogle() {
         console.log("redirect sign in...");
+        await setPersistence(auth, browserSessionPersistence);
         await signInWithRedirect(auth, provider);
     }
 
@@ -127,11 +115,6 @@
         }
     });
 </script>
-
-<SignedIn let:user let:signOut>
-    <!-- <p>Hello {user.displayName}</p> -->
-    <!-- <button on:click={signOut}>Sign Out</button> -->
-</SignedIn>
 
 <SignedOut>
     <button
