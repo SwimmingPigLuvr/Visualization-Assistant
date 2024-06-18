@@ -31,7 +31,7 @@
     import { goto } from "$app/navigation";
     import PricingTable from "./PricingTable.svelte";
     import VoiceData from "./VoiceData.svelte";
-    import { cubicInOut } from "svelte/easing";
+    import { cubicIn, cubicInOut, cubicOut } from "svelte/easing";
     import Techniques from "./Techniques.svelte";
     import { SignedIn } from "sveltefire";
 
@@ -299,17 +299,10 @@
             <!-- set based on mode -->
             {#if hTwo}
                 <h2
-                    in:fade={{ delay: 500, duration: 1000, easing: cubicInOut }}
-                    class=" absolute top-1/4 left-1/2 -translate-x-1/2 font-black -tracking-widest text-xl text-center"
+                    in:fade={{ delay: 500, duration: 1500, easing: cubicOut }}
+                    class="text-glow uppercase my-4 text-[4rem] absolute top-1/4 left-1/2 -translate-x-1/2 font-black -tracking-widest text-center"
                 >
-                    What would you like to
-                    <p
-                        in:fade={{ duration: 1000 }}
-                        class="text-glow uppercase my-4 text-[4rem]"
-                    >
                         {mode}
-                    </p>
-                    today?
                 </h2>
             {/if}
         {/if}
