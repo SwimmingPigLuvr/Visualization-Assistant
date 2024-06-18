@@ -2,30 +2,42 @@
     import { auth, firestore } from "$lib/firebase";
     import {
         GoogleAuthProvider,
-        signInWithPopup,
         signInWithRedirect,
         getRedirectResult,
         type User,
         createUserWithEmailAndPassword,
-        getAuth,
         signInWithEmailAndPassword,
+        setPersistence,
+        onAuthStateChanged,
+        browserSessionPersistence
     } from "firebase/auth";
     import { doc, getDoc, setDoc } from "firebase/firestore";
     import { SignedIn, SignedOut } from "sveltefire";
     import { browser } from "$app/environment";
     import { afterUpdate, onMount } from "svelte";
     import { defaultVoiceID, signInModalOpen } from "$lib/stores";
-    import { writable } from "svelte/store";
-    import { fade, fly, slide } from "svelte/transition";
-    import { backOut, cubicInOut } from "svelte/easing";
+    import { fade, fly } from "svelte/transition";
+    import { backOut } from "svelte/easing";
 
-    // https://firebase.google.com/docs/auth/web/email-link-auth?hl=en&authuser=0&_gl=1*2fpshk*_ga*MTE1ODg4MzE0My4xNzE1Mzk1ODE4*_ga_CW55HF8NVT*MTcxNjgyMjIxOC4zMC4xLjE3MTY4MjIzMDEuNTguMC4w
-    // easy!
+    const provider = new GoogleAuthProvider();
 
     let email = "";
     let password = "";
     let isSignUp = false;
     let emailInput: HTMLElement | null = null;
+
+    setPersistence(auth, browserSessionPersistence).then(() => {
+        const provider = new GoogleAuthProvider();
+        return signInWithRedirect(auth, provider);
+    });
+
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            console.log('user in:', user);
+        } else {
+            console.log('user out:', user);
+        }
+    });
 
     async function handleFormSubmit(event: SubmitEvent) {
         event.preventDefault();
@@ -67,15 +79,8 @@
     }
 
     async function signInWithGoogle() {
-        const provider = new GoogleAuthProvider();
-        try {
-            if (browser) {
-                console.log("redirect sign in...");
-                await signInWithRedirect(auth, provider);
-            }
-        } catch (error) {
-            console.error("Error during sign in:", error);
-        }
+        console.log("redirect sign in...");
+        await signInWithRedirect(auth, provider);
     }
 
     async function handleUserSignIn(user: User) {
@@ -175,11 +180,11 @@
                         bind:value={password}
                     />
                     <button
-                        class="font-sans font-bold text-white text-xl bg-blue-700 transform transition-all duration-500 ease-in-out  border-transparent border-[1px] hover:border-white hover:border-[1px] p-3 rounded-xl"
-                        type="submit">
-                            <p class="">Visualize Your Goals now ➔</p>
-                    </button
+                        class="font-sans font-bold text-white text-xl bg-blue-700 transform transition-all duration-500 ease-in-out border-transparent border-[1px] hover:border-white hover:border-[1px] p-3 rounded-xl"
+                        type="submit"
                     >
+                        <p class="">Visualize Your Goals now ➔</p>
+                    </button>
                 </form>
 
                 <p>or</p>
