@@ -52,12 +52,9 @@ body {
 }
 
 .glow {
-    box-shadow: 0 0 2px #ffffff, /* Small white glow */
-                 0 0 5px #ffffff, /* Larger white glow */
-                 0 0 10px #ffffff, /* Even larger white glow */
-                 0 0 10px #0275e8, /* Even larger white glow */
-                 0 0 100px #000000, /* Even larger white glow */
-                 0 0 50px #ffffff; /* Even larger white glow */
+    box-shadow: 0 0 5px #ffffff,
+                 0 0 10px #ffffff,
+                 0 0 20px #ffffff;
 }
 
 .text-glow {
@@ -73,11 +70,7 @@ body {
 .hover-glow:hover {
     box-shadow: 0 0 5px #ffffff, /* Small white glow */
                 0 0 10px #ffffff, /* Larger white glow */
-                0 0 20px #ffffff, /* Even larger white glow */
-                0 0 40px #ff00ff, /* Pink outer glow */
-                0 0 80px #ff00ff, /* Larger pink glow */
-                0 0 100px #ff00ff, /* Even larger pink glow */
-                0 0 200px #ff00ff; /* Largest pink glow */
+                0 0 20px #ffffff; /* Even larger white glow */
 }
 
 .hover-text-glow {
