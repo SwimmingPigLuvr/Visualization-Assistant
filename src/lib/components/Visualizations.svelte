@@ -161,7 +161,7 @@
         on:mouseenter={() => (showOptions = true)}
         on:mouseleave={() => (showOptions = false)}
         on:click={() => setThread(threadID)}
-        class="group hover:border-slate-400 rounded-xl border-[1px] border-transparent sm:w-[370px] w-[490px] text-left relative p-2 hover:glow"
+        class="hover-glow group hover:border-slate-400 rounded-xl border-[1px] border-transparent sm:w-[370px] w-[490px] text-left relative p-2 hover:glow"
     >
         <!-- preview thread content -->
         <p

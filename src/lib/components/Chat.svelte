@@ -305,7 +305,7 @@
                     What would you like to
                     <p
                         in:fade={{ duration: 1000 }}
-                        class="text-lime-300 uppercase my-4 text-[4rem]"
+                        class="text-glow uppercase my-4 text-[4rem]"
                     >
                         {mode}
                     </p>

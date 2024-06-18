@@ -139,13 +139,13 @@
         <button
             in:fade
             on:click={() => signInModalOpen.set(false)}
-            class="z-40 w-full h-screen bg-black bg-opacity-75 inset-0 fixed top-0 left-0 p-4"
+            class="z-40 w-full h-screen bg-black bg-opacity-50 inset-0 fixed top-0 left-0 p-4"
         >
             <!-- modal -->
             <button
-                in:fly={{ y: 10, duration: 1000, easing: backOut }}
+                in:fly={{ y: 100, duration: 1000, easing: backOut }}
                 on:click|stopPropagation
-                class="top-0 -translate-y-1/4 left-1/2 -translate-x-1/2 z-50 flex items-center rounded-2xl flex-col space-y-4 w-full max-w-[28rem] relative p-4 sm:p-12 border-slate-600 border-[1px] bg-black"
+                class="glow top-0 -translate-y-1/4 left-1/2 -translate-x-1/2 z-50 flex items-center rounded-2xl flex-col space-y-4 w-full max-w-[28rem] relative p-4 sm:p-12 border-slate-600 border-[1px] bg-black"
             >
                 <form
                     class="text-left flex flex-col space-y-2 w-full"
@@ -175,8 +175,10 @@
                         bind:value={password}
                     />
                     <button
-                        class="font-sans font-bold text-xl bg-blue-700 transform transition-all duration-500 ease-in-out hover:bg-sky-400 border-transparent border-[1px] hover:border-white hover:border-[1px] p-3 rounded-xl"
-                        type="submit">Visualize Your Goals now ➔</button
+                        class="font-sans font-bold text-white text-xl bg-blue-700 transform transition-all duration-500 ease-in-out  border-transparent border-[1px] hover:border-white hover:border-[1px] p-3 rounded-xl"
+                        type="submit">
+                            <p class="">Visualize Your Goals now ➔</p>
+                    </button
                     >
                 </form>
 
