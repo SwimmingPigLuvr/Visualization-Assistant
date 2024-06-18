@@ -1,72 +1,58 @@
-import axios from 'axios';
-import { browser } from '$app/environment';
-import { currentAudio, isLoading, isPlaying, audioSource } from '$lib/stores';
+// utils/streamTextToSpeech.ts
+import { audioSource, isLoading, isPlaying } from '$lib/stores';
 
-async function streamTextToSpeech(
-    text: string,
-    voiceID: string,
-    retries: number = 3,
-) {
-    const plainText = stripHtmlTags(text);
-    console.log("streamTextToSpeech function: ", plainText);
-    // listenToolTip = false;
-    if (!browser) return;
+export async function streamTextToSpeech(text: string, voiceID: string, retries: number = 3): Promise<void> {
+  const plainText = stripHtmlTags(text);
+  if (!text || !voiceID) throw new Error('Text or voiceID is missing');
 
-    isLoading.set(true);
-    isPlaying.set(false);
+  isLoading.set(true);
+  isPlaying.set(false);
 
-    for (let attempt = 1; attempt <= retries; attempt++) {
-        try {
-            const response = await fetch('/api/xi-stream', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ text: plainText, voiceID }),
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      const response = await fetch('/api/xi-stream', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: plainText, voiceID }),
+      });
+
+      if (!response.ok) throw new Error(`Failed: ${response.statusText}`);
+
+      const reader = response.body?.getReader();
+      const stream = new ReadableStream({
+        start(controller) {
+          function push() {
+            reader.read().then(({ done, value }) => {
+              if (done) {
+                controller.close();
+                return;
+              }
+              controller.enqueue(value);
+              push();
             });
+          }
 
-            if (response.ok) {
-                const reader = response.body?.getReader();
-                const audioChunks = [];
-
-                if (reader) {
-                    while (true) {
-                        const { done, value } = await reader.read();
-                        if (done) break;
-                        audioChunks.push(value);
-                    }
-
-                    const audioBuffer = new Blob(audioChunks);
-                    const url = URL.createObjectURL(audioBuffer);
-                    audioSource.set(url);
-                    isPlaying.set(true);
-                    isLoading.set(false);
-                    return;
-                }
-            } else {
-                console.error(
-                    'Failed to convert text to speech:',
-                    response.statusText,
-                );
-            }
-        } catch (error) {
-            console.error(`Attempt ${attempt} failed:`, error);
-            if (attempt < retries) {
-                console.log(`Retrying... (${attempt}/${retries})`);
-                await new Promise((res) => setTimeout(res, 1000));
-            } else {
-                isLoading.set(false);
-                console.error(
-                    'Failed to convert text to speech after multiple attempts.',
-                );
-            }
+          push();
         }
+      });
+
+      const audioURL = URL.createObjectURL(new Blob([stream], { type: 'audio/mpeg' }));
+      audioSource.set(audioURL);
+      isPlaying.set(true);
+      isLoading.set(false);
+      return;
+
+    } catch (error) {
+      if (attempt >= retries) {
+        isLoading.set(false);
+        throw error;
+      }
+      await new Promise(res => setTimeout(res, 1000));
     }
+  }
 }
 
-// Function to strip HTML tags
-function stripHtmlTags(inputText) {
-    return inputText.replace(/<[^>]*>/g, "");
+function stripHtmlTags(inputText: string): string {
+  return inputText.replace(/<[^>]*>/g, "");
 }
 
-export { streamTextToSpeech };

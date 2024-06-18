@@ -5,11 +5,11 @@ import type { RequestHandler } from '@sveltejs/kit';
 export const POST: RequestHandler = async ({ request }) => {
   try {
     const { text, voiceID } = await request.json();
-    console.log('Received request to /api/xi-stream. VoiceID:', voiceID, 'Text:', text);
+    if (!text || !voiceID) {
+      return new Response(JSON.stringify({ error: 'Text or voiceID is missing' }), { status: 400 });
+    }
 
-    // ElevenLabs API URL with voice ID path parameter
     const url = `https://api.elevenlabs.io/v1/text-to-speech/${voiceID}/stream`;
-    console.log('ElevenLabs API URL:', url);
 
     const headers = {
       "Accept": "audio/mpeg",
@@ -18,18 +18,17 @@ export const POST: RequestHandler = async ({ request }) => {
     };
 
     const data = {
-      text: text,
+      text,
       model_id: "eleven_monolingual_v1",
     };
 
     const response = await fetch(url, {
       method: 'POST',
-      headers: headers,
+      headers,
       body: JSON.stringify(data)
     });
 
     if (!response.ok) {
-      console.error('Error response from ElevenLabs API:', response.status, response.statusText);
       return new Response(JSON.stringify({ error: 'Failed to convert text to speech' }), { status: response.status });
     }
 
@@ -43,14 +42,14 @@ export const POST: RequestHandler = async ({ request }) => {
       }
     }
 
-    const audioBuffer = new Blob(chunks);
+    const audioBuffer = new Blob(chunks, { type: 'audio/mpeg' });
     return new Response(audioBuffer, {
       headers: {
         'Content-Type': 'audio/mpeg'
       }
     });
   } catch (error) {
-    console.error('Error in /api/xi-stream handler:', error);
     return new Response(JSON.stringify({ error: 'Internal Server Error' }), { status: 500 });
   }
 };
+
