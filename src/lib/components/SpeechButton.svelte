@@ -170,6 +170,7 @@
         src={$audioSource}
         on:play={() => isPlaying.set(true)}
         on:pause={() => isPlaying.set(false)}
+        on:ended={() => isPlaying.set(false)}
         autoplay
         loop={isLooped}
     />
