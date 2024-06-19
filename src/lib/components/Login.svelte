@@ -133,7 +133,7 @@
             <button
                 in:fly={{ y: 100, duration: 1000, easing: backOut }}
                 on:click|stopPropagation
-                class="glow top-0 -translate-y-1/4 left-1/2 -translate-x-1/2 z-50 flex items-center rounded-2xl flex-col space-y-4 w-full max-w-[28rem] relative p-4 sm:p-12 border-slate-600 border-[1px] bg-black"
+                class="glow -top-1/4 left-1/2 -translate-x-1/2 z-50 flex items-center rounded-2xl flex-col space-y-4 w-full max-w-[28rem] relative p-4 sm:p-12 border-slate-600 border-[1px] bg-black"
             >
                 <form
                     class="text-left flex flex-col space-y-2 w-full"
