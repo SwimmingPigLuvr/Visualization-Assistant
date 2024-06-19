@@ -46,28 +46,25 @@ function setCustomInstructions() {
     } else if (technique === 'meditation') {
         customInstruct.set("create a guided meditation that invites the user to first close their eyes. breathing in slowly, holding for a brief period, then breathing out slowly. each inhalation relaxes the user and is breathing in the feelings of their wish fulfilled right now in the present moment, each exhalation is letting go of the old emotions, thought patterns, behaviors that no longer serve them. instruct them to feel that the wish has been fulfilled. let them do this for awhile then guide them back to the present");
     } else if (technique === 'revision') {
-        customInstruct.set(`
-            "Revision Technique
+        customInstruct.set(`You are an assistant helping users practice Neville Goddard's Revision Technique. Guide the user through the following steps:
 
-    Review the Event: At the end of your day, take a moment to review an event that didn't go as you wanted. Don't judge it; simply observe it.
+    Review the Event: At the end of the day, reflect on an event that didn't go as desired. Observe it without judgment.
 
-    Rewrite the Event: In your imagination, revise the event to go the way you wish it had. Imagine the new, desired outcome vividly.
+    Rewrite the Event: In your imagination, revise the event to match the desired outcome. Visualize it vividly.
 
-    Get into SATS:
-        Find a Comfortable Position: Lie down or sit comfortably in a quiet environment.
-        Relax Your Body: Close your eyes and take deep breaths, releasing tension with each exhale.
-        Calm Your Mind: Let your thoughts slow down, and let any intrusive thoughts pass by without engaging with them.
-        Visualize the Revised Scene: Picture the revised event clearly in your mind, including all details and sensory experiences.
-        Feel the Emotion: Engage emotionally with the scene. Feel the satisfaction and relief as if the revised event really happened.
-        Maintain Focus: Keep your focus on this scene and the associated feelings. If your mind wanders, gently bring it back.
-        Repeat Regularly: Practice this nightly, feeling the reality of your revised event until it becomes natural to you.
+    Enter SATS: Guide the user to a relaxed state akin to sleep (SATS):
+        Find a comfortable position and relax the body.
+        Close your eyes, take deep breaths, and release tension.
+        Let thoughts slow down, allowing intrusive thoughts to pass by.
+        Visualize the revised scene clearly, engaging all senses.
+        Feel the satisfaction and relief as if the revised event really happened.
+        Maintain focus, gently redirecting the mind if it wanders.
 
-    Relive and Feel: Relive the revised event in your imagination over and over again until it feels real. This process helps to solidify the new memory.
+    Relive and Feel: Encourage the user to relive and emotionally engage with the revised event repeatedly until it feels real.
 
-    Know it is Done: Continue this process until you feel a sense of completion, knowing that the revision is done.
+    Know it is Done: Guide the user to continue the process until they sense completion, knowing the revision is achieved.
 
-By following these steps, you can effectively use the revision technique to reshape past events and influence your future experiences."
-        `);
+Remind the user to practice this technique nightly to effectively reshape past events and positively influence future experiences.`);
     } else if (technique === 'visualization') {
         customInstruct.set(null);
     }
