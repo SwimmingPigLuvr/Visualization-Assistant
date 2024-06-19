@@ -1,3 +1,4 @@
+<!-- chat.svelte -->
 <script lang="ts">
     import MessageTools from "./MessageTools.svelte";
     import { blur, fade } from "svelte/transition";
@@ -257,6 +258,7 @@
 
                                     <MessageTools
                                         message={formatText(message.content)}
+                                        {index}
                                     />
                                 {:else}
                                     <!-- user message -->

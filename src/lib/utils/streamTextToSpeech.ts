@@ -1,12 +1,23 @@
 // utils/streamTextToSpeech.ts
 import { audioSource, isLoading, isPlaying } from '$lib/stores';
 
-export async function streamTextToSpeech(text: string, voiceID: string, retries: number = 3) {
+export async function streamTextToSpeech(
+    text: string, 
+    voiceID: string, 
+    index: number,
+    retries: number = 3,
+) {
     const plainText = stripHtmlTags(text);
     console.log("streamTextToSpeech function: ", plainText);
     
-    isLoading.set(true);
-    isPlaying.set(false);
+    isLoading.update(n => {
+        n[index] = true;
+        return n;
+    })
+    isPlaying.update(n => {
+        n[index] = false;
+        return n;
+    })
 
     for (let attempt = 1; attempt <= retries; attempt++) {
         try {
@@ -31,9 +42,20 @@ export async function streamTextToSpeech(text: string, voiceID: string, retries:
 
                     const audioBuffer = new Blob(audioChunks, { type: 'audio/mpeg' });
                     const url = URL.createObjectURL(audioBuffer);
-                    audioSource.set(url);
-                    isPlaying.set(true);
-                    isLoading.set(false);
+                    audioSource.update(n => {
+                        n[index] = url;
+                        return n;
+                    });
+
+                    isLoading.update(n => {
+                        n[index] = true;
+                        return n;
+                    });
+                    isPlaying.update(n => {
+                        n[index] = false;
+                        return n;
+                    });
+
                     return;
                 }
             } else {
