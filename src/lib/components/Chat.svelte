@@ -300,7 +300,7 @@
             {#if hTwo}
                 <h2
                     in:fade={{ delay: 500, duration: 1500, easing: cubicOut }}
-                    class="leading-[3.3rem] text-glow  uppercase my-4 text-[4rem] absolute top-10 left-1/2 -translate-x-1/2 font-black -tracking-widest text-center"
+                    class="leading-[3.3rem] text-dreamy uppercase my-4 text-[4rem] absolute sm:top-1/4 top-10 left-1/2 -translate-x-1/2 font-black -tracking-widest text-center"
                 >
                     {mode}
                 </h2>

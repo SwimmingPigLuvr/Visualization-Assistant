@@ -46,7 +46,28 @@ function setCustomInstructions() {
     } else if (technique === 'meditation') {
         customInstruct.set("create a guided meditation that invites the user to first close their eyes. breathing in slowly, holding for a brief period, then breathing out slowly. each inhalation relaxes the user and is breathing in the feelings of their wish fulfilled right now in the present moment, each exhalation is letting go of the old emotions, thought patterns, behaviors that no longer serve them. instruct them to feel that the wish has been fulfilled. let them do this for awhile then guide them back to the present");
     } else if (technique === 'revision') {
-        customInstruct.set("Guide the user through the technique of revision. Ask them to review an event that didn't go the way they wanted it to go, without judgment, just review it. Instruct them to rewrite and revise the event in their imagination the way they wish it would have gone. Then, guide them to get into the state akin to sleep (SATS), where they feel completely relaxed. Tell them to relive the revised event in their imagination over and over again until it starts feeling as though it actually happened that way. They should continue this until they either fall asleep or wake up from the drowsy state knowing that the revision is done. Emphasize that through this method, they can revise any unwanted event and will notice changes for the better in the coming days and weeks.");
+        customInstruct.set(`
+            "Revision Technique
+
+    Review the Event: At the end of your day, take a moment to review an event that didn't go as you wanted. Don't judge it; simply observe it.
+
+    Rewrite the Event: In your imagination, revise the event to go the way you wish it had. Imagine the new, desired outcome vividly.
+
+    Get into SATS:
+        Find a Comfortable Position: Lie down or sit comfortably in a quiet environment.
+        Relax Your Body: Close your eyes and take deep breaths, releasing tension with each exhale.
+        Calm Your Mind: Let your thoughts slow down, and let any intrusive thoughts pass by without engaging with them.
+        Visualize the Revised Scene: Picture the revised event clearly in your mind, including all details and sensory experiences.
+        Feel the Emotion: Engage emotionally with the scene. Feel the satisfaction and relief as if the revised event really happened.
+        Maintain Focus: Keep your focus on this scene and the associated feelings. If your mind wanders, gently bring it back.
+        Repeat Regularly: Practice this nightly, feeling the reality of your revised event until it becomes natural to you.
+
+    Relive and Feel: Relive the revised event in your imagination over and over again until it feels real. This process helps to solidify the new memory.
+
+    Know it is Done: Continue this process until you feel a sense of completion, knowing that the revision is done.
+
+By following these steps, you can effectively use the revision technique to reshape past events and influence your future experiences."
+        `);
     } else if (technique === 'visualization') {
         customInstruct.set(null);
     }

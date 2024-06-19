@@ -9,7 +9,7 @@
 </script>
 
 <body
-    class="background-video w-full h-screen font-mono bg-slate-700 text-neutral-100"
+    class="w-full h-screen font-mono text-neutral-100"
 >
     <div class="z-50">
         <Login />
