@@ -7,7 +7,7 @@ export async function streamTextToSpeech(
     voiceID: string, 
     index: number,
     retries: number = 3,
-    backoff: number = 1000;
+    backoff: number = 1000,
 ) {
     const plainText = stripHtmlTags(text);
     console.log("streamTextToSpeech function: ", plainText);
