@@ -30,7 +30,7 @@ export async function streamTextToSpeech(
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ text: plainText, voiceID }),
-                timeout: backoff * attempt;
+                timeout: backoff * attempt,
             });
 
             if (response.ok) {
