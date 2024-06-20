@@ -73,7 +73,7 @@
 
     async function handleStreamTextToSpeech() {
         const formattedText = formatText(message);
-        console.log("streamTextToSpeech function: ", formatText);
+        console.log("streamTextToSpeech function: ", formattedText);
         if (formattedText && $currentVoiceID) {
             await streamTextToSpeech(formattedText, $currentVoiceID);
         } else {
