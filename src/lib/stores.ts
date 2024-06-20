@@ -3,8 +3,8 @@ import { defaultSettings, type Message, type Settings } from "$lib/types";
 
 export let audioSource = writable<string>("");
 export let currentVoiceID = writable<string>('286VLndcKwmm1RxLQoOn');
-export let isLoading = writable<boolean[]>([]);
-export let isPlaying = writable<boolean[]>([]);
+export let isLoading = writable<boolean>(false);
+export let isPlaying = writable<boolean>(false);
 
 
 export let currentAudio = writable<Audio | null>(null);

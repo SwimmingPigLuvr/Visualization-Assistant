@@ -2,36 +2,21 @@
 import { browser } from '$app/environment';
 import { audioSource, isLoading, isPlaying } from '$lib/stores';
 
-function initArray<T>(array: T[], length: number, defaultValue: T): T[] {
-    for (let i = 0; i < length; i++) {
-        if (array[i] === undefined) {
-            array[i] = defaultValue;
-        }
-    }
-    return array;
-}
-
 export async function streamTextToSpeech(
     text: string, 
     voiceID: string, 
-    index: number,
     retries: number = 3,
 ) {
     const plainText = stripHtmlTags(text);
     console.log("streamTextToSpeech function: ", plainText);
     if (!browser) return;
     
-    // init arrays
-    isLoading.update(n => initArray(n, index + 1, false));
-    isPlaying.update(n => initArray(n, index + 1, false));
-    audioSource.update(n => initArray(n, index + 1, ''));
-
     isLoading.update(n => {
-        n[index] = true;
+        n = true;
         return n;
     });
     isPlaying.update(n => {
-        n[index] = false;
+        n = false;
         return n;
     });
 
@@ -59,17 +44,17 @@ export async function streamTextToSpeech(
                     const audioBuffer = new Blob(audioChunks, { type: 'audio/mpeg' });
                     const url = URL.createObjectURL(audioBuffer);
                     audioSource.update(n => {
-                        n[index] = url;
+                        n = url;
                         return n;
                     });
 
                     isPlaying.update(n => {
-                        n[index] = true;
+                        n = true;
                         return n;
                     });
 
                     isLoading.update(n => {
-                        n[index] = false;
+                        n = false;
                         return n;
                     });
 
@@ -88,7 +73,7 @@ export async function streamTextToSpeech(
                 await new Promise((res) => setTimeout(res, 1000));
             } else {
                 isLoading.update(n => {
-                    n[index] = false;
+                    n = false;
                     return n;
                 });
                 console.error(
