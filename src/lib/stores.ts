@@ -1,12 +1,17 @@
 import { writable } from "svelte/store";
+import { browser } from '$app/environment';
 import { defaultSettings, type Message, type Settings } from "$lib/types";
 
 export let currentVoiceID = writable<string>('286VLndcKwmm1RxLQoOn');
 
-export let globalAudioPlayer = writable(new Audio());
+export let globalAudioPlayer = writable<null | HTMLAudioElement>(null);
 export let audioSource = writable([]);
 export let isLoading = writable([]);
 export let isPlaying = writable([]);
+
+if (browser) {
+    globalAudioPlayer.set(new Audio());
+}
 
 
 export let currentAudio = writable<Audio | null>(null);
