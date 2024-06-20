@@ -1,6 +1,15 @@
 // utils/streamTextToSpeech.ts
 import { audioSource, isLoading, isPlaying } from '$lib/stores';
 
+function initArray<T>(array: T[], length: number, defaultValue: T): T[] {
+    for (let i = 0; i < length; i++) {
+        if (array[i] === undefined) {
+            array[i] = defaultValue;
+        }
+    }
+    return array;
+}
+
 export async function streamTextToSpeech(
     text: string, 
     voiceID: string, 
@@ -9,15 +18,21 @@ export async function streamTextToSpeech(
 ) {
     const plainText = stripHtmlTags(text);
     console.log("streamTextToSpeech function: ", plainText);
+    if (!browser) return;
     
+    // init arrays
+    isLoading.update(n => initArray(n, index + 1, false));
+    isPlaying.update(n => initArray(n, index + 1, false));
+    audioSource.update(n => initArray(n, index + 1, ''));
+
     isLoading.update(n => {
         n[index] = true;
         return n;
-    })
+    });
     isPlaying.update(n => {
         n[index] = false;
         return n;
-    })
+    });
 
     for (let attempt = 1; attempt <= retries; attempt++) {
         try {
@@ -47,11 +62,12 @@ export async function streamTextToSpeech(
                         return n;
                     });
 
-                    isLoading.update(n => {
+                    isPlaying.update(n => {
                         n[index] = true;
                         return n;
                     });
-                    isPlaying.update(n => {
+
+                    isLoading.update(n => {
                         n[index] = false;
                         return n;
                     });
@@ -70,7 +86,10 @@ export async function streamTextToSpeech(
                 console.log(`Retrying... (${attempt}/${retries})`);
                 await new Promise((res) => setTimeout(res, 1000));
             } else {
-                isLoading.set(false);
+                isLoading.update(n => {
+                    n[index] = false;
+                    return n;
+                });
                 console.error(
                     'Failed to convert text to speech after multiple attempts.',
                 );
