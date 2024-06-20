@@ -1,4 +1,5 @@
 // utils/streamTextToSpeech.ts
+import { browser } from '$app/environment';
 import { audioSource, isLoading, isPlaying } from '$lib/stores';
 
 function initArray<T>(array: T[], length: number, defaultValue: T): T[] {
