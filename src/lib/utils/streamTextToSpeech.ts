@@ -1,10 +1,11 @@
 // utils/streamTextToSpeech.ts
 import { browser } from '$app/environment';
-import { audioSource, isLoading, isPlaying } from '$lib/stores';
+import { globalAudioPlayer, audioSource, isLoading, isPlaying } from '$lib/stores';
 
 export async function streamTextToSpeech(
     text: string, 
     voiceID: string, 
+    index: number,
     retries: number = 3,
 ) {
     const plainText = stripHtmlTags(text);
@@ -12,11 +13,11 @@ export async function streamTextToSpeech(
     if (!browser) return;
     
     isLoading.update(n => {
-        n = true;
+        n[index] = true;
         return n;
     });
     isPlaying.update(n => {
-        n = false;
+        n[index] = false;
         return n;
     });
 
@@ -43,18 +44,25 @@ export async function streamTextToSpeech(
 
                     const audioBuffer = new Blob(audioChunks, { type: 'audio/mpeg' });
                     const url = URL.createObjectURL(audioBuffer);
+
                     audioSource.update(n => {
-                        n = url;
+                        n[index] = url;
                         return n;
                     });
 
+                    globalAudioPlayer.update(audioPlayer => {
+                        audioPlayer.src = url;
+                        audioPlayer.play();
+                        return audioPlayer;
+                    });
+
                     isPlaying.update(n => {
-                        n = true;
+                        n[index] = true;
                         return n;
                     });
 
                     isLoading.update(n => {
-                        n = false;
+                        n[index] = false;
                         return n;
                     });
 
@@ -73,7 +81,7 @@ export async function streamTextToSpeech(
                 await new Promise((res) => setTimeout(res, 1000));
             } else {
                 isLoading.update(n => {
-                    n = false;
+                    n[index] = false;
                     return n;
                 });
                 console.error(

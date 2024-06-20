@@ -6,11 +6,14 @@
         isLoading,
         isPlaying,
         currentTechnique,
+        globalAudioPlayer,
     } from "$lib/stores";
     import { formatText } from "$lib/api";
     import { streamTextToSpeech } from "$lib/utils/streamTextToSpeech";
+    import { get } from "svelte/store";
 
     export let message: string;
+    export let index: number;
 
     let listenToolTip = false;
     let pauseTooltip = false;
@@ -23,14 +26,14 @@
     let loopTooltip = false;
     let isLooped = false;
 
-    let audioPlayer: HTMLAudioElement;
+    let audioPlayer = get(globalAudioPlayer);
 
     function downloadAudio() {
         downloaded = false;
         downloadStatus = "in progress";
-        if ($audioSource) {
+        if ($audioSource[index]) {
             const a = document.createElement("a");
-            a.href = $audioSource;
+            a.href = $audioSource[index];
             a.download = `custom_${$currentTechnique}.mp3`;
             a.style.display = "none";
             document.body.appendChild(a);
@@ -46,13 +49,14 @@
     }
 
     function togglePlayBack() {
-        if ($isPlaying) {
+        const audioPlayer = $globalAudioPlayer;
+        if ($isPlaying[index]) {
             audioPlayer.pause();
         } else {
             audioPlayer.play();
         }
         isPlaying.update((n) => {
-            n = !$isPlaying;
+            n[index] = !$isPlaying[index];
             return n;
         });
     }
@@ -62,10 +66,11 @@
     }
 
     function resumeAudio() {
-        if ($audioSource) {
+        if ($audioSource[index]) {
+            audioPlayer.src = $audioSource[index];
             audioPlayer.play();
-            isPlaying.update((n) => {
-                n = true;
+            isPlaying.update(n => {
+                n[index] = true;
                 return n;
             });
         }
@@ -75,7 +80,7 @@
         const formattedText = formatText(message);
         console.log("streamTextToSpeech function: ", formattedText);
         if (formattedText && $currentVoiceID) {
-            await streamTextToSpeech(formattedText, $currentVoiceID);
+            await streamTextToSpeech(formattedText, $currentVoiceID, index);
         } else {
             console.error("text or voice id is missing");
         }
@@ -83,7 +88,7 @@
 </script>
 
 <div>
-    {#if $isLoading}
+    {#if $isLoading[index]}
         <button
             on:mouseenter={() => (loadingSpeechTooltip = true)}
             on:mouseleave={() => (loadingSpeechTooltip = false)}
@@ -97,7 +102,7 @@
             {/if}
             <p class="animate-spin">💿</p>
         </button>
-    {:else if $isPlaying}
+    {:else if $isPlaying[index]}
         <button
             on:mouseenter={() => (pauseTooltip = true)}
             on:mouseleave={() => (pauseTooltip = false)}
@@ -112,7 +117,7 @@
             {/if}
             ⏸️
         </button>
-    {:else if $audioSource}
+    {:else if $audioSource[index]}
         <button
             on:mouseenter={() => (listenToolTip = true)}
             on:mouseleave={() => (listenToolTip = false)}
@@ -149,7 +154,7 @@
     {/if}
 </div>
 
-{#if $audioSource}
+{#if $audioSource[index]}
     <button
         on:click={toggleLoopAudio}
         on:mouseenter={() => (loopTooltip = true)}
@@ -180,20 +185,20 @@
     </button>
     <audio
         bind:this={audioPlayer}
-        src={$audioSource}
-        on:play={() =>
-            isPlaying.update((n) => {
-                n = true;
+        src={$audioSource[index]}
+        on:play={() => 
+            isPlaying.update(n => {
+                n[index] = true;
                 return n;
             })}
         on:pause={() =>
             isPlaying.update((n) => {
-                n = false;
+                n[index] = false;
                 return n;
             })}
         on:ended={() =>
             isPlaying.update((n) => {
-                n = false;
+                n[index] = false;
                 return n;
             })}
         autoplay
