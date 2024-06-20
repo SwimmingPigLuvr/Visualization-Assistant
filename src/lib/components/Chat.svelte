@@ -235,7 +235,7 @@
             <ul class="max-w-xl sm:max-w-2xl mx-auto py-0">
                 {#each $messagesStore as message}
                     <div
-                        in:fade={{ duration: 1500 }}
+                        in:fade={{ duration: 500 }}
                         class="my-4 flex justify-end"
                     >
                         <li
