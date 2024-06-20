@@ -7,6 +7,7 @@
     let regenerateToolTip = false;
 
     export let message: string;
+    export let index: number;
 
     let copied = false;
 
@@ -27,7 +28,7 @@
     class="transform transition-all duration-500 ease-in-out flex items-center justify-start space-x-3 mt-2 mb-8 -translate-x-2"
 >
     <!-- text to speech button -->
-    <SpeechButton {message} />
+    <SpeechButton {message} {index}/>
     <!-- copy to clipboard button -->
     <button
         on:mouseenter={() => (copyToolTip = true)}

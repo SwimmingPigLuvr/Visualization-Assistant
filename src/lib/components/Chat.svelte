@@ -233,7 +233,7 @@
         <!-- if there is at least one message -->
         {#if $messagesStore.length > 0}
             <ul class="max-w-xl sm:max-w-2xl mx-auto py-0">
-                {#each $messagesStore as message}
+                {#each $messagesStore as message, index}
                     <div
                         in:fade={{ duration: 500 }}
                         class="my-4 flex justify-end"
@@ -258,6 +258,7 @@
 
                                     <MessageTools
                                         message={formatText(message.content)}
+                                        {index}
                                     />
                                 {:else}
                                     <!-- user message -->
