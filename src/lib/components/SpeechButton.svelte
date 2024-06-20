@@ -79,7 +79,7 @@
         const formattedText = formatText(message);
         console.log("streamTextToSpeech function: ", formatText);
         if (formattedText && $currentVoiceID) {
-            await streamTextToSpeech(formattedText, $currentVoiceID);
+            await streamTextToSpeech(formattedText, $currentVoiceID, index);
         } else {
             console.error("text or voice id is missing");
         }

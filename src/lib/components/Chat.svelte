@@ -233,7 +233,7 @@
         <!-- if there is at least one message -->
         {#if $messagesStore.length > 0}
             <ul class="max-w-xl sm:max-w-2xl mx-auto py-0">
-                {#each $messagesStore as message, index}
+                {#each $messagesStore as message, index (message.id)}
                     <div
                         in:fade={{ duration: 1500 }}
                         class="my-4 flex justify-end"
