@@ -4,15 +4,10 @@ import { defaultSettings, type Message, type Settings } from "$lib/types";
 
 export let currentVoiceID = writable<string>('286VLndcKwmm1RxLQoOn');
 
-export let globalAudioPlayer = writable<null | HTMLAudioElement>(null);
-export let audioSource = writable([]);
-export let isLoading = writable([]);
-export let isPlaying = writable([]);
-
-if (browser) {
-    globalAudioPlayer.set(new Audio());
-}
-
+export let globalAudioPlayer = writable<HTMLAudioElement>(new Audio());
+export let audioSource = writable<string[]>([]);
+export let isLoading = writable<boolean[]>([]);
+export let isPlaying = writable<boolean[]>([]);
 
 export let currentAudio = writable<Audio | null>(null);
 

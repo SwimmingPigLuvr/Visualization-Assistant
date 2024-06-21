@@ -10,7 +10,6 @@
     } from "$lib/stores";
     import { formatText } from "$lib/api";
     import { streamTextToSpeech } from "$lib/utils/streamTextToSpeech";
-    import { get } from "svelte/store";
 
     export let message: string;
     export let index: number;
@@ -26,7 +25,10 @@
     let loopTooltip = false;
     let isLooped = false;
 
-    let audioPlayer = get(globalAudioPlayer);
+    let audioPlayer: HTMLAudioElement;
+    $: {
+        audioPlayer = $globalAudioPlayer;
+    }
 
     function downloadAudio() {
         downloaded = false;
@@ -49,7 +51,6 @@
     }
 
     function togglePlayBack() {
-        const audioPlayer = $globalAudioPlayer;
         if ($isPlaying[index]) {
             audioPlayer.pause();
         } else {
@@ -69,7 +70,7 @@
         if ($audioSource[index]) {
             audioPlayer.src = $audioSource[index];
             audioPlayer.play();
-            isPlaying.update(n => {
+            isPlaying.update((n) => {
                 n[index] = true;
                 return n;
             });
@@ -78,7 +79,6 @@
 
     async function handleStreamTextToSpeech() {
         const formattedText = formatText(message);
-        console.log("streamTextToSpeech function: ", formattedText);
         if (formattedText && $currentVoiceID) {
             await streamTextToSpeech(formattedText, $currentVoiceID, index);
         } else {
@@ -186,8 +186,8 @@
     <audio
         bind:this={audioPlayer}
         src={$audioSource[index]}
-        on:play={() => 
-            isPlaying.update(n => {
+        on:play={() =>
+            isPlaying.update((n) => {
                 n[index] = true;
                 return n;
             })}
