@@ -45,7 +45,7 @@ export async function streamTextToSpeech(
                     const audioBuffer = new Blob(audioChunks, { type: 'audio/mpeg' });
                     const url = URL.createObjectURL(audioBuffer);
 
-                    audioSource.update(n: string[] => {
+                    audioSource.update(n => {
                         n[index] = url;
                         return n;
                     });
@@ -56,12 +56,12 @@ export async function streamTextToSpeech(
                         return audioPlayer;
                     });
 
-                    isPlaying.update(n: boolean[] => {
+                    isPlaying.update(n => {
                         n[index] = true;
                         return n;
                     });
 
-                    isLoading.update(n: boolean[] => {
+                    isLoading.update(n => {
                         n[index] = false;
                         return n;
                     });

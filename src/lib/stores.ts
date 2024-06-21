@@ -1,6 +1,7 @@
 import { writable } from "svelte/store";
 import { browser } from '$app/environment';
 import { defaultSettings, type Message, type Settings } from "$lib/types";
+import { Audio } from "openai/resources/index.mjs";
 
 export let currentVoiceID = writable<string>('286VLndcKwmm1RxLQoOn');
 
