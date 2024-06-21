@@ -51,11 +51,12 @@
             class="cursor-default z-40 w-full h-screen fixed top-0 left-0"
         ></button>
         <div
-            in:fade out:fade={{ duration: 100 }}
+            in:fade
+            out:fade={{ duration: 100 }}
             class="z-50 absolute top-16 sm:left-4 sm:-translate-x-0 left-1/2 -translate-x-1/2 bg-black bg-opacity-50 rounded-xl border-white border-[1px] backdrop-blur-xl max-w-sm w-[87.5vw] p-2"
         >
             <div class="flex justify-between items-center p-4">
-                <p>Technique</p>
+                <p>Techniques</p>
                 <p>
                     <a
                         href="/education"
@@ -135,7 +136,7 @@
     {/if}
 {:else}
     <div class="p-2">
-        <h2 class="text-xl">Technique</h2>
+        <h2 class="text-xl">Techniques</h2>
 
         <!-- pay now button -->
         <!-- <p>for dev purposes only</p> -->

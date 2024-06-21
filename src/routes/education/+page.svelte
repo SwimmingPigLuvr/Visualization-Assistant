@@ -1,12 +1,9 @@
 <script lang="ts">
 </script>
 
-<body>
-    <div>
-        <button class="bg-slate-600"></button>
-    </div>
+<body class="bg-black w-full fixed items-center flex justify-center h-screen top-0 left-0 p-2">
 
-    <div>
+    <div class="m-auto">
         <blockquote
             class="reddit-embed-bq"
             style="height:316px"
