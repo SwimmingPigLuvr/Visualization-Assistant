@@ -7,7 +7,6 @@ export async function streamTextToSpeech(
     voiceID: string, 
     index: number,
     retries: number = 3,
-    backoff: number = 1000,
 ) {
     const plainText = stripHtmlTags(text);
     console.log("streamTextToSpeech function: ", plainText);
@@ -30,7 +29,6 @@ export async function streamTextToSpeech(
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ text: plainText, voiceID }),
-                timeout: backoff * attempt,
             });
 
             if (response.ok) {
@@ -47,7 +45,7 @@ export async function streamTextToSpeech(
                     const audioBuffer = new Blob(audioChunks, { type: 'audio/mpeg' });
                     const url = URL.createObjectURL(audioBuffer);
 
-                    audioSource.update(n => {
+                    audioSource.update(n: string[] => {
                         n[index] = url;
                         return n;
                     });
@@ -58,12 +56,12 @@ export async function streamTextToSpeech(
                         return audioPlayer;
                     });
 
-                    isPlaying.update(n => {
+                    isPlaying.update(n: boolean[] => {
                         n[index] = true;
                         return n;
                     });
 
-                    isLoading.update(n => {
+                    isLoading.update(n: boolean[] => {
                         n[index] = false;
                         return n;
                     });

@@ -26,9 +26,7 @@
     let isLooped = false;
 
     let audioPlayer: HTMLAudioElement;
-    $: {
-        audioPlayer = $globalAudioPlayer;
-    }
+    $: audioPlayer = $globalAudioPlayer;
 
     function downloadAudio() {
         downloaded = false;
