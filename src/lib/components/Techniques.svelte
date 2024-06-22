@@ -51,7 +51,7 @@
             class="cursor-default z-40 w-full h-screen fixed top-0 left-0"
         ></button>
         <div
-            in:fade
+            in:slide
             out:fade={{ duration: 100 }}
             class="z-50 absolute top-16 sm:left-4 sm:-translate-x-0 left-1/2 -translate-x-1/2 bg-black bg-opacity-50 rounded-xl border-white border-[1px] backdrop-blur-xl max-w-sm w-[87.5vw] p-2"
         >
