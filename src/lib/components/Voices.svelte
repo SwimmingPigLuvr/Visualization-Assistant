@@ -8,12 +8,6 @@
 
     let voices: Voice[] = [
         {
-            id: "Atp5cNFg1Wj5gyKD7HWV",
-            name: "Natasha",
-            imageURL: "/images/voices/natasha.png",
-            audioPreviewURL: "/sounds/voice-previews/natasha.mp3",
-        },
-        {
             id: "7Uw4vgM4Qb1qiwwUnu15",
             name: "Sam",
             imageURL: "/images/voices/soothing-sam.png",
@@ -24,12 +18,6 @@
             name: "Matthew",
             imageURL: "/images/voices/materializePath.png",
             audioPreviewURL: "/sounds/voice-previews/matthew.mp3",
-        },
-        {
-            id: "aOcS60CY8CoaVaZfqqb5",
-            name: "Bleakoff",
-            imageURL: "/images/voices/bleakoffHandDox.png",
-            audioPreviewURL: "/sounds/voice-previews/bleakoff.mp3",
         },
         {
             id: "FVQMzxJGPUBtfz1Azdoy",
