@@ -94,70 +94,61 @@
     async function uploadPhoto() {}
 </script>
 
-<SignedIn>
-    <!-- {#each threads as thread}
-        <p>{thread}</p>
-    {/each} -->
-    <div class="px-4">
-        <p>signed in as <span class="text-white">{username}</span></p>
-        <form
-            class="flex flex-col space-y-2 w-full"
-            on:submit|preventDefault={confirmUsername}
-        >
-            <div class="flex space-x-2">
-                {#if username === ""}
-                    <p>create</p>
-                {:else}
-                    <p>edit</p>
-                {/if}
-                <p>username</p>
-                <input
-                    type="text"
-                    placeholder={username}
-                    class="underline text-white font-bold bg-transparent outline-none border-none"
-                    bind:value={newUsername}
-                    on:input={checkAvailability}
-                />
-            </div>
+<div class="px-4">
+    <p>signed in as <span class="text-white">{username}</span></p>
+    <form
+        class="flex flex-col space-y-2 w-full"
+        on:submit|preventDefault={confirmUsername}
+    >
+        <div class="flex space-x-2">
+            {#if username === ""}
+                <p>create</p>
+            {:else}
+                <p>edit</p>
+            {/if}
+            <p>username</p>
+            <input
+                type="text"
+                placeholder={username}
+                class="underline text-white font-bold bg-transparent outline-none border-none"
+                bind:value={newUsername}
+                on:input={checkAvailability}
+            />
+        </div>
 
-            <div class="flex space-x-2 items-center">
-                {#if isTouched}
-                    {#if !isValid}
-                        <div in:slide out:slide class="flex flex-col">
-                            <p class="text-red-400 text-xs">
-                                must be 3-16 characters long
-                            </p>
-                            <p class="text-red-400 text-xs">
-                                aplhanumeric only
-                            </p>
-                        </div>
-                    {:else}
-                        <p>status:</p>
-                        {#if loading}
-                            <img
-                                class="animate-spin h-6 w-6 rounded-full"
-                                src="/icons/gigaBubble.png"
-                                alt=""
-                            />
-                        {/if}
-                        {#if isAvailable}
-                            <p class="text-lime-400">available</p>
-                        {:else if !loading}
-                            <p class="text-red-400">username taken</p>
-                        {/if}
+        <div class="flex space-x-2 items-center">
+            {#if isTouched}
+                {#if !isValid}
+                    <div in:slide out:slide class="flex flex-col">
+                        <p class="text-red-400 text-xs">
+                            must be 3-16 characters long
+                        </p>
+                        <p class="text-red-400 text-xs">aplhanumeric only</p>
+                    </div>
+                {:else}
+                    <p>status:</p>
+                    {#if loading}
+                        <img
+                            class="animate-spin h-6 w-6 rounded-full"
+                            src="/icons/gigaBubble.png"
+                            alt=""
+                        />
+                    {/if}
+                    {#if isAvailable}
+                        <p class="text-lime-400">available</p>
+                    {:else if !loading}
+                        <p class="text-red-400">username taken</p>
                     {/if}
                 {/if}
-            </div>
-
-            {#if isValid && isAvailable}
-                <button
-                    class="bg-lime-600 text-slate-200 text-xs p-1 hover:bg-lime-400"
-                    >confirm username <span class="text-white"
-                        >{newUsername}</span
-                    ></button
-                >
             {/if}
-        </form>
-    </div>
-</SignedIn>
+        </div>
 
+        {#if isValid && isAvailable}
+            <button
+                class="bg-lime-600 text-slate-200 text-xs p-1 hover:bg-lime-400"
+                >confirm username <span class="text-white">{newUsername}</span
+                ></button
+            >
+        {/if}
+    </form>
+</div>

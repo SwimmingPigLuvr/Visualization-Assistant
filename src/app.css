@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+    font-family: 'Cinema';
+    src: url('/fonts/Cinema.otf') format('opentype');
+}
+
 .message-content {
     position: relative; /* Ensure relative positioning for proper padding application */
     padding-left: 2rem; /* Indent all content */

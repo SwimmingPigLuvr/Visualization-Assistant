@@ -41,10 +41,10 @@
     let mode: string;
 
     const modeMap: { [key: string]: string } = {
-        visualization: "Visualize your future",
-        meditation: "meditate on",
-        revision: "Revise an event from your past",
-        affirmation: "affirm your desire has been fulfilled",
+        visualization: "visualize your future.",
+        meditation: "meditate on.",
+        revision: "revise your past.",
+        affirmation: "affirm it has been done.",
     };
 
     $: mode = modeMap[$currentTechnique] || "";
@@ -218,9 +218,7 @@
     <PricingTable />
 {/if}
 
-<SignedIn>
-    <Techniques isDropdown />
-</SignedIn>
+<Techniques isDropdown />
 
 <div
     class="fixed top-0 left-0 py-16 w-full m-auto items-center justify-center flex flex-col h-screen"
@@ -302,7 +300,7 @@
             {#if hTwo}
                 <h2
                     in:fade={{ delay: 500, duration: 1500, easing: cubicOut }}
-                    class="leading-[3.3rem] text-dreamy uppercase my-4 text-[4rem] absolute sm:top-1/4 top-10 left-1/2 -translate-x-1/2 font-black -tracking-widest text-center"
+                    class="font-mono text-dreamy leading-[4rem] my-4 text-[2rem] absolute sm:top-1/3 top-10 left-1/2 -translate-x-1/2 text-center"
                 >
                     {mode}
                 </h2>

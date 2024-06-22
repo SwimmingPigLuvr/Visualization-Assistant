@@ -10,10 +10,8 @@
 
 </script>
 
-<SignedIn>
     <div class="flex flex-col">
         {#each myThreads as thread, index}
             <Visualizations threadID={thread} index={index}/>
         {/each}
     </div>
-</SignedIn>

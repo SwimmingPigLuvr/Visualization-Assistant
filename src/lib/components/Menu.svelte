@@ -155,7 +155,6 @@
     }
 </script>
 
-<SignedIn>
     {#if $isMenuOpen}
         <!-- bg overlay -->
         <button
@@ -225,4 +224,3 @@
             </span>
         {/if}
     </button>
-</SignedIn>

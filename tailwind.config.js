@@ -4,6 +4,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
+        'cinema': ['Cinema', 'sans-serif'],
       }
     },
   },

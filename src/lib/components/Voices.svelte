@@ -55,14 +55,14 @@
     <!-- voice -->
     <button
         on:click={() => showVoiceModal.set(true)}
-        class="p-2 rounded-xl hover:bg-white hover:bg-opacity-10 hover:border-white border-[1px] border-transparent flex justify-between items-center -tracking-widest text-xl text-left"
+        class="p-2 px-4 rounded-xl hover:bg-white hover:bg-opacity-10 hover:border-white border-[1px] border-transparent flex justify-between items-center text-xl text-left"
     >
         Voice
 
         <!-- current voice -->
         <div class="flex text-xl items-center space-x-2">
             <img
-                class="h-10 w-10 rounded-full"
+                class="h-8 w-8 rounded-full"
                 src={voices[$v].imageURL}
                 alt=""
             />
