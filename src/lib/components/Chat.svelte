@@ -35,6 +35,7 @@
     import { cubicIn, cubicInOut, cubicOut } from "svelte/easing";
     import Techniques from "./Techniques.svelte";
     import { SignedIn } from "sveltefire";
+    import { initializeApp } from "firebase/app";
 
     let mode: string;
 
@@ -88,40 +89,51 @@
     // adapt these for useAssistant() (doesn't exist for svelte yet)
     // const { input, handleSubmit, messages } = useChat();
 
-    let currentlyScrolling = false;
+    let isUserSrolling = false;
+    let scrollTimeout: number;
 
     function scrollToBottom() {
         if (browser) {
             const container = document.getElementById("chat-container");
-            if (container) {
+            if (container && !isUserSrolling) {
+                const buffer = 2000;
                 container.scrollTo({
-                    top: container.scrollHeight,
-                    behavior: "smooth",
+                    top: container.scrollHeight + buffer,
+                    behavior: "instant",
                 });
+            }
+        }
+    }
+
+    function handleScroll() {
+        isUserSrolling = true;
+        clearTimeout(scrollTimeout)
+        scrollTimeout = window.setTimeout(() => {
+            isUserSrolling = false;
+        }, 1000);
+    }
+
+    function initializeAutoScroll() {
+        if (typeof window !== 'undefined') {
+            const container = document.getElementById("chat-container");
+            if (container) {
+                container.addEventListener("scroll", handleScroll);
             }
         }
     }
 
     $: if ($partialMessage) {
-        if (browser) {
-            const container = document.getElementById("chat-container");
-            if (container) {
-                container.addEventListener("scroll", () => {
-                    currentlyScrolling = true;
-                });
-                if (!currentlyScrolling) {
-                    container.scrollTop = container.scrollHeight;
-                }
-            }
-        }
+        scrollToBottom();
     }
 
+    initializeAutoScroll();
+
     $: if ($partialMessage.content !== "") {
-        scrollToBottom();
+        setTimeout(scrollToBottom, 100);
     }
 
     $: if ($messagesStore.length > 0) {
-        scrollToBottom();
+        setTimeout(scrollToBottom, 100);
     }
 
     async function handleSubmit() {
@@ -157,7 +169,7 @@
             userInput.set("");
         }
 
-        scrollToBottom();
+        setTimeout(scrollToBottom, 100);
     }
 
     function handleKeyDown(event: KeyboardEvent) {
