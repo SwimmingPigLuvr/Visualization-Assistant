@@ -10,6 +10,12 @@ export async function streamTextToSpeech(
     const plainText = stripHtmlTags(text);
     console.log("streamTextToSpeech function: ", plainText);
     if (!browser) return;
+
+    // Clear the audio source preemptively
+    audioSource.update(n => {
+        n[index] = "";
+        return n;
+    });
     
     isLoading.update(n => {
         n[index] = true;

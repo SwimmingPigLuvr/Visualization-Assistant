@@ -36,8 +36,6 @@
     import Techniques from "./Techniques.svelte";
     import { SignedIn } from "sveltefire";
 
-    let hTwo = false;
-
     let mode: string;
 
     const modeMap: { [key: string]: string } = {
@@ -56,7 +54,6 @@
     }
 
     onMount(() => {
-        hTwo = true;
         if (browser) {
             textareaElement = document.getElementById("textareaElement");
         }
@@ -92,6 +89,19 @@
     // const { input, handleSubmit, messages } = useChat();
 
     let currentlyScrolling = false;
+
+    function scrollToBottom() {
+        if (browser) {
+            const container = document.getElementById("chat-container");
+            if (container) {
+                container.scrollTo({
+                    top: container.scrollHeight,
+                    behavior: "smooth",
+                });
+            }
+        }
+    }
+
     $: if ($partialMessage) {
         if (browser) {
             const container = document.getElementById("chat-container");
@@ -104,6 +114,14 @@
                 }
             }
         }
+    }
+
+    $: if ($partialMessage.content !== "") {
+        scrollToBottom();
+    }
+
+    $: if ($messagesStore.length > 0) {
+        scrollToBottom();
     }
 
     async function handleSubmit() {
@@ -138,6 +156,8 @@
             run($currentThread);
             userInput.set("");
         }
+
+        scrollToBottom();
     }
 
     function handleKeyDown(event: KeyboardEvent) {
@@ -226,16 +246,13 @@
     <!-- chat -->
     <div
         id="chat-container"
-        class="relative h-full m-auto p-2 w-full text-xl tracking-tight overflow-x-hidden overflow-y-auto"
+        class="bg-opacity-100 relative h-full m-auto p-2 w-full text-xl tracking-tight overflow-x-hidden overflow-y-auto"
     >
         <!-- if there is at least one message -->
         {#if $messagesStore.length > 0}
             <ul class="max-w-xl sm:max-w-2xl mx-auto py-0">
                 {#each $messagesStore as message, index}
-                    <div
-                        in:fade={{ duration: 500 }}
-                        class="my-4 flex justify-end"
-                    >
+                    <div class="my-4 flex justify-end">
                         <li
                             class="relative rounded-2xl p-2 {message.role ===
                             'user'
@@ -243,7 +260,7 @@
                                 : 'pl-8 pt-4 mr-auto'} "
                         >
                             <div
-                                class="font-mono text-[0.9rem] sm:text-[1.1rem] leading-6 sm:leading-8"
+                                class="font-mono text-xl leading-6 sm:leading-8"
                             >
                                 {#if message.role === "assistant"}
                                     <img
@@ -271,13 +288,18 @@
 
                 <!-- incoming response -->
                 {#if $partialMessage.content !== ""}
-                    <div class="my-4">
+                    <div class="my-4 py-6">
                         <li class="relative px-8">
                             <!-- <span class="capitalize font-bold">Assistant</span>
                             <br /> -->
+                            <img
+                                class="rounded-full w-8 h-8 sm:w-10 sm:h-10 absolute -top-2 -left-2 sm:-left-6 transform transitino-all duration-500 ease-in-out"
+                                src={$assistantPfp}
+                                alt="assistant pfp"
+                            />
 
                             <div class="">
-                                <span class="font-mono text-[1rem] leading-7">
+                                <span class="font-mono text-xl leading-7">
                                     {#if $isThinking}
                                         <span class=""
                                             >{@html formattedPartial}</span
@@ -297,14 +319,12 @@
         {:else if !$signInModalOpen}
             <!-- message in the middle -->
             <!-- set based on mode -->
-            {#if hTwo}
-                <h2
-                    in:fade={{ delay: 500, duration: 1500, easing: cubicOut }}
-                    class="font-mono text-dreamy leading-[4rem] my-4 text-[2rem] absolute sm:top-1/3 top-10 left-1/2 -translate-x-1/2 text-center"
-                >
-                    {mode}
-                </h2>
-            {/if}
+            <h2
+                in:fade={{ delay: 500, duration: 1500, easing: cubicOut }}
+                class="font-mono text-dreamy leading-[4rem] my-4 text-[2rem] absolute sm:top-1/3 top-10 left-1/2 -translate-x-1/2 text-center"
+            >
+                {mode}
+            </h2>
         {/if}
     </div>
 
