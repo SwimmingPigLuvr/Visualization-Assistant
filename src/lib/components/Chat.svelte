@@ -27,7 +27,7 @@
         run,
     } from "$lib/api";
     import { browser } from "$app/environment";
-    import { onMount } from "svelte";
+    import { onDestroy, onMount } from "svelte";
     import { page } from "$app/stores";
     import { goto } from "$app/navigation";
     import PricingTable from "./PricingTable.svelte";
@@ -36,8 +36,38 @@
     import Techniques from "./Techniques.svelte";
     import { SignedIn } from "sveltefire";
     import { initializeApp } from "firebase/app";
+    import { tweened } from "svelte/motion";
+
+
+    let showMode = false;
+
+    function typewriter(node: HTMLElement, { speed = 50 }) {
+        const valid =
+            node.childNodes.length === 1 &&
+            node.childNodes[0].nodeType === Node.TEXT_NODE;
+
+        if (!valid) {
+            throw new Error(
+                `this only works on elements with a single text node child`,
+            );
+        }
+
+        const text = node.textContent || "";
+        const duration = text.length * speed;
+
+        return {
+            duration,
+            tick: (t: number) => {
+                const i = ~~(text.length * t);
+                node.textContent = text.slice(0, i);
+            },
+        };
+    }
 
     let mode: string;
+    let positionStore;
+    let position = 0;
+    let cleanup: (() => void) | null = null;
 
     const modeMap: { [key: string]: string } = {
         visualization: "visualize your future.",
@@ -48,23 +78,24 @@
 
     $: mode = modeMap[$currentTechnique] || "";
 
+    $: {
+        if (cleanup) cleanup();
+
+        positionStore = tweened(0, { easing: cubicInOut, duration: 2000 });
+        cleanup = positionStore.subscribe(val => position = Math.round(val));
+
+        positionStore.set(mode.length);
+    }
+
+    onDestroy(() => {
+        if (cleanup) cleanup();
+    });
+
     let textareaElement: HTMLElement | null = null;
 
     $: if ($inputFocused) {
         textareaElement?.focus();
     }
-
-    onMount(() => {
-        if (browser) {
-            textareaElement = document.getElementById("textareaElement");
-        }
-        inputFocused.set(true);
-
-        const urlThreadID = $page.url.searchParams.get("thread");
-        if (urlThreadID) {
-            currentThread.set(urlThreadID);
-        }
-    });
 
     let sendTooltip = false;
 
@@ -89,50 +120,57 @@
     // adapt these for useAssistant() (doesn't exist for svelte yet)
     // const { input, handleSubmit, messages } = useChat();
 
-    let isUserSrolling = false;
-    let scrollTimeout: number;
+    let shouldAutoScroll = true;
 
     function scrollToBottom() {
-        if (browser) {
+        if (browser && shouldAutoScroll) {
             const container = document.getElementById("chat-container");
-            if (container && !isUserSrolling) {
-                const buffer = 2000;
+            if (container) {
                 container.scrollTo({
-                    top: container.scrollHeight + buffer,
-                    behavior: "instant",
+                    top: container.scrollHeight,
+                    behavior: "smooth",
                 });
             }
         }
     }
 
-    function handleScroll() {
-        isUserSrolling = true;
-        clearTimeout(scrollTimeout)
-        scrollTimeout = window.setTimeout(() => {
-            isUserSrolling = false;
-        }, 1000);
+    function handleManualScroll() {
+        shouldAutoScroll = false;
     }
 
     function initializeAutoScroll() {
-        if (typeof window !== 'undefined') {
+        if (browser) {
             const container = document.getElementById("chat-container");
             if (container) {
-                container.addEventListener("scroll", handleScroll);
+                container.addEventListener("scroll", handleManualScroll);
             }
         }
     }
 
-    $: if ($partialMessage) {
-        scrollToBottom();
-    }
+    onMount(() => {
+        setTimeout(() => {
+            showMode = true;
+        }, 1000);
 
-    initializeAutoScroll();
+        if (browser) {
+            initializeAutoScroll();
+            textareaElement = document.getElementById("textareaElement");
+        }
+        inputFocused.set(true);
+
+        const urlThreadID = $page.url.searchParams.get("thread");
+        if (urlThreadID) {
+            currentThread.set(urlThreadID);
+        }
+    });
 
     $: if ($partialMessage.content !== "") {
+        shouldAutoScroll = true;
         setTimeout(scrollToBottom, 100);
     }
 
     $: if ($messagesStore.length > 0) {
+        shouldAutoScroll = true;
         setTimeout(scrollToBottom, 100);
     }
 
@@ -169,6 +207,7 @@
             userInput.set("");
         }
 
+        shouldAutoScroll = true;
         setTimeout(scrollToBottom, 100);
     }
 
@@ -331,12 +370,11 @@
         {:else if !$signInModalOpen}
             <!-- message in the middle -->
             <!-- set based on mode -->
-            <h2
-                in:fade={{ delay: 500, duration: 1500, easing: cubicOut }}
-                class="font-mono text-dreamy leading-[4rem] my-4 text-[2rem] absolute sm:top-1/3 top-10 left-1/2 -translate-x-1/2 text-center"
-            >
-                {mode}
-            </h2>
+                <h2
+                    class="font-mono text-dreamy leading-[1] my-4 text-[2rem] m-auto absolute -translate-x-1/2 sm:top-1/3 top-10 left-1/2  text-center"
+                >
+                    {mode.slice(0, position)}
+                </h2>
         {/if}
     </div>
 

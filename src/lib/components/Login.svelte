@@ -1,3 +1,4 @@
+<!-- lib/components/Login.svelte -->
 <script lang="ts">
     import { auth, firestore } from "$lib/firebase";
     import {

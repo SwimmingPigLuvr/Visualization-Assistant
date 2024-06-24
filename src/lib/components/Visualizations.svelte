@@ -1,4 +1,4 @@
-<!-- perform api call to list all of user's threads -->
+<!-- lib/components/Visualizations.svelte -->
 <script lang="ts">
     import { goto } from "$app/navigation";
     import { auth, firestore } from "$lib/firebase";
@@ -9,33 +9,48 @@
         messagesStore,
         userThreads,
         threadOptionIndex,
+        firstMessage,
     } from "$lib/stores";
     import { fade, fly, slide } from "svelte/transition";
     import {
         arrayRemove,
         doc,
+        getDoc,
         getFirestore,
         setDoc,
         updateDoc,
     } from "firebase/firestore";
-    import { onMount } from "svelte";
+    import { createEventDispatcher, onMount } from "svelte";
     import { get, writable } from "svelte/store";
     import { docStore, userStore } from "sveltefire";
-    import { cubicInOut } from "svelte/easing";
-    import ThreadOptions from "./ThreadOptions.svelte";
-
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
     const user = userStore(auth);
-
-    let showDeleteToolTip = false;
-    let showDeleteButton = false;
-    let showOptions = false;
-
-    let firstMessage = writable<string>("");
+    const dispatch = createEventDispatcher<{
+        favorite: { threadID: string };
+        rename: { threadID: string; newName: string };
+        archive: { threadID: string };
+    }>();
 
     export let threadID: string;
     export let index: number;
+
+    let threadName = $firstMessage;
+
+    async function loadThreadName() {
+        if (!$user) return;
+        const userRef = doc(firestore, `users/${$user.uid}`);
+        const userDoc = await getDoc(userRef);
+        const threadNames = userDoc.data()?.threadNames || {};
+        threadName = threadName[threadID] || $firstMessage;
+    }
+
+    $: if ($user) {
+        loadThreadName();
+    }
+
+
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    let showOptions = false;
 
     async function getFirstMessage() {
         try {
@@ -153,6 +168,21 @@
             document.removeEventListener("click", handleClickOutside);
         };
     });
+
+    async function favorite() {
+        dispatch("favorite", { threadID });
+    }
+
+    async function rename() {
+        const newName = prompt("Enter new name for thread:");
+        if (newName) {
+            dispatch("rename", { threadID, rename });
+        }
+    }
+
+    async function archive() {
+        dispatch("archive", { threadID });
+    }
 </script>
 
 {#if $firstMessage !== ""}
@@ -190,6 +220,7 @@
                         >
                             <!-- share -->
                             <button
+                                on:click|stopPropagation={favorite}
                                 class="w-full p-3 rounded-xl hover:bg-blue-700 flex justify-start space-x-2"
                             >
                                 <p>⭐️</p>
@@ -197,6 +228,7 @@
                             </button>
                             <!-- rename -->
                             <button
+                                on:click|stopPropagation={rename}
                                 class="w-full p-3 rounded-xl hover:bg-blue-700 flex justify-start space-x-2"
                             >
                                 <p>🤔</p>
@@ -204,6 +236,7 @@
                             </button>
                             <!-- archive -->
                             <button
+                                on:click|stopPropagation={archive}
                                 class="w-full p-3 rounded-xl hover:bg-blue-700 flex justify-start space-x-2"
                             >
                                 <p>🗂️</p>
@@ -211,6 +244,7 @@
                             </button>
                             <!-- delete -->
                             <button
+                                on:click|stopPropagation={deleteThread}
                                 class="w-full p-3 rounded-xl hover:bg-red-700 flex justify-start space-x-2"
                             >
                                 <p>🚮</p>

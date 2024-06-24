@@ -1,3 +1,4 @@
+// routes/api/threads/delete/+server.ts
 import OpenAi from "openai";
 
 const openai = new OpenAi();

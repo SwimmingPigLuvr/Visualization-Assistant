@@ -70,14 +70,14 @@
             <button
                 in:slide={{ duration: 250 }}
                 on:click|stopPropagation
-                class="flex border-white border-[1px] bg-blue-800 flex-col p-4 w-full items-center justify-evenly overflow-x-auto"
+                class="rounded-none flex border-white border-[1px] bg-blue-800 flex-col p-4 w-full items-center justify-evenly overflow-x-auto"
             >
                 <!-- header -->
                 <div class="mb-auto flex justify-between w-full items-center">
-                    <p>Choose a voice</p>
+                    <p class="text-center">Choose a voice</p>
                     <button
                         on:click={() => showVoiceModal.set(false)}
-                        class="border-white border-[1px] px-3 hover:bg-black hover:bg-opacity-50 p-1"
+                        class="rounded-none border-white border-[1px] px-3 hover:bg-rose-500 hover:bg-opacity-50 p-1"
                         >X</button
                     >
                 </div>

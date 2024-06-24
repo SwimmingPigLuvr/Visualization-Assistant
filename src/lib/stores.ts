@@ -33,6 +33,8 @@ export let currentThread = writable<string>('');
 export let currentRun = writable<string>('');
 
 export let userThreads = writable<string[]>([]);
+export let archivedThreads = writable<string[]>([]);
+export let firstMessage = writable<string>("");
 
 export let wallpaper = writable<string>('/videos/clouds.mp4');
 export let bgMode = writable<'image' | 'video'>('video');

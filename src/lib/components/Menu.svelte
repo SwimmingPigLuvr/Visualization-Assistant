@@ -44,52 +44,6 @@
     let newVisualizationToolTip = false;
     let toggleMenuToolTip = false;
 
-    let showCreateButton = false;
-
-    let wallpapers = [
-        {
-            src: "/wallpaper/images/scene1.png",
-            alt: "A serene landscape with clear blue skies, lush green meadows and gentle flowing rivers under the warm summer sun. The scene is filled with vibrant colors of nature's palette, creating an atmosphere that evokes tranquility and harmony. in the style of anime.",
-        },
-        {
-            src: "/wallpaper/images/scene2.png",
-            alt: "Japanese temple, Japanese landscape with waterfalls and blue sky, fantasy art style, concept art in the style of Atey Ghailan and Studio Ghibli, anime background, red accents, digital painting, high resolution",
-        },
-        {
-            src: "/wallpaper/images/background.jpeg",
-            alt: "pretty field of green grass, neatly cut, a branch with many pink cherry blossoms and green leaves is in the view of the top right corner of the image. the sun shines white with long rays in the upper left over a sky of beautiful white clouds",
-        },
-    ];
-
-    let videos = ["/videos/clouds.mp4"];
-
-    let voices: Voice[] = [
-        {
-            id: "7Uw4vgM4Qb1qiwwUnu15",
-            name: "Sam",
-            imageURL: "/images/voices/soothing-sam.png",
-            audioPreviewURL: "/sounds/voice-previews/sam.mp3",
-        },
-        {
-            id: "286VLndcKwmm1RxLQoOn",
-            name: "Matthew",
-            imageURL: "/images/voices/materializePath.png",
-            audioPreviewURL: "/sounds/voice-previews/matthew.mp3",
-        },
-        {
-            id: "FVQMzxJGPUBtfz1Azdoy",
-            name: "Danielle",
-            imageURL: "/images/voices/zoomer.png",
-            audioPreviewURL: "/sounds/voice-previews/danielle.mp3",
-        },
-        {
-            id: "4JVOFy4SLQs9my0OLhEw",
-            name: "Luca",
-            imageURL: "/images/voices/snow-leopard.png",
-            audioPreviewURL: "/sounds/voice-previews/luca.mp3",
-        },
-    ];
-
     function toggleMenu() {
         isMenuOpen.set(!$isMenuOpen);
         toggleMenuToolTip = false;
@@ -103,34 +57,7 @@
         isMenuOpen.set(false);
     }
 
-    function toggleSettings(event: MouseEvent) {
-        showSettings = !showSettings;
-    }
-
     let showSettings = false;
-    let showAssistantSettings = false;
-    let showVoiceSettings = false;
-    let showProfileSettings = false;
-    let showAppearanceSettings = false;
-
-    let isVideoOn = writable(false);
-
-    function toggleVideo(event: MouseEvent) {
-        isVideoOn.set(!isVideoOn);
-    }
-
-    function setWallpaper(src: string, mode: "image" | "video") {
-        if (mode === "image") {
-            console.log("bg mode: image");
-            console.log("image source: ", src);
-            wallpaper.set(src);
-            bgMode.set(mode);
-        } else if (mode === "video") {
-            console.log("bg mode: video");
-            console.log("video source: ", src);
-            bgMode.set(mode);
-        }
-    }
 
     function handleCreateNewThread() {
         isMenuOpen.set(false);
