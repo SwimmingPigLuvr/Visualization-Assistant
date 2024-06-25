@@ -10,13 +10,11 @@ export const POST: RequestHandler = async ({ request }) => {
     }
 
     const url = `https://api.elevenlabs.io/v1/text-to-speech/${voiceID}/stream`;
-
     const headers = {
       "Accept": "audio/mpeg",
       "Content-Type": "application/json",
       "xi-api-key": XI_API_KEY
     };
-
     const data = {
       text,
       model_id: "eleven_monolingual_v1",
@@ -32,24 +30,14 @@ export const POST: RequestHandler = async ({ request }) => {
       return new Response(JSON.stringify({ error: 'Failed to convert text to speech' }), { status: response.status });
     }
 
-    const reader = response.body?.getReader();
-    const chunks = [];
-    if (reader) {
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        chunks.push(value);
-      }
-    }
-
-    const audioBuffer = new Blob(chunks, { type: 'audio/mpeg' });
+    const audioBuffer = await response.arrayBuffer();
     return new Response(audioBuffer, {
       headers: {
         'Content-Type': 'audio/mpeg'
       }
     });
   } catch (error) {
+    console.error('Error in xi-stream:', error);
     return new Response(JSON.stringify({ error: 'Internal Server Error' }), { status: 500 });
   }
-};
-
+}

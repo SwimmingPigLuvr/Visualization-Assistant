@@ -98,7 +98,7 @@
                 <span
                     in:fly={{ duration: 200, y: -10 }}
                     class="text-sm absolute top-3 right-0 tooltip rounded shadow-lg px-2 p-1 bg-black border-white border-[1px] text-white mt-8"
-                    >new {$currentTechnique}</span
+                    >new visualization</span
                 >
             {/if}
         </button>

@@ -41,11 +41,12 @@ export async function syncThreadData() {
 
 function setCustomInstructions() {
     const technique = get(currentTechnique);
-    if (technique === 'affirmation') {
+
+    if (technique === 'affirm') {
         customInstruct.set("Your role is my affirmation assistant. An affirmation is a short statement. Create an affirmation based on the user's desired outcome. the affirmation will be in the present tense and will be a positive statement that assumes their desire is fulfilled");
-    } else if (technique === 'meditation') {
+    } else if (technique === 'meditate') {
         customInstruct.set("create a guided meditation that invites the user to first close their eyes. breathing in slowly, holding for a brief period, then breathing out slowly. each inhalation relaxes the user and is breathing in the feelings of their wish fulfilled right now in the present moment, each exhalation is letting go of the old emotions, thought patterns, behaviors that no longer serve them. instruct them to feel that the wish has been fulfilled. let them do this for awhile then guide them back to the present");
-    } else if (technique === 'revision') {
+    } else if (technique === 'revise') {
         customInstruct.set(`You are an assistant helping users practice Neville Goddard's Revision Technique. Guide the user through the following steps:
 
     Review the Event: At the end of the day, reflect on an event that didn't go as desired. Observe it without judgment.
@@ -65,8 +66,12 @@ function setCustomInstructions() {
     Know it is Done: Guide the user to continue the process until they sense completion, knowing the revision is achieved.
 
 Remind the user to practice this technique nightly to effectively reshape past events and positively influence future experiences.`);
-    } else if (technique === 'visualization') {
+    } else if (technique === 'visualize') {
         customInstruct.set(null);
+    } else if (technique === 'remember') {
+        customInstruct.set("Your role is to help users use the 'I Remember When' technique (taught by Neville Goddard) to shift their perception of current circumstances by imagining them as past events. Explain that this technique involves thinking of their current undesirable situation as something that happened in the past. Guide them to create statements starting with 'I remember when...' followed by the current situation, and then describe the desired outcome as if it is now the present. Encourage them to believe in the truth of their statements and to repeat them regularly while feeling the emotions of having already achieved the desired outcome.")
+    } else if (technique === 'script') {
+        customInstruct.set("Your role is to help users craft detailed, vivid, and emotionally engaging scripts about their desired future as if it has already happened. Explain that scripting involves writing a detailed story of their ideal future in the present tense, including emotions, sensory details, and specific events. Prompt them to describe a perfect day, a specific event, or how they feel in this ideal future. Encourage them to include all five senses and to read their script regularly while feeling the emotions as if the events are happening now.");
     }
 }
 

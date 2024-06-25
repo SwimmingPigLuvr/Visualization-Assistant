@@ -133,10 +133,10 @@
             <!-- modal -->
             <button
                 on:click|stopPropagation
-                class="glow sm:-top-32 -top-1/4 left-1/2 -translate-x-1/2 z-50 flex items-center rounded-2xl flex-col space-y-4 w-full max-w-[28rem] relative p-4 sm:p-12 border-slate-600 border-[1px] bg-black"
+                class=" sm:-top-32 -top-1/4 left-1/2 -translate-x-1/2 z-50 flex items-center rounded-none flex-col space-y-4 w-full max-w-[28rem] relative p-4 sm:p-12 border-slate-600 border-[1px] bg-black"
             >
                 <form
-                    class="text-left flex flex-col space-y-2 w-full"
+                    class="text-left flex flex-col space-y-4 w-full"
                     on:submit|preventDefault={handleFormSubmit}
                 >
                     <!-- <button
@@ -145,7 +145,7 @@
                     > -->
                     <!-- <label for="email">email</label> -->
                     <input
-                        class="text-black p-3 rounded-xl"
+                        class="bg-white bg-opacity-10 text-white p-3 rounded-xl"
                         placeholder="Type your email..."
                         type="email"
                         name="email"
@@ -155,7 +155,7 @@
                     />
                     <!-- <label for="password">password</label> -->
                     <input
-                        class="text-black p-3 rounded-xl"
+                        class="bg-white bg-opacity-10 text-white p-3 rounded-xl"
                         placeholder="Password"
                         type="password"
                         name="password"
@@ -163,7 +163,7 @@
                         bind:value={password}
                     />
                     <button
-                        class="font-sans font-bold text-white text-xl bg-blue-700 transform transition-all duration-500 ease-in-out border-transparent border-[1px] hover:border-white hover:border-[1px] p-3 rounded-xl"
+                        class="font-sans font-bold text-white text-xl bg-blue-700 transform transition-all duration-500 ease-in-out border-transparent border-[1px] hover:border-white hover:border-[1px] bg-opacity-50 hover:bg-opacity-100 p-3 rounded-xl"
                         type="submit"
                     >
                         <p class="">Visualize Your Goals now ➔</p>
@@ -173,7 +173,7 @@
                 <p>or</p>
                 <!-- google -->
                 <button
-                    class="hover:bg-black hover:text-white hover:border-white border-[1px] flex space-x-2 justify-center items-center font-bold text-xl p-3 w-full bg-white text-black font-sans rounded-2xl"
+                    class="hover:bg-black hover:text-white hover:border-white border-[1px] flex space-x-2 justify-center items-center font-bold text-xl p-3 w-full bg-white bg-opacity-25 text-white font-sans rounded-2xl"
                     on:click={signInWithGoogle}
                 >
                     <img

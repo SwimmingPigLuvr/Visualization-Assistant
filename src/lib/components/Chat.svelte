@@ -70,10 +70,12 @@
     let cleanup: (() => void) | null = null;
 
     const modeMap: { [key: string]: string } = {
-        visualization: "visualize your future.",
-        meditation: "meditate on.",
-        revision: "revise your past.",
-        affirmation: "affirm it has been done.",
+        visualize: "visualize your future.",
+        revise: "revise your past.",
+        script: "rehearse your future.",
+        affirm: "affirm it has been done.",
+        remember: "I remember when...",
+        meditate: "improve your focus.",
     };
 
     $: mode = modeMap[$currentTechnique] || "";
@@ -371,7 +373,7 @@
             <!-- message in the middle -->
             <!-- set based on mode -->
                 <h2
-                    class="font-mono text-dreamy leading-[1] my-4 text-[2rem] m-auto absolute -translate-x-1/2 sm:top-1/3 top-10 left-1/2  text-center"
+                    class="text-opacity-90 font-mono text-dreamy leading-[1] my-4 text-[2rem] m-auto absolute -translate-x-1/2 sm:top-1/3 top-10 left-1/2  text-center"
                 >
                     {mode.slice(0, position)}
                 </h2>

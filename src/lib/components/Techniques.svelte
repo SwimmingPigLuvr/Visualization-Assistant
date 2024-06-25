@@ -69,15 +69,16 @@
             <!-- list techniques -->
             <!-- add a title and subheading -->
 
-            <div class="flex flex-col w-full">
+            <div class="text-3xl flex flex-col w-full">
+
                 <!-- Visualization -->
                 <button
-                    on:click={() => chooseTechnique("visualization")}
-                    class="relative flex items-center justify-start space-x-3 p-4 hover:bg-lime-700 hover:bg-opacity-100 rounded-lg group"
+                    on:click={() => chooseTechnique("visualize")}
+                    class="relative flex items-center justify-start space-x-4 p-4 hover:bg-white hover:bg-opacity-25 rounded-lg group"
                 >
                     <div
-                        class="bg-lime-400 bg-opacity-50 group-hover:bg-opacity-100 h-8 w-8 rounded-full"
-                    ></div>
+                        class=""
+                    >👁️</div>
                     <div class="flex flex-col text-left">
                         <p class="text-sm font-black">Visualization</p>
                         <!-- description -->
@@ -90,30 +91,48 @@
 
                 <!-- Revision -->
                 <button
-                    on:click={() => chooseTechnique("revision")}
-                    class="relative flex items-center justify-start space-x-3 p-4 hover:bg-rose-700 hover:bg-opacity-100 rounded-lg group"
+                    on:click={() => chooseTechnique("revise")}
+                    class="relative flex items-center justify-start space-x-4 p-4 hover:bg-white hover:bg-opacity-25 rounded-lg group"
                 >
                     <div
-                        class="bg-rose-400 bg-opacity-50 group-hover:bg-opacity-100 h-8 w-8 rounded-full"
-                    ></div>
+                        class=""
+                    >✍️</div>
                     <div class="flex flex-col text-left">
                         <p class="text-sm font-black">Revision</p>
                         <!-- description -->
-                        <p class="text-xs">Re-imagine past events</p>
+                        <p class="text-xs">Rewrite past events</p>
                     </div>
                     {#if $currentTechnique === "revision"}
                         <p class="absolute right-4">✅</p>
                     {/if}
                 </button>
 
-                <!-- Affirmation -->
+                <!-- Scripting -->
                 <button
-                    on:click={() => chooseTechnique("affirmation")}
-                    class="relative flex items-center justify-start space-x-3 p-4 hover:bg-blue-700 hover:bg-opacity-100 rounded-lg group"
+                    on:click={() => chooseTechnique("script")}
+                    class="relative flex items-center justify-start space-x-4 p-4 hover:bg-white hover:bg-opacity-25 rounded-lg group"
                 >
                     <div
-                        class="bg-blue-400 bg-opacity-50 group-hover:bg-opacity-100 h-8 w-8 rounded-full"
-                    ></div>
+                        class=""
+                    >📝</div>
+                    <div class="flex flex-col text-left">
+                        <p class="text-sm font-black">Scripting</p>
+                        <!-- description -->
+                        <p class="text-xs">Rehearse what's to come</p>
+                    </div>
+                    {#if $currentTechnique === "affirmation"}
+                        <p class="absolute right-4">✅</p>
+                    {/if}
+                </button>
+
+                <!-- Affirmation -->
+                <button
+                    on:click={() => chooseTechnique("affirm")}
+                    class="relative flex items-center justify-start space-x-4 p-4 hover:bg-white hover:bg-opacity-25 rounded-lg group"
+                >
+                    <div
+                        class=""
+                    >✅</div>
                     <div class="flex flex-col text-left">
                         <p class="text-sm font-black">Affirmation</p>
                         <!-- description -->
@@ -123,6 +142,43 @@
                         <p class="absolute right-4">✅</p>
                     {/if}
                 </button>
+
+                <!-- Remember -->
+                <button
+                    on:click={() => chooseTechnique("remember")}
+                    class="relative flex items-center justify-start space-x-4 p-4 hover:bg-white hover:bg-opacity-25 rounded-lg group"
+                >
+                    <div
+                        class=""
+                    >🤔</div>
+                    <div class="flex flex-col text-left">
+                        <p class="text-sm font-black">I Remember When</p>
+                        <!-- description -->
+                        <p class="text-xs">Look back from your future</p>
+                    </div>
+                    {#if $currentTechnique === "affirmation"}
+                        <p class="absolute right-4">✅</p>
+                    {/if}
+                </button>
+
+                <!-- Remember -->
+                <button
+                    on:click={() => chooseTechnique("meditate")}
+                    class="relative flex items-center justify-start space-x-4 p-4 hover:bg-white hover:bg-opacity-25 rounded-lg group"
+                >
+                    <div
+                        class=""
+                    >🧘‍♀️</div>
+                    <div class="flex flex-col text-left">
+                        <p class="text-sm font-black">Meditation</p>
+                        <!-- description -->
+                        <p class="text-xs">Embrace stillness</p>
+                    </div>
+                    {#if $currentTechnique === "meditate"}
+                        <p class="absolute right-4">✅</p>
+                    {/if}
+                </button>
+
             </div>
 
             <hr class="w-[90%] m-auto" />
@@ -151,7 +207,7 @@
                     'visualization'
                         ? 'border-white bg-sky-600 text-white tracking-normal font-bold'
                         : 'border-slate-600 text-slate-600'} transform transition-all duration-300 ease-in-out"
-                    on:click={() => chooseTechnique("visualization")}
+                    on:click={() => chooseTechnique("visualize")}
                 >
                     Visualization
                 </button>
@@ -169,7 +225,7 @@
                     'affirmation'
                         ? 'border-white bg-rose-600  text-white tracking-normal font-bold'
                         : 'border-slate-600 text-slate-600'} transform transition-all duration-300 ease-in-out"
-                    on:click={() => chooseTechnique("affirmation")}
+                    on:click={() => chooseTechnique("affirm")}
                 >
                     Affirmation
                 </button>
@@ -178,7 +234,7 @@
                     'meditation'
                         ? 'border-white bg-fuchsia-600 bg-opacity-100  text-white tracking-normal font-bold'
                         : 'border-slate-600 text-slate-600'} transform transition-all duration-300 ease-in-out"
-                    on:click={() => chooseTechnique("meditation")}
+                    on:click={() => chooseTechnique("meditate")}
                 >
                     Meditation
                 </button>
