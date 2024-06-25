@@ -22,6 +22,7 @@ export async function streamTextToSpeech(
         n[index] = true;
         return n;
     });
+
     isPlaying.update(n => {
         n[index] = false;
         return n;
@@ -54,15 +55,22 @@ export async function streamTextToSpeech(
             n[index] = url;
             return n;
         });
+
         globalAudioPlayer.update(audioPlayer => {
+          if (audioPlayer && typeof audioPlayer.play === 'function') {
             audioPlayer.src = url;
-            audioPlayer.play();
-            return audioPlayer;
+            audioPlayer.play().catch(e => console.error('Playback failed', e));
+          } else {
+            console.error('Invalid audio player', audioPlayer);
+          }
+          return audioPlayer;
         });
+
         isPlaying.update(n => {
             n[index] = true;
             return n;
         });
+
     } catch (error) {
         console.error('Failed to convert text to speech:', error);
     } finally {
