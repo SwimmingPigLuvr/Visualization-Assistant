@@ -87,10 +87,10 @@
     on:mouseenter={() => (toggleMenuToolTip = true)}
     on:mouseleave={() => (toggleMenuToolTip = false)}
     on:click={() => toggleMenu()}
-    class="transform z-50 transition-all duration-500 ease-in-out group fixed top-4 left-4 font-mono text-3xl font-black hover:text-white text-slate-400"
+    class="transform z-50 transition-all duration-500 ease-in-out group fixed top-4 left-6 font-mono text-3xl font-black hover:text-white text-slate-400"
 >
     <p class="group-hover:scale-110">
-        ⭐️
+        𓊓
     </p>
 
     {#if toggleMenuToolTip}

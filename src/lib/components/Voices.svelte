@@ -10,25 +10,25 @@
         {
             id: "7Uw4vgM4Qb1qiwwUnu15",
             name: "Sam",
-            imageURL: "/images/voices/soothing-sam.png",
+            imageURL: "/images/voices/sam.png",
             audioPreviewURL: "/sounds/voice-previews/sam.mp3",
         },
         {
             id: "286VLndcKwmm1RxLQoOn",
             name: "Matthew",
-            imageURL: "/images/voices/materializePath.png",
+            imageURL: "/images/voices/matthew.png",
             audioPreviewURL: "/sounds/voice-previews/matthew.mp3",
         },
         {
             id: "FVQMzxJGPUBtfz1Azdoy",
             name: "Danielle",
-            imageURL: "/images/voices/zoomer.png",
+            imageURL: "/images/voices/danielle.png",
             audioPreviewURL: "/sounds/voice-previews/danielle.mp3",
         },
         {
             id: "4JVOFy4SLQs9my0OLhEw",
             name: "Luca",
-            imageURL: "/images/voices/snow-leopard.png",
+            imageURL: "/images/voices/luca.png",
             audioPreviewURL: "/sounds/voice-previews/luca.mp3",
         },
     ];
