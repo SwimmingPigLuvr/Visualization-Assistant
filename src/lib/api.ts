@@ -378,26 +378,3 @@ export async function cancelRun(threadID: string, runID: string) {
         console.error('error during cancellation: ', error);
     }
 }
-
-
-// export function extractMessages(events: Events): Message[] {
-//     return events
-//     .filter(event => event.object === 'thread.message' && event.content.length > 0)
-//     .map(event => ({
-//       id: event.id,
-//       content: event.content.map(c => c.text.value).join(' '),
-//       createdAt: new Date(event.created_at),
-//       role: event.role as 'user' | 'assistant' | 'system' | 'function' | 'data' | 'tool'
-//     }));
-// }
-
-// export function extractMessageValues(events: Events): string[] {
-//     return events
-//       .filter(event => event.content && event.content.length > 0)
-//       .map(event => event.content
-//         .map(content => content.text.value) // TypeScript understands content is TextContent
-//         .join(' ')
-//       );
-// }
-
-

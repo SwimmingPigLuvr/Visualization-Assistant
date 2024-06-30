@@ -67,9 +67,14 @@
     }
 
     async function signInWithGoogle() {
-        console.log("redirect sign in...");
-        await setPersistence(auth, browserSessionPersistence);
-        await signInWithRedirect(auth, provider);
+        console.log("initiating google sign in process...");
+        try {
+            await setPersistence(auth, browserSessionPersistence);
+            console.log("persistence set nicely");
+            await signInWithRedirect(auth, provider);
+        } catch (error) {
+            console.error("error during google sign in: ", error);
+        }
     }
 
     async function handleUserSignIn(user: User) {
@@ -98,8 +103,10 @@
     // Check for redirect results on component mount
     onMount(async () => {
         if (browser) {
+            console.log("checking for redirect result");
             try {
                 const result = await getRedirectResult(auth);
+                console.log("redirect result:", result);
                 if (result) {
                     await handleUserSignIn(result.user);
                 }

@@ -1,4 +1,4 @@
-// src/routes/api/assistant/+server.ts
+// src/routes/api/threads/messages/+server.ts
 import OpenAI from 'openai';
 import { OPENAI_API_KEY } from '$env/static/private';
 

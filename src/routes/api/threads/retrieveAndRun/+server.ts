@@ -1,4 +1,4 @@
-// api/threads/retrieve/+server.ts
+// api/threads/retrieveAndRun/+server.ts
 import { currentThread } from "$lib/stores.js";
 import { json } from "@sveltejs/kit";
 import OpenAi from "openai";
