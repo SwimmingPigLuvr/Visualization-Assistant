@@ -5,14 +5,9 @@
         currentTechnique,
         showPricingTable,
     } from "$lib/stores";
-    import { blur, fade, slide } from "svelte/transition";
+    import { fade, slide } from "svelte/transition";
 
     export let isDropdown = false;
-
-    let showRevisionInfo = false;
-    let showAffirmationInfo = false;
-    let showVisualizationInfo = false;
-    let showMeditationInfo = false;
 
     let showTechniqueModal = false;
 
@@ -41,9 +36,6 @@
         ✦
     </button>
 
-    <!-- TODO -->
-    <!-- implement modal to select the technique -->
-
     <!-- technique modal -->
     {#if showTechniqueModal}
         <button
@@ -65,9 +57,6 @@
                     >
                 </p>
             </div>
-            <!-- TODO -->
-            <!-- list techniques -->
-            <!-- add a title and subheading -->
 
             <div class="text-3xl flex flex-col w-full">
 
@@ -193,9 +182,6 @@
 {:else}
     <div class="p-2">
         <h2 class="text-xl">Techniques</h2>
-
-        <!-- pay now button -->
-        <!-- <p>for dev purposes only</p> -->
 
         {#if $accountType === "paid"}
             <!-- <button class="p-4 bg-sky-700 text-sky-200" on:click={() => accountType.set('free')}>downgrade?</button> -->

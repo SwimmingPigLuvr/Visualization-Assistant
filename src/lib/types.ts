@@ -1,5 +1,12 @@
 import type { Annotation } from "openai/resources/beta/threads/messages.mjs";
 
+export interface Thread {
+    name?: string;
+    id: string;
+    archived: boolean;
+    favorite: boolean;
+}
+
 export interface Event {
     id: string;
     object: string;

@@ -38,7 +38,6 @@
     import { initializeApp } from "firebase/app";
     import { tweened } from "svelte/motion";
 
-
     let showMode = false;
 
     function typewriter(node: HTMLElement, { speed = 50 }) {
@@ -84,7 +83,9 @@
         if (cleanup) cleanup();
 
         positionStore = tweened(0, { easing: cubicInOut, duration: 2000 });
-        cleanup = positionStore.subscribe(val => position = Math.round(val));
+        cleanup = positionStore.subscribe(
+            (val) => (position = Math.round(val)),
+        );
 
         positionStore.set(mode.length);
     }
@@ -130,7 +131,7 @@
             if (container) {
                 container.scrollTo({
                     top: container.scrollHeight,
-                    behavior: "smooth",
+                    behavior: "instant",
                 });
             }
         }
@@ -313,7 +314,7 @@
                                 : 'pl-8 pt-4 mr-auto'} "
                         >
                             <div
-                                class="font-mono text-xl leading-6 sm:leading-8"
+                                class="font-mono text-xl leading-6 sm:leading-loose"
                             >
                                 {#if message.role === "assistant"}
                                     <img
@@ -352,7 +353,7 @@
                             />
 
                             <div class="">
-                                <span class="font-mono text-xl leading-7">
+                                <span class="font-mono text leading-10">
                                     {#if $isThinking}
                                         <span class=""
                                             >{@html formattedPartial}</span
@@ -372,11 +373,11 @@
         {:else if !$signInModalOpen}
             <!-- message in the middle -->
             <!-- set based on mode -->
-                <h2
-                    class="text-opacity-90 font-mono text-dreamy leading-[1] my-4 text-[2rem] m-auto absolute -translate-x-1/2 sm:top-1/3 top-10 left-1/2  text-center"
-                >
-                    {mode.slice(0, position)}
-                </h2>
+            <h2
+                class="text-opacity-90 font-mono text-dreamy leading-[1] my-4 text-[2rem] m-auto absolute -translate-x-1/2 sm:top-1/3 top-10 left-1/2 text-center"
+            >
+                {mode.slice(0, position)}
+            </h2>
         {/if}
     </div>
 

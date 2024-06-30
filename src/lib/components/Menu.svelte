@@ -1,43 +1,17 @@
 <script lang="ts">
     import Voices from "./Voices.svelte";
 
-    import { fade, fly, slide, blur } from "svelte/transition";
-    import VoiceData from "./VoiceData.svelte";
+    import { fly } from "svelte/transition";
     import {
         cubicInOut,
-        cubicIn,
-        cubicOut,
-        backIn,
-        backOut,
     } from "svelte/easing";
-    import { writable } from "svelte/store";
-    import Visualizations from "./Visualizations.svelte";
     import {
-        bgMode,
-        customInstruct,
-        currentTechnique,
         currentThread,
         inputFocused,
         isMenuOpen,
         messagesStore,
-        userThreads,
-        v,
-        wallpaper,
     } from "$lib/stores";
-    import {
-        SignedIn,
-        SignedOut,
-        Doc,
-        collectionStore,
-        docStore,
-        userStore,
-    } from "sveltefire";
-    import { auth, firestore } from "$lib/firebase";
-    import { onDestroy } from "svelte";
     import Threads from "./Threads.svelte";
-    import type { Voice } from "$lib/types";
-    import Profile from "./Profile.svelte";
-    import Techniques from "./Techniques.svelte";
     import Bugs from "./Bugs.svelte";
     import { goto } from "$app/navigation";
 
@@ -49,15 +23,9 @@
         toggleMenuToolTip = false;
     }
 
-    function openMenu() {
-        isMenuOpen.set(true);
-    }
-
     function closeMenu() {
         isMenuOpen.set(false);
     }
-
-    let showSettings = false;
 
     function handleCreateNewThread() {
         isMenuOpen.set(false);
@@ -122,8 +90,7 @@
     class="transform z-50 transition-all duration-500 ease-in-out group fixed top-4 left-4 font-mono text-3xl font-black hover:text-white text-slate-400"
 >
     <p class="group-hover:scale-110">
-        🌸
-        <!-- ✦ -->
+        ⭐️
     </p>
 
     {#if toggleMenuToolTip}

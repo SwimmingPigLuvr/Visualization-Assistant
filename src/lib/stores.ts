@@ -1,6 +1,6 @@
 import { writable } from "svelte/store";
 import { browser } from '$app/environment';
-import { defaultSettings, type Message, type Settings } from "$lib/types";
+import { defaultSettings, type Message, type Settings, type Thread } from "$lib/types";
 import { Audio } from "openai/resources/index.mjs";
 
 export let currentVoiceID = writable<string>('286VLndcKwmm1RxLQoOn');
@@ -32,9 +32,8 @@ export let defaultVoiceID = writable<string>('286VLndcKwmm1RxLQoOn');
 export let currentThread = writable<string>('');
 export let currentRun = writable<string>('');
 
-export let userThreads = writable<string[]>([]);
+export let userThreads = writable<Thread[]>([]);
 export let archivedThreads = writable<string[]>([]);
-export let firstMessage = writable<string>("");
 
 export let wallpaper = writable<string>('/videos/clouds.mp4');
 export let bgMode = writable<'image' | 'video'>('video');

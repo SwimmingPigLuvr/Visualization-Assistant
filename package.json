@@ -31,6 +31,7 @@
 		"axios": "^1.7.2",
 		"elevenlabs": "^0.6.0",
 		"firebase": "^9.23.0",
+		"firebase-admin": "^12.2.0",
 		"fs": "^0.0.1-security",
 		"openai": "^4.38.1",
 		"sveltefire": "^0.4.5",

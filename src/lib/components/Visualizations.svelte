@@ -1,4 +1,4 @@
-<!-- lib/components/Visualizations.svelte -->
+<!--Visualizations.svelte -->
 <script lang="ts">
     import { goto } from "$app/navigation";
     import { auth, firestore } from "$lib/firebase";
@@ -9,7 +9,6 @@
         messagesStore,
         userThreads,
         threadOptionIndex,
-        firstMessage,
     } from "$lib/stores";
     import { fade, fly, slide } from "svelte/transition";
     import {
@@ -23,18 +22,28 @@
     import { createEventDispatcher, onMount } from "svelte";
     import { get, writable } from "svelte/store";
     import { docStore, userStore } from "sveltefire";
+    import type { Thread } from "$lib/types";
 
     const user = userStore(auth);
     const dispatch = createEventDispatcher<{
-        favorite: { threadID: string };
-        rename: { threadID: string; newName: string };
-        archive: { threadID: string };
+        favorite: { id: string };
+        rename: { id: string; newName: string };
+        archive: { id: string };
     }>();
 
-    export let threadID: string;
+    export let thread: Thread;
     export let index: number;
+    export let firstMessage: Promise<string>;
 
-    let threadName = $firstMessage;
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    let showOptions = false;
+    let displayMessage = writable('');
+
+    $: if (thread.name) {
+        displayMessage.set(thread.name);
+    } else {
+        firstMessage.then(message => displayMessage.set(message));
+    }
 
     async function loadThreadName() {
         if (!$user) return;
@@ -49,45 +58,15 @@
     }
 
 
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    let showOptions = false;
 
-    async function getFirstMessage() {
-        try {
-            const response = await fetch("/api/threads/messages", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    threadID: threadID,
-                }),
-            });
-
-            const data = await response.json();
-
-            firstMessage.set(
-                data.body?.data?.[1]?.content?.[0]?.text?.value ?? "",
-            );
-        } catch (error) {
-            console.error("error fetching thread messages", error);
-        }
-    }
-
-    async function deleteThread(threadID: string) {
-        // todos
-        // delete thread from userThreads store
-        // delete thread from firestore
-        console.log("hello from delete thread");
+    async function deleteThread(id: string) {
         try {
             const response = await fetch("/api/threads/delete", {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({
-                    threadID: threadID,
-                }),
+                body: JSON.stringify({ threadID: id }),
             });
 
             if (!response.ok) {
@@ -95,74 +74,52 @@
             }
 
             const result = await response.json();
-            console.log("API response:", result);
 
             // delete from firestore
             if (result.deleted) {
-                console.log("hello from if (result.success)");
-
-                console.log(
-                    "Thread successfully deleted from API. Proceeding with Firestore update.",
-                );
-
                 const userRef = doc(firestore, `users/${$user!.uid}`);
-
                 await updateDoc(userRef, {
-                    threads: arrayRemove(threadID),
+                    threads: arrayRemove(id),
                 });
 
-                console.log("Thread successfully deleted from Firestore.");
-
-                // todo
-                // remove thread from userThreads
                 userThreads.update((threads) =>
-                    threads.filter((id) => id !== threadID),
-                );
-                console.log(
-                    "Thread successfully deleted from userThreads store.",
+                    threads.filter((thread) => thread.id !== id)
                 );
 
-                // check if deleted thread is the currentThread
-                console.log("checking to see if currentThread deleted: ");
                 currentThread.update((current) => {
-                    if (current === threadID) {
+                    if (current === id) {
                         messagesStore.set([]);
                         currentRun.set("");
-
-                        // clear url
                         goto("/", { replaceState: true });
-
                         return "";
                     }
                     return current;
                 });
-                console.log("current thread: ", currentThread);
             }
         } catch (error) {
             console.error("failed to delete the thread: ", error);
         }
     }
 
-    async function setThread(threadID: string) {
-        currentThread.set(threadID);
+    async function setThread(id: string) {
+        currentThread.set(id);
         isMenuOpen.set(false);
     }
 
-    getFirstMessage();
-
-    // close thread options by clicking anything else
-    const handleClickOutside = (event: MouseEvent) => {
-        const target = event.target as Element | null;
-        if (
-            target &&
-            !target.closest(".options-modal") &&
-            $threadOptionIndex === index
-        ) {
-            threadOptionIndex.set(-1);
-        }
-    };
-
     onMount(() => {
+
+        // close thread options by clicking anything else
+        const handleClickOutside = (event: MouseEvent) => {
+            const target = event.target as Element | null;
+            if (
+                target &&
+                !target.closest(".options-modal") &&
+                $threadOptionIndex === index
+            ) {
+                threadOptionIndex.set(-1);
+            }
+        };
+
         document.addEventListener("click", handleClickOutside);
         return () => {
             document.removeEventListener("click", handleClickOutside);
@@ -170,34 +127,34 @@
     });
 
     async function favorite() {
-        dispatch("favorite", { threadID });
+        dispatch("favorite", { id: thread.id });
     }
 
     async function rename() {
         const newName = prompt("Enter new name for thread:");
         if (newName) {
-            dispatch("rename", { threadID, rename });
+            dispatch("rename", { id: thread.id, newName });
         }
     }
 
     async function archive() {
-        dispatch("archive", { threadID });
+        dispatch("archive", { id: thread.id });
     }
 </script>
 
-{#if $firstMessage !== ""}
+{#if $displayMessage !== ""}
     <!-- choose thread button -->
     <button
         on:mouseenter={() => (showOptions = true)}
         on:mouseleave={() => (showOptions = false)}
-        on:click={() => setThread(threadID)}
+        on:click={() => setThread(thread.id)}
         class="hover-glow group hover:border-slate-400 rounded-xl border-[1px] border-transparent sm:w-[370px] w-[490px] text-left relative p-2 hover:glow"
     >
         <!-- preview thread content -->
         <p
             class="z-20 group-hover:text-opacity-100 text-opacity-75 overflow-hidden truncate tracking w-full text-white"
         >
-            {$firstMessage}
+            {$displayMessage}
         </p>
 
         <!-- open thread options button -->
@@ -221,7 +178,7 @@
                             <!-- share -->
                             <button
                                 on:click|stopPropagation={favorite}
-                                class="w-full p-3 rounded-xl hover:bg-blue-700 flex justify-start space-x-2"
+                                class="{thread.favorite ? 'bg-blue-700' : 'hover:bg-blue-700'} w-full p-3 rounded-xl flex justify-start space-x-2"
                             >
                                 <p>⭐️</p>
                                 <p>Favorite</p>
@@ -244,7 +201,7 @@
                             </button>
                             <!-- delete -->
                             <button
-                                on:click|stopPropagation={deleteThread}
+                                on:click|stopPropagation={() => deleteThread(thread.id)}
                                 class="w-full p-3 rounded-xl hover:bg-red-700 flex justify-start space-x-2"
                             >
                                 <p>🚮</p>

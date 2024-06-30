@@ -2,6 +2,7 @@ import { doc, updateDoc, writeBatch } from "firebase/firestore";
 import { responseText, messagesStore, currentThread, isThinking, currentRun, partialMessage, completedMessage, userThreads, currentTechnique, customInstruct } from "./stores";
 import { auth, firestore } from "./firebase";
 import { get } from "svelte/store";
+import type { Thread } from "$lib/types";
 
 export function formatText(inputText: string) {
 
@@ -25,8 +26,13 @@ export function formatText(inputText: string) {
     return formattedText;
 }
 
-async function addThread(threadID: string) {
-    userThreads.update(userThreads => [threadID, ...userThreads]);
+async function addThread(id: string) {
+    const newThread: Thread = {
+        id: id,
+        archived: false,
+        favorite: false,
+    }
+    userThreads.update(userThreads => [newThread, ...userThreads]);
 }
 
 export async function syncThreadData() {
@@ -74,6 +80,8 @@ Remind the user to practice this technique nightly to effectively reshape past e
         customInstruct.set("Your role is to help users craft detailed, vivid, and emotionally engaging scripts about their desired future as if it has already happened. Explain that scripting involves writing a detailed story of their ideal future in the present tense, including emotions, sensory details, and specific events. Prompt them to describe a perfect day, a specific event, or how they feel in this ideal future. Encourage them to include all five senses and to read their script regularly while feeling the emotions as if the events are happening now.");
     }
 }
+
+
 
 export async function createAndRun(userInput: string) {
     isThinking.set(true);
