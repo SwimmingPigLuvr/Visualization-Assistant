@@ -373,6 +373,8 @@
         {:else if !$signInModalOpen}
             <!-- message in the middle -->
             <!-- set based on mode -->
+
+            <!-- can't see right now -->
             <h2
                 class="text-opacity-90 font-mono text-dreamy leading-[1] my-4 text-[2rem] m-auto absolute -translate-x-1/2 sm:top-1/3 top-10 left-1/2 text-center"
             >
