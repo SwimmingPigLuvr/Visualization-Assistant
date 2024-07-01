@@ -2,9 +2,7 @@
     import Voices from "./Voices.svelte";
 
     import { fly } from "svelte/transition";
-    import {
-        cubicInOut,
-    } from "svelte/easing";
+    import { cubicInOut } from "svelte/easing";
     import {
         currentThread,
         inputFocused,
@@ -19,7 +17,7 @@
     let toggleMenuToolTip = false;
 
     function toggleMenu() {
-        isMenuOpen.set(!$isMenuOpen);
+        isMenuOpen.update(current => !current);
         toggleMenuToolTip = false;
     }
 
@@ -55,7 +53,7 @@
             on:mouseenter={() => (newVisualizationToolTip = true)}
             on:mouseleave={() => (newVisualizationToolTip = false)}
             on:click={() => handleCreateNewThread()}
-            class=" z-10 group absolute top-4 right-4 font-mono text-3xl font-black hover:text-white text-slate-400"
+            class="p-4 bg-lime-800 z-10 group absolute top-0 right-0 font-mono text-3xl font-black hover:text-white text-slate-400"
             ><p
                 class="transform transition-all duration-500 ease-in-out group-hover:scale-110"
             >
@@ -65,7 +63,7 @@
             {#if newVisualizationToolTip}
                 <span
                     in:fly={{ duration: 200, y: -10 }}
-                    class="text-sm absolute top-3 right-0 tooltip rounded shadow-lg px-2 p-1 bg-black border-white border-[1px] text-white mt-8"
+                    class="text-sm absolute top-10 right-0 tooltip rounded shadow-lg px-2 p-1 bg-black border-white border-[1px] text-white mt-8"
                     >new visualization</span
                 >
             {/if}
@@ -84,24 +82,24 @@
     </div>
 {/if}
 <button
-    on:mouseenter={() => (toggleMenuToolTip = true)}
-    on:mouseleave={() => (toggleMenuToolTip = false)}
-    on:click={() => toggleMenu()}
-    class="transform z-50 transition-all duration-500 ease-in-out group fixed top-4 left-6 font-mono text-3xl font-black hover:text-white text-slate-400"
+    on:touchstart|preventDefault={() => (toggleMenuToolTip = true)}
+    on:touchend|preventDefault={() => (toggleMenuToolTip = false)}
+    on:mouseenter|preventDefault={() => (toggleMenuToolTip = true)}
+    on:mouseleave|preventDefault={() => (toggleMenuToolTip = false)}
+    on:click|preventDefault={() => toggleMenu()}
+    class="p-4 bg-lime-800 transform z-[9999] transition-all duration-500 ease-in-out group fixed top-0 left-0 font-mono text-3xl font-black hover:text-white text-slate-400"
 >
-    <p class="group-hover:scale-110">
-        𓊓
-    </p>
+    <p class="group-hover:scale-110">𓊓</p>
 
     {#if toggleMenuToolTip}
         <span
-            in:fly={{ duration: 200, y: -10 }}
-            class="z-50 flex justify-center items-center text-sm absolute top-5 left-0 tooltip w-32 rounded shadow-lg px-2 p-1 bg-black border-white border-[1px] text-white mt-8"
+            in:fly={{duration: 200, y: -10}}
+            class="z-50 flex justify-center items-center text-sm absolute top-10 left-0 tooltip w-28 rounded shadow-lg px-2 p-1 bg-black border-white border-[1px] font-mono font-normal text-white mt-8"
         >
             {#if $isMenuOpen}
-                close menu
+                Close menu
             {:else}
-                open menu
+                Open menu
             {/if}
         </span>
     {/if}

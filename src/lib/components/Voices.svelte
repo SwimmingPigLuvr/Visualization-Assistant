@@ -54,7 +54,7 @@
                 src={voices[$v].imageURL}
                 alt=""
             />
-            <p>{voices[$v].name}</p>
+            <p class="font-serif italic -tracking-widest">{voices[$v].name}</p>
         </div>
     </button>
 
