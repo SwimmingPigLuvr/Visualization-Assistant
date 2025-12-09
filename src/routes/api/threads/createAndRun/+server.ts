@@ -11,10 +11,9 @@ export async function POST({ request }) {
 
     console.log("Sending Custom Instructions:", instructions);
 
-
     const stream = await openai.beta.threads.createAndRun({
-      model: 'gpt-4o-2024-05-13',
-      assistant_id: 'asst_VhJfolAsWeg19JwxVbYjHpqc',
+      model: "gpt-5.1",
+      assistant_id: "asst_VhJfolAsWeg19JwxVbYjHpqc",
       instructions: instructions,
       thread: {
         messages: [userMessage],
@@ -34,13 +33,13 @@ export async function POST({ request }) {
 
     return new Response(readableStream, {
       headers: {
-        'Content-Type': 'text/event-stream',
-        'Cache-Control': 'no-cache',
-        'Connection': 'keep-alive',
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache",
+        Connection: "keep-alive",
       },
     });
   } catch (error) {
-    console.error('whoops... ', error);
-    return json({ error: 'An error occurred' }, { status: 500 });
+    console.error("whoops... ", error);
+    return json({ error: "An error occurred" }, { status: 500 });
   }
 }
