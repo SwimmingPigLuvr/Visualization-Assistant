@@ -24,7 +24,7 @@
     import { docStore, userStore } from "sveltefire";
     import type { Thread } from "$lib/types";
 
-    const user = userStore(auth);
+    const user = userStore(auth!);
     const dispatch = createEventDispatcher<{
         favorite: { id: string };
         rename: { id: string; newName: string };
@@ -46,15 +46,11 @@
     }
 
     async function loadThreadName() {
-        if (!$user) return;
+        if (!$user || !firestore) return;
         const userRef = doc(firestore, `users/${$user.uid}`);
         const userDoc = await getDoc(userRef);
         const threadNames = userDoc.data()?.threadNames || {};
-        threadName = threadName[threadID] || $firstMessage;
-    }
-
-    $: if ($user) {
-        loadThreadName();
+        // This function is not actually needed since we use displayMessage instead
     }
 
 

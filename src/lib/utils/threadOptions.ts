@@ -6,6 +6,12 @@ import {
     messagesStore,
     userThreads,
 } from "$lib/stores";
+import { doc, updateDoc, arrayRemove } from "firebase/firestore";
+import { firestore } from "$lib/firebase";
+import { userStore } from "sveltefire";
+import { auth } from "$lib/firebase";
+
+const user = userStore(auth);
 
 export async function deleteThread(threadID: string) {
     // todos

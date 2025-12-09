@@ -1,7 +1,6 @@
 <!-- chat.svelte -->
 <script lang="ts">
     import MessageTools from "./MessageTools.svelte";
-    import { blur, fade } from "svelte/transition";
     import {
         currentThread,
         assistantPfp,
@@ -11,9 +10,7 @@
         partialMessage,
         inputFocused,
         currentTechnique,
-        customInstruct,
         showPricingTable,
-        showStats,
         signInModalOpen,
     } from "$lib/stores";
     import { get, writable } from "svelte/store";
@@ -31,37 +28,12 @@
     import { page } from "$app/stores";
     import { goto } from "$app/navigation";
     import PricingTable from "./PricingTable.svelte";
-    import VoiceData from "./VoiceData.svelte";
-    import { cubicIn, cubicInOut, cubicOut } from "svelte/easing";
+    import { cubicInOut } from "svelte/easing";
     import Techniques from "./Techniques.svelte";
-    import { SignedIn } from "sveltefire";
-    import { initializeApp } from "firebase/app";
     import { tweened } from "svelte/motion";
+    import XiWidget from "./XiWidget.svelte";
 
     let showMode = false;
-
-    function typewriter(node: HTMLElement, { speed = 50 }) {
-        const valid =
-            node.childNodes.length === 1 &&
-            node.childNodes[0].nodeType === Node.TEXT_NODE;
-
-        if (!valid) {
-            throw new Error(
-                `this only works on elements with a single text node child`,
-            );
-        }
-
-        const text = node.textContent || "";
-        const duration = text.length * speed;
-
-        return {
-            duration,
-            tick: (t: number) => {
-                const i = ~~(text.length * t);
-                node.textContent = text.slice(0, i);
-            },
-        };
-    }
 
     let mode: string;
     let positionStore;
@@ -285,14 +257,14 @@
     let showSubmitButton = false;
 </script>
 
-<!-- <SignedIn let:user> -->
-
 <!-- pricing table -->
 {#if $showPricingTable}
     <PricingTable />
 {/if}
 
 <Techniques isDropdown />
+
+<XiWidget />
 
 <div
     class="fixed top-0 left-0 py-16 w-full m-auto items-center justify-center flex flex-col h-screen"
@@ -468,5 +440,3 @@
         </form>
     </div>
 </div>
-
-<!-- </SignedIn> -->

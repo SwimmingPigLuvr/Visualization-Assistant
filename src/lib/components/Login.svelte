@@ -124,83 +124,85 @@
     });
 </script>
 
-<SignedOut>
-    <button
-        class="z-50 absolute top-2 right-3"
-        on:click={() => signInModalOpen.set(true)}>Sign In</button
-    >
-
-    <!-- sign in with email -->
-    {#if $signInModalOpen}
+{#if browser}
+    <SignedOut>
         <button
-            in:fade
-            on:click={() => signInModalOpen.set(false)}
-            class="z-40 w-full h-screen bg-black bg-opacity-50 inset-0 fixed top-0 left-0 p-4"
+            class="z-50 absolute top-2 right-3"
+            on:click={() => signInModalOpen.set(true)}>Sign In</button
         >
-            <!-- modal -->
+
+        <!-- sign in with email -->
+        {#if $signInModalOpen}
             <button
-                on:click|stopPropagation
-                class=" sm:-top-32 -top-1/4 left-1/2 -translate-x-1/2 z-50 flex items-center rounded-none flex-col space-y-4 w-full max-w-[28rem] relative p-4 sm:p-12 border-slate-600 border-[1px] bg-black"
+                in:fade
+                on:click={() => signInModalOpen.set(false)}
+                class="z-40 w-full h-screen bg-black bg-opacity-50 inset-0 fixed top-0 left-0 p-4"
             >
-                <form
-                    class="text-left flex flex-col space-y-4 w-full"
-                    on:submit|preventDefault={handleFormSubmit}
+                <!-- modal -->
+                <button
+                    on:click|stopPropagation
+                    class=" sm:-top-32 -top-1/4 left-1/2 -translate-x-1/2 z-50 flex items-center rounded-none flex-col space-y-4 w-full max-w-[28rem] relative p-4 sm:p-12 border-slate-600 border-[1px] bg-black"
                 >
-                    <!-- <button
+                    <form
+                        class="text-left flex flex-col space-y-4 w-full"
+                        on:submit|preventDefault={handleFormSubmit}
+                    >
+                        <!-- <button
                         class="absolute top-0 right-1 rounded-none p-3"
                         on:click={() => signInModalOpen.set(false)}>X</button
                     > -->
-                    <!-- <label for="email">email</label> -->
-                    <input
-                        class="bg-white bg-opacity-10 text-white p-3 rounded-xl"
-                        placeholder="Type your email..."
-                        type="email"
-                        name="email"
-                        id="email"
-                        bind:this={emailInput}
-                        bind:value={email}
-                    />
-                    <!-- <label for="password">password</label> -->
-                    <input
-                        class="bg-white bg-opacity-10 text-white p-3 rounded-xl"
-                        placeholder="Password"
-                        type="password"
-                        name="password"
-                        id="password"
-                        bind:value={password}
-                    />
-                    <button
-                        class="font-sans font-bold text-white text-xl bg-blue-700 transform transition-all duration-500 ease-in-out border-transparent border-[1px] hover:border-white hover:border-[1px] bg-opacity-50 hover:bg-opacity-100 p-3 rounded-xl"
-                        type="submit"
-                    >
-                        <p class="">Visualize Your Goals now ➔</p>
-                    </button>
-                </form>
+                        <!-- <label for="email">email</label> -->
+                        <input
+                            class="bg-white bg-opacity-10 text-white p-3 rounded-xl"
+                            placeholder="Type your email..."
+                            type="email"
+                            name="email"
+                            id="email"
+                            bind:this={emailInput}
+                            bind:value={email}
+                        />
+                        <!-- <label for="password">password</label> -->
+                        <input
+                            class="bg-white bg-opacity-10 text-white p-3 rounded-xl"
+                            placeholder="Password"
+                            type="password"
+                            name="password"
+                            id="password"
+                            bind:value={password}
+                        />
+                        <button
+                            class="font-sans font-bold text-white text-xl bg-blue-700 transform transition-all duration-500 ease-in-out border-transparent border-[1px] hover:border-white hover:border-[1px] bg-opacity-50 hover:bg-opacity-100 p-3 rounded-xl"
+                            type="submit"
+                        >
+                            <p class="">Visualize Your Goals now ➔</p>
+                        </button>
+                    </form>
 
-                <p>or</p>
-                <!-- google -->
-                <button
-                    class="hover:bg-black hover:text-white hover:border-white border-[1px] flex space-x-2 justify-center items-center font-bold text-xl p-3 w-full bg-white bg-opacity-25 text-white font-sans rounded-2xl"
-                    on:click={signInWithGoogle}
-                >
-                    <img
-                        src="images/logos/Google_g_logo.png"
-                        alt="google G logo"
-                        class="h-8"
-                    />
-                    <p>Sign in with Google</p>
-                </button>
-                <p class="text-xs -translate-y-1">
-                    {isSignUp
-                        ? "Already have an account?"
-                        : "Don't have an account?"}
-                    <button on:click={() => (isSignUp = !isSignUp)}
-                        ><span class="text-lime-200"
-                            >{isSignUp ? "Sign In" : "Sign Up"}</span
-                        ></button
+                    <p>or</p>
+                    <!-- google -->
+                    <button
+                        class="hover:bg-black hover:text-white hover:border-white border-[1px] flex space-x-2 justify-center items-center font-bold text-xl p-3 w-full bg-white bg-opacity-25 text-white font-sans rounded-2xl"
+                        on:click={signInWithGoogle}
                     >
-                </p>
+                        <img
+                            src="images/logos/Google_g_logo.png"
+                            alt="google G logo"
+                            class="h-8"
+                        />
+                        <p>Sign in with Google</p>
+                    </button>
+                    <p class="text-xs -translate-y-1">
+                        {isSignUp
+                            ? "Already have an account?"
+                            : "Don't have an account?"}
+                        <button on:click={() => (isSignUp = !isSignUp)}
+                            ><span class="text-lime-200"
+                                >{isSignUp ? "Sign In" : "Sign Up"}</span
+                            ></button
+                        >
+                    </p>
+                </button>
             </button>
-        </button>
-    {/if}
-</SignedOut>
+        {/if}
+    </SignedOut>
+{/if}

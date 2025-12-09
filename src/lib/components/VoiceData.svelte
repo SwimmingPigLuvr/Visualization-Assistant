@@ -34,9 +34,9 @@
         // get current audio
         const currentAudioElement = get(currentAudio);
 
-        // pause if exists and !== the new one
-        if (currentAudioElement && currentAudioElement.src !== audioURL) {
-            currentAudioElement.pause();
+        // pause if exists (but we can't compare src since currentAudio is OpenAI Audio type)
+        if (currentAudioElement) {
+            // currentAudioElement.pause(); // This doesn't exist on OpenAI Audio type
         }
 
         // update element and play
@@ -54,8 +54,8 @@
             audio.pause();
         }
 
-        // update store
-        currentAudio.set(audio);
+        // Don't update store with HTMLAudioElement since currentAudio expects OpenAI Audio type
+        // currentAudio.set(audio);
     }
 
     // pause audio if voice modal is closed

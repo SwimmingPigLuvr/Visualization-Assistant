@@ -1,8 +1,14 @@
 <script lang="ts">
+    import XiWidget from "$lib/components/XiWidget.svelte";
 </script>
 
-<body class="bg-black w-full fixed items-center flex justify-center h-screen top-0 left-0 p-2">
-
+<body
+    class="bg-black w-full fixed items-center flex flex-col justify-center h-screen top-0 left-0 p-2"
+>
+    <div>
+        <h1 class="text-white">hello</h1>
+    </div>
+    <XiWidget />
     <div class="m-auto">
         <blockquote
             class="reddit-embed-bq"

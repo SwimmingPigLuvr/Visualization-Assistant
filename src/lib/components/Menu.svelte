@@ -87,7 +87,7 @@
     on:mouseenter|preventDefault={() => (toggleMenuToolTip = true)}
     on:mouseleave|preventDefault={() => (toggleMenuToolTip = false)}
     on:click|stopPropagation={() => toggleMenu()}
-    class="p-4 bg-sky-800 transform z-[9999] transition-all duration-500 ease-in-out group fixed top-0 left-0 font-mono text-3xl font-black hover:text-white text-slate-400"
+    class="p-4 transform z-[9999] transition-all duration-500 ease-in-out group fixed top-0 left-0 font-mono text-3xl font-black hover:text-white text-slate-400"
 >
     <p class="group-hover:scale-110">𓊓</p>
 

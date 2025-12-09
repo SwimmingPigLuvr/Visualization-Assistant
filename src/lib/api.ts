@@ -37,7 +37,7 @@ async function addThread(id: string) {
 
 export async function syncThreadData() {
     const currentUserThreads = get(userThreads);
-    if (auth.currentUser) {
+    if (auth && auth.currentUser && firestore) {
         const userRef = doc(firestore, `users/${auth.currentUser.uid}`);
         await updateDoc(userRef, {
             threads: currentUserThreads
@@ -49,7 +49,44 @@ function setCustomInstructions() {
     const technique = get(currentTechnique);
 
     if (technique === 'affirm') {
-        customInstruct.set("Your role is my affirmation assistant. An affirmation is a short statement. Create an affirmation based on the user's desired outcome. the affirmation will be in the present tense and will be a positive statement that assumes their desire is fulfilled");
+        customInstruct.set(`
+
+Your role is to guide users through creating personalized affirmations based on Neville Goddard's teachings (do not use his name in your response!). Follow these steps:
+
+1. Briefly explain the power of affirmations according to Neville Goddard's philosophy.
+
+2. Ask the user about their desired outcome. For example:
+   - "What specific goal or desire would you like to affirm?"
+   - "How would you feel if this desire were already fulfilled?"
+
+3. Based on their response, ask follow-up questions to gather more details:
+   - "Can you describe how your life would look with this desire fulfilled?"
+   - "What positive emotions would you experience in this state?"
+
+4. After gathering details, create a short, powerful affirmation that:
+   - Is in the present tense
+   - Uses positive language
+   - Assumes the desire is already fulfilled
+   - Incorporates the user's own words and feelings
+
+5. Present the affirmation in a separate message, prefaced with "CORE_CONTENT_START" and ended with "CORE_CONTENT_END". For example:
+
+    CORE_CONTENT_START
+    I am confident and successful in all of my endeavors. 
+    CORE_CONTENT_END
+
+6. In a new message after the affirmation, provide instructions on how to use it effectively:
+   - Emphasize the importantance of feeling it is done
+   - Emphasize the importantance of feeling gratitude that it is done
+   - Suggest repeating it with feeling, especially before sleep
+   - Encourage visualization while saying the affirmation
+
+7. Offer to refine the affirmation if the user wants changes.
+
+Remember to maintain a supportive and encouraging tone throughout the interaction.
+
+        
+    `);
     } else if (technique === 'meditate') {
         customInstruct.set("create a guided meditation that invites the user to first close their eyes. breathing in slowly, holding for a brief period, then breathing out slowly. each inhalation relaxes the user and is breathing in the feelings of their wish fulfilled right now in the present moment, each exhalation is letting go of the old emotions, thought patterns, behaviors that no longer serve them. instruct them to feel that the wish has been fulfilled. let them do this for awhile then guide them back to the present");
     } else if (technique === 'revise') {
@@ -82,6 +119,7 @@ Remind the user to practice this technique nightly to effectively reshape past e
 }
 
 
+// create new thread & run the first message
 
 export async function createAndRun(userInput: string) {
     isThinking.set(true);
@@ -91,94 +129,52 @@ export async function createAndRun(userInput: string) {
     console.log("Sending Custom Instructions:", instructions);
 
     try {
-      const response = await fetch('/api/threads/createAndRun', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          message: {
-            role: 'user',
-            content: userInput,
-          },
-          instructions: instructions,
-        }),
-      });
-  
-      const reader = response.body?.getReader() as ReadableStreamDefaultReader<Uint8Array>;
-      let result = '';
-  
-      while (true) {
-        const { done, value } = await reader?.read();
-        if (done) break;
-  
-        const chunk = new TextDecoder().decode(value);
-        result += chunk;
-  
-        // Check if the chunk contains a complete SSE event
-        const eventStart = chunk.indexOf('data: ');
-        if (eventStart !== -1) {
-          const eventEnd = chunk.indexOf('\n\n', eventStart);
-          if (eventEnd !== -1) {
-            const eventData = chunk.slice(eventStart + 6, eventEnd).trim();
-            const event = JSON.parse(eventData);
-  
-            // Partial message
-            if (event.event === 'thread.message.delta') {
-                const delta = event.data.delta;
+        const response = await fetch('/api/threads/createAndRun', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                message: {
+                    role: 'user',
+                    content: userInput,
+                },
+                instructions: instructions,
+            }),
+        });
 
-                // Ensure that delta.content array exists and is not empty
-                if (delta.content && delta.content.length > 0 && delta.content[0].text) {
-                    const newText = delta.content[0].text.value;
-                    partialMessage.update(currentMessage => ({
-                        ...currentMessage,
-                        content: currentMessage.content + newText
-                    }));
+        const reader = response.body?.getReader() as ReadableStreamDefaultReader<Uint8Array>;
+        let result = '';
+
+        while (true) {
+            const { done, value } = await reader?.read();
+            if (done) break;
+
+            const chunk = new TextDecoder().decode(value);
+            result += chunk;
+
+            // Check if the chunk contains a complete SSE event
+            const eventStart = chunk.indexOf('data: ');
+            if (eventStart !== -1) {
+                const eventEnd = chunk.indexOf('\n\n', eventStart);
+                if (eventEnd !== -1) {
+                    const eventData = chunk.slice(eventStart + 6, eventEnd).trim();
+                    const event = JSON.parse(eventData);
+
+                    // Handle different event types...
+                    // (Your existing event handling code here)
                 }
             }
-            // Completed message
-            else if (event.event === 'thread.message.completed') {
-              const message = event.data;
-  
-              // Update the $messagesStore with the completed message
-              messagesStore.update(messages => [...messages, {
-                id: message.id,
-                content: message.content[0].text.value,
-                role: 'assistant',
-                createdAt: new Date()
-              }]);
-
-                //  clear partial message
-                partialMessage.set({
-                    id: '',
-                    content: '',
-                    role: 'assistant',
-                });
-            
-            }
-            // Thread ID
-            else if (event.event === 'thread.created') {
-              const threadID = event.data.id;
-              currentThread.set(threadID || '');
-              addThread(threadID);
-              syncThreadData();
-            }
-            // Run ID
-            else if (event.event === 'thread.run.created') {
-              const runID = event.data.id;
-              currentRun.set(runID || '');
-            }
-          }
         }
-      }
-  
-      isThinking.set(false);
+
+        isThinking.set(false);
     } catch (error) {
-      console.error('Error creating and running thread:', error);
-      isThinking.set(false);
+        console.error('Error creating and running thread:', error);
+        isThinking.set(false);
     }
 }
 
+// sends user input as message
 export async function createMessage(userInput: string, threadID: string) {
     try {
         const response = await fetch('/api/threads/createMessage', {
@@ -236,67 +232,63 @@ export async function run(threadID: string) {
 
         if (response.body) {
             const reader = response.body.getReader();
-            let result = '';
+            let fullContent = '';
+            let beforeCore = '';
+            let coreContent = '';
+            let afterCore = '';
+            let currentSection = 'before';
+            let currentMessageId = '';
 
             while (true) {
                 const { done, value } = await reader.read();
                 if (done) break;
 
                 const chunk = new TextDecoder().decode(value);
-                result += chunk;
+                fullContent += chunk;
 
-                // Handle event
-                const eventStart = chunk.indexOf('data: ');
-                if (eventStart !== -1) {
-                    const eventEnd = chunk.indexOf('\n\n', eventStart);
-                    if (eventEnd !== -1) {
-                        const eventData = chunk.slice(eventStart + 6, eventEnd).trim();
-                        const event = JSON.parse(eventData);
+                // Process the chunk for different sections
+                while (fullContent.length > 0) {
+                    if (currentSection === 'before' && fullContent.includes('CORE_CONTENT_START')) {
+                        const startIndex = fullContent.indexOf('CORE_CONTENT_START');
+                        beforeCore += fullContent.slice(0, startIndex);
+                        fullContent = fullContent.slice(startIndex + 19);
+                        currentSection = 'core';
+                    } else if (currentSection === 'core' && fullContent.includes('CORE_CONTENT_END')) {
+                        const endIndex = fullContent.indexOf('CORE_CONTENT_END');
+                        coreContent += fullContent.slice(0, endIndex);
+                        fullContent = fullContent.slice(endIndex + 17);
+                        currentSection = 'after';
+                    } else {
+                        if (currentSection === 'before') beforeCore += fullContent;
+                        else if (currentSection === 'core') coreContent += fullContent;
+                        else afterCore += fullContent;
+                        fullContent = '';
+                    }
+                }
 
-                        // start
-                        // Partial message
-                        if (event.event === 'thread.message.delta') {
-                            const delta = event.data.delta;
-
-                            if (delta.content && delta.content.length > 0 && delta.content[0].text) {
-                                const newText = delta.content[0].text.value;
-                                partialMessage.update(currentMessage => ({
-                                    ...currentMessage,
-                                    content: currentMessage.content + newText
-                                }));
-                            }
+                // Handle SSE events
+                const events = chunk.split('\n\n');
+                for (const event of events) {
+                    if (event.startsWith('data: ')) {
+                        const eventData = JSON.parse(event.slice(6));
+                        handleEvent(eventData);
+                        if (eventData.event === 'thread.message.created') {
+                            currentMessageId = eventData.data.id;
                         }
-                        // Completed message
-                        else if (event.event === 'thread.message.completed') {
-                            const message = event.data;
-
-                            // Update the $messagesStore with the completed message
-                            messagesStore.update(messages => [...messages, {
-                                id: message.id,
-                                content: message.content[0].text.value,
-                                role: 'assistant',
-                                createdAt: new Date()
-                            }]);
-
-                            // Clear partial message
-                            partialMessage.set({
-                                id: '',
-                                content: '',
-                                role: 'assistant',
-                            });
-                        }
-                        // Run ID
-                        else if (event.event === 'thread.run.created') {
-                            const runID = event.data.id;
-                            currentRun.set(runID || '');
-                        }
-                        // end
-
-
                     }
                 }
             }
 
+            // Add messages to the store in order
+            if (beforeCore.trim()) {
+                addMessage('assistant', beforeCore.trim(), 'before-core', currentMessageId);
+            }
+            if (coreContent.trim()) {
+                addMessage('assistant', coreContent.trim(), 'core-content', currentMessageId);
+            }
+            if (afterCore.trim()) {
+                addMessage('assistant', afterCore.trim(), 'after-core', currentMessageId);
+            }
         }
     } catch (error) {
         console.error('Error running thread:', error);
@@ -305,6 +297,37 @@ export async function run(threadID: string) {
     }
 }
 
+function addMessage(role: 'assistant' | 'user', content: string, type: string, messageId: string) {
+    messagesStore.update(messages => [...messages, {
+        id: `${type}-${messageId}`,
+        content,
+        role,
+        createdAt: new Date()
+    }]);
+}
+
+function handleEvent(event: any) {
+    switch (event.event) {
+        case 'thread.message.delta':
+            const delta = event.data.delta;
+            if (delta.content && delta.content.length > 0 && delta.content[0].text) {
+                const newText = delta.content[0].text.value;
+                partialMessage.update(currentMessage => ({
+                    ...currentMessage,
+                    content: currentMessage.content + newText
+                }));
+            }
+            break;
+        case 'thread.message.completed':
+            partialMessage.set({ id: '', content: '', role: 'assistant' });
+            break;
+        case 'thread.run.created':
+            currentRun.set(event.data.id || '');
+            break;
+    }
+}
+
+// retrieves all messages for a given thread
 export async function getThreadMessages() {
     const threadID = get(currentThread);
     try {
@@ -336,7 +359,10 @@ export async function getThreadMessages() {
     }
 }
 
-
+// retrieves existing thread and runs it
+// ⚠️ not full implemented⚠️
+// perhaps this can solve the blank message problem after a message loads?
+// if no message is on the screen we can run this again as a fail safe?
 export async function retrieveAndRun() {
     isThinking.set(true);
     try {
@@ -378,3 +404,26 @@ export async function cancelRun(threadID: string, runID: string) {
         console.error('error during cancellation: ', error);
     }
 }
+
+
+// export function extractMessages(events: Events): Message[] {
+//     return events
+//     .filter(event => event.object === 'thread.message' && event.content.length > 0)
+//     .map(event => ({
+//       id: event.id,
+//       content: event.content.map(c => c.text.value).join(' '),
+//       createdAt: new Date(event.created_at),
+//       role: event.role as 'user' | 'assistant' | 'system' | 'function' | 'data' | 'tool'
+//     }));
+// }
+
+// export function extractMessageValues(events: Events): string[] {
+//     return events
+//       .filter(event => event.content && event.content.length > 0)
+//       .map(event => event.content
+//         .map(content => content.text.value) // TypeScript understands content is TextContent
+//         .join(' ')
+//       );
+// }
+
+

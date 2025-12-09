@@ -5,7 +5,7 @@ import { Audio } from "openai/resources/index.mjs";
 
 export let currentVoiceID = writable<string>('286VLndcKwmm1RxLQoOn');
 
-export let globalAudioPlayer = writable<HTMLAudioElement>(new Audio());
+export let globalAudioPlayer = writable<HTMLAudioElement | null>(browser ? document.createElement('audio') : null);
 export let audioSource = writable<string[]>([]);
 export let isLoading = writable<boolean[]>([]);
 export let isPlaying = writable<boolean[]>([]);

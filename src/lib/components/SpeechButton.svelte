@@ -25,7 +25,7 @@
     let loopTooltip = false;
     let isLooped = false;
 
-    let audioPlayer: HTMLAudioElement;
+    let audioPlayer: HTMLAudioElement | null = null;
     $: audioPlayer = $globalAudioPlayer;
 
     function downloadAudio() {

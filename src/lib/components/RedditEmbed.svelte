@@ -4,12 +4,12 @@
     export let post: { url: string, title: string, author: string, subreddit: string, height: number };
 
     // Function to create the embed HTML without breaking the Svelte script block
-    function createEmbedHtml(post) {
+    function createEmbedHtml(postData: { url: string, title: string, author: string, subreddit: string, height: number }) {
         return `
-            <blockquote class="reddit-embed-bq" style="height:${post.height}px" data-embed-height="858">
-                <a href="${post.url}">${post.title}</a><br> 
-                by <a href="https://www.reddit.com/user/${post.author}/">${post.author}</a> in 
-                <a href="https://www.reddit.com/r/${post.subreddit}/">${post.subreddit}</a>
+            <blockquote class="reddit-embed-bq" style="height:${postData.height}px" data-embed-height="858">
+                <a href="${postData.url}">${postData.title}</a><br>
+                by <a href="https://www.reddit.com/user/${postData.author}/">${postData.author}</a> in
+                <a href="https://www.reddit.com/r/${postData.subreddit}/">${postData.subreddit}</a>
             </blockquote>
         `;
     }

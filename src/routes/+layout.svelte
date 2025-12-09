@@ -10,6 +10,7 @@
     import { auth, firestore } from "$lib/firebase";
     import { doc, getDoc, setDoc } from "firebase/firestore";
     import { onAuthStateChanged } from "firebase/auth";
+    import type { User } from "firebase/auth";
     import {
         currentThread,
         accountType,
@@ -19,67 +20,84 @@
         defaultVoiceID,
     } from "$lib/stores";
     import { onMount } from "svelte";
-    import { get, writable } from "svelte/store";
+    import { get, writable, type Readable } from "svelte/store";
     import { inject } from "@vercel/analytics";
-    import { dev } from "$app/environment";
+    import { browser, dev } from "$app/environment";
 
     inject({ mode: dev ? "development" : "production" });
 
     let loadingUserData = writable<boolean>(false);
+    let user: Readable<User | null> | null = null;
 
-    const user = userStore(auth);
-
-    onAuthStateChanged(auth, async (user) => {
-        if (user) {
-            loadingUserData.set(true);
-            const userRef = doc(firestore, `users/${user.uid}`);
-            const docSnap = await getDoc(userRef);
-
-            if (docSnap.exists()) {
-                const userData = docSnap.data();
-                userNameStore.set(userData.username);
-                userSettings.set(userData.settings);
-                userThreads.set(userData.threads);
-                accountType.set(userData.accountType);
-                loadingUserData.set(false);
-            } else {
-                console.log("No such document!");
-                userNameStore.set("user"); // Default or error case
-                // Create a new document for the user
-                await setDoc(userRef, {
-                    username: user.displayName || "user",
-                    email: user.email,
-                    threads: [],
-                    settings: {
-                        voiceID: get(defaultVoiceID),
-                    },
-                    accountType: "free", // Set default account type
-                    createdAt: new Date(),
-                });
-                console.log("User document created.");
-                // Re-fetch the user data
-                const newDocSnap = await getDoc(userRef);
-                const newUserData = newDocSnap.data();
-                userNameStore.set(newUserData?.username);
-                userSettings.set(newUserData?.settings);
-                userThreads.set(newUserData?.threads);
-                accountType.set(newUserData?.accountType);
-                loadingUserData.set(false);
-            }
-            console.log("user SIGNED IN");
-        } else {
-            console.log("user SIGNED OUT");
-            userNameStore.set("");
+    onMount(() => {
+        if (browser && auth) {
+            user = userStore(auth);
+            user.subscribe(($user) => {
+                if ($user) {
+                    loadUserData($user);
+                } else {
+                    console.log('user signed out')
+                    userNameStore.set('');
+                    accountType.set('free');
+                }
+            });
         }
     });
+
+    async function loadUserData(user: User) {
+        if (!firestore) return;
+        loadingUserData.set(true);
+        const userRef = doc(firestore, `users/${user.uid}`);
+        const docSnap = await getDoc(userRef);
+
+        if (docSnap.exists()) {
+            const userData = docSnap.data();
+            userNameStore.set(userData.username);
+            userSettings.set(userData.settings);
+            userThreads.set(userData.threads);
+            accountType.set(userData.accountType);
+        } else {
+            console.log("no such document!");
+            userNameStore.set("user");
+            // create new user
+            await setDoc(userRef, {
+                username: user.displayName || "user",
+                email: user.email,
+                threads: [],
+                settings: {
+                    voiceID: get(defaultVoiceID),
+                },
+                accountType: "paid",
+                createdAt: new Date(),
+            });
+            console.log("user created");
+            // refetch user
+            const newDocSnap = await getDoc(userRef);
+            const newUserData = newDocSnap.data();
+            userNameStore.set(newUserData?.username);
+            userSettings.set(newUserData?.settings);
+            userThreads.set(newUserData?.threads);
+            accountType.set(newUserData?.accountType);
+        }
+        loadingUserData.set(false);
+        console.log("user data loaded");
+    }
+
+    $: if (browser && user && !$user) {
+        console.log("user signed out");
+        userNameStore.set("");
+        // userSettings.set("");
+        // userThreads.set("");
+        accountType.set("");
+    }
 </script>
 
-<FirebaseApp {auth} {firestore}>
+{#if browser}
+    <FirebaseApp {auth} {firestore}>
+        <slot />
+        <SignedIn let:user></SignedIn>
+        <SignedOut></SignedOut>
+    </FirebaseApp>
+{:else}
     <slot />
-    <SignedIn let:user>
-        <!-- you're signed in -->
-    </SignedIn>
-    <SignedOut>
-        <!-- <div>user not signed in</div> -->
-    </SignedOut>
-</FirebaseApp>
+{/if}
