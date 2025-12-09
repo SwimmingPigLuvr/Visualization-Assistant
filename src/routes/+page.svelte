@@ -8,9 +8,7 @@
     import { browser } from "$app/environment";
 </script>
 
-<body
-    class="w-full h-screen font-mono text-neutral-100"
->
+<body class="w-full h-screen font-mono text-neutral-100">
     <div class="z-50">
         <Login />
     </div>
@@ -60,5 +58,4 @@
         object-fit: cover;
         z-index: -2;
     }
-
 </style>
