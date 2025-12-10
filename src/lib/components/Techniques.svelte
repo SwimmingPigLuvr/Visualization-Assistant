@@ -45,137 +45,155 @@
         <div
             in:slide
             out:fade={{ duration: 100 }}
-            class="z-50 absolute top-16 sm:left-4 sm:-translate-x-0 left-1/2 -translate-x-1/2 bg-black bg-opacity-50 rounded-xl border-white border-[1px] backdrop-blur-xl max-w-sm w-[87.5vw] p-2"
+            class="z-50 absolute top-16 sm:left-4 sm:-translate-x-0 left-1/2 -translate-x-1/2
+            bg-black bg-opacity-50 rounded-xl border-white border-[1px] backdrop-blur-xl
+            max-w-sm w-[33vw] p-2"
         >
-            <div class="flex justify-between items-center p-4">
+            <div class="flex justify-between items-center p-2">
                 <p>Techniques</p>
                 <p>
                     <a
                         href="/education"
-                        class="rounded-[100%] h-4 w-4 flex items-center justify-center font-black border-white border-[1px] text-xs"
-                        >i</a
+                        class="rounded-[100%] h-4 w-4 flex items-center justify-center
+                        font-black border-white border-[1px] text-xs">i</a
                     >
                 </p>
             </div>
 
             <div class="text-3xl flex flex-col w-full">
-
                 <!-- Visualization -->
                 <button
                     on:click={() => chooseTechnique("visualize")}
-                    class="relative flex items-center justify-start space-x-4 p-4 hover:bg-white hover:bg-opacity-25 rounded-lg group"
+                    class="relative flex items-center justify-start space-x-3 p-3
+                    hover:bg-white hover:bg-opacity-25 rounded-lg group"
                 >
-                    <div
-                        class=""
-                    >👁️</div>
+                    <div class="text-xl">👁️</div>
                     <div class="flex flex-col text-left">
                         <p class="text-sm font-black">Visualization</p>
                         <!-- description -->
                         <p class="text-xs">Imagine living in the end</p>
                     </div>
                     {#if $currentTechnique === "visualization"}
-                        <p class="absolute right-4">✅</p>
+                        <p
+                            class="absolute text-xl right-4 top-1/2 -translate-y-1/2"
+                        >
+                            ✅
+                        </p>
                     {/if}
                 </button>
 
                 <!-- Revision -->
                 <button
                     on:click={() => chooseTechnique("revise")}
-                    class="relative flex items-center justify-start space-x-4 p-4 hover:bg-white hover:bg-opacity-25 rounded-lg group"
+                    class="relative flex items-center justify-start space-x-3 p-3
+                    hover:bg-white hover:bg-opacity-25 rounded-lg group"
                 >
-                    <div
-                        class=""
-                    >✍️</div>
+                    <div class="text-xl">✍️</div>
                     <div class="flex flex-col text-left">
                         <p class="text-sm font-black">Revision</p>
                         <!-- description -->
                         <p class="text-xs">Rewrite past events</p>
                     </div>
                     {#if $currentTechnique === "revision"}
-                        <p class="absolute right-4">✅</p>
+                        <p
+                            class="absolute text-xl top-1/2 -translate-y-1/2 right-4"
+                        >
+                            ✅
+                        </p>
                     {/if}
                 </button>
 
                 <!-- Scripting -->
                 <button
                     on:click={() => chooseTechnique("script")}
-                    class="relative flex items-center justify-start space-x-4 p-4 hover:bg-white hover:bg-opacity-25 rounded-lg group"
+                    class="relative flex items-center justify-start space-x-3 p-3
+                    hover:bg-white hover:bg-opacity-25 rounded-lg group"
                 >
-                    <div
-                        class=""
-                    >📝</div>
+                    <div class="text-xl">📝</div>
                     <div class="flex flex-col text-left">
                         <p class="text-sm font-black">Scripting</p>
                         <!-- description -->
                         <p class="text-xs">Rehearse what's to come</p>
                     </div>
                     {#if $currentTechnique === "affirmation"}
-                        <p class="absolute right-4">✅</p>
+                        <p
+                            class="absolute text-xl top-1/2 -translate-y-1/2 right-4"
+                        >
+                            ✅
+                        </p>
                     {/if}
                 </button>
 
                 <!-- Affirmation -->
                 <button
                     on:click={() => chooseTechnique("affirm")}
-                    class="relative flex items-center justify-start space-x-4 p-4 hover:bg-white hover:bg-opacity-25 rounded-lg group"
+                    class="relative flex items-center justify-start space-x-3 p-3
+                    hover:bg-white hover:bg-opacity-25 rounded-lg group"
                 >
-                    <div
-                        class=""
-                    >✅</div>
+                    <div class="text-xl">✅</div>
                     <div class="flex flex-col text-left">
                         <p class="text-sm font-black">Affirmation</p>
                         <!-- description -->
                         <p class="text-xs">Solidify your beliefs</p>
                     </div>
                     {#if $currentTechnique === "affirmation"}
-                        <p class="absolute right-4">✅</p>
+                        <p
+                            class="absolute text-xl top-1/2 -translate-y-1/2 right-4"
+                        >
+                            ✅
+                        </p>
                     {/if}
                 </button>
 
                 <!-- Remember -->
                 <button
                     on:click={() => chooseTechnique("remember")}
-                    class="relative flex items-center justify-start space-x-4 p-4 hover:bg-white hover:bg-opacity-25 rounded-lg group"
+                    class="relative flex items-center justify-start space-x-3 p-3
+                    hover:bg-white hover:bg-opacity-25 rounded-lg group"
                 >
-                    <div
-                        class=""
-                    >🤔</div>
+                    <div class="text-xl">🤔</div>
                     <div class="flex flex-col text-left">
                         <p class="text-sm font-black">I Remember When</p>
                         <!-- description -->
                         <p class="text-xs">Look back from your future</p>
                     </div>
                     {#if $currentTechnique === "affirmation"}
-                        <p class="absolute right-4">✅</p>
+                        <p
+                            class="absolute text-xl top-1/2 -translate-y-1/2 right-4"
+                        >
+                            ✅
+                        </p>
                     {/if}
                 </button>
 
-                <!-- Remember -->
+                <!-- Meditation -->
                 <button
                     on:click={() => chooseTechnique("meditate")}
-                    class="relative flex items-center justify-start space-x-4 p-4 hover:bg-white hover:bg-opacity-25 rounded-lg group"
+                    class="relative flex items-center justify-start space-x-3 p-3
+                    hover:bg-white hover:bg-opacity-25 rounded-lg group"
                 >
-                    <div
-                        class=""
-                    >🧘‍♀️</div>
+                    <div class="text-xl">🧘‍♀️</div>
                     <div class="flex flex-col text-left">
                         <p class="text-sm font-black">Meditation</p>
                         <!-- description -->
                         <p class="text-xs">Embrace stillness</p>
                     </div>
                     {#if $currentTechnique === "meditate"}
-                        <p class="absolute right-4">✅</p>
+                        <p
+                            class="absolute text-xl -translate-y-1/2 top-1/2 right-4"
+                        >
+                            ✅
+                        </p>
                     {/if}
                 </button>
-
             </div>
 
             <hr class="w-[90%] m-auto" />
 
             <div
-                class="flex items-center text-center justify-center p-4 text-xs"
+                class="flex items-center text-center justify-center p-3 text-xs"
             >
-                <p>More Techniques coming soon!</p>
+                <p>More Techniques coming soon</p>
             </div>
         </div>
     {/if}

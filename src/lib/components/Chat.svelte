@@ -219,42 +219,18 @@
         },
     ];
 
-    function getRandomPrompts(numberOfPrompts: number) {
-        let promptsCopy = [...randomPrompts];
-        let selectedPrompts = [];
-
-        const maxPrompts = Math.min(numberOfPrompts, randomPrompts.length);
-
-        for (let i = 0; i < maxPrompts; i++) {
-            const randomIndex = Math.floor(
-                Math.random() * (promptsCopy.length - i),
-            );
-
-            [
-                promptsCopy[randomIndex],
-                promptsCopy[promptsCopy.length - 1 - i],
-            ] = [
-                promptsCopy[promptsCopy.length - 1 - i],
-                promptsCopy[randomIndex],
-            ];
-
-            selectedPrompts.push(promptsCopy.pop());
+    // Shuffle array function
+    function shuffleArray(array: any[]) {
+        const shuffled = [...array];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
         }
-
-        return selectedPrompts;
+        return shuffled;
     }
 
-    const randomSelectedPrompts = getRandomPrompts(2);
-    const randomSelectedPromptsAsStrings = [
-        `${randomSelectedPrompts[0]?.prompt}` +
-            ` ` +
-            `${randomSelectedPrompts[0]?.details}`,
-        `${randomSelectedPrompts[1]?.prompt}` +
-            ` ` +
-            `${randomSelectedPrompts[1]?.details}`,
-    ];
-
-    let showSubmitButton = false;
+    // Shuffle all prompts and display them in random order
+    const shuffledPrompts = shuffleArray(randomPrompts);
 </script>
 
 <!-- pricing table -->
@@ -280,13 +256,13 @@
                 {#each $messagesStore as message, index}
                     <div class="my-4 flex justify-end">
                         <li
-                            class="relative rounded-2xl p-2 {message.role ===
+                            class="relative rounded-lg p-2 {message.role ===
                             'user'
-                                ? 'p-4 max-w-[80%] ml-auto bg-black bg-opacity-50 backdrop-blur-xl'
+                                ? 'p-2 max-w-[80%] ml-auto bg-black bg-opacity-50 backdrop-blur-xl'
                                 : 'pl-8 pt-4 mr-auto'} "
                         >
                             <div
-                                class="font-mono text-xl leading-6 sm:leading-loose"
+                                class="font-mono text-sm leading-6 sm:leading-loose"
                             >
                                 {#if message.role === "assistant"}
                                     <img
@@ -359,37 +335,30 @@
     <div class=" max-w-3xl w-full fixed bottom-0 left-1/2 -translate-x-1/2">
         {#if $messagesStore.length === 0}
             <!-- example prompts -->
-            <form
-                on:submit={() => handleSubmit()}
-                class="text-sm flex w-full flex-col space-y-2 md:flex-row md:space-x-2 md:space-y-0 px-2"
-            >
-                <button
-                    on:click={() =>
-                        useExamplePrompt(randomSelectedPromptsAsStrings[0])}
-                    class="hover:bg-gray-900 rounded-lg p-3 border-slate-500 border-[1px] w-full md:w-1/2 text-left focus:ring-0 outline-none bg-black bg-opacity-50 flex flex-col"
+            <div class="w-full px-2">
+                <div
+                    class="flex gap-3 overflow-x-auto overflow-y-hidden scroll-smooth pb-2 scrollbar-hide"
+                    style="scrollbar-width: none; -ms-overflow-style: none;"
                 >
-                    <span class="text-white"
-                        >{randomSelectedPrompts[0]?.prompt}</span
-                    >
-                    <span class="text-gray-500"
-                        >{randomSelectedPrompts[0]?.details}</span
-                    >
-                </button>
-                <button
-                    on:mouseenter={() => (showSubmitButton = true)}
-                    on:mouseleave={() => (showSubmitButton = false)}
-                    on:click={() =>
-                        useExamplePrompt(randomSelectedPromptsAsStrings[1])}
-                    class="hover:bg-slate-800 rounded-lg p-3 border-slate-500 border-[1px] w-full md:w-1/2 text-left focus:ring-0 outline-none bg-black bg-opacity-50 flex flex-col items-start"
-                >
-                    <span class="text-white"
-                        >{randomSelectedPrompts[1]?.prompt}</span
-                    >
-                    <span class="text-gray-500"
-                        >{randomSelectedPrompts[1]?.details}</span
-                    >
-                </button>
-            </form>
+                    {#each shuffledPrompts as prompt, index}
+                        <button
+                            type="button"
+                            on:click={() =>
+                                useExamplePrompt(
+                                    `${prompt.prompt} ${prompt.details}`,
+                                )}
+                            class="flex-shrink-0 min-w-[280px] max-w-[320px] hover:bg-gray-900 rounded-lg p-3 border-slate-500 border-[1px] text-left focus:ring-0 outline-none bg-black bg-opacity-50 transition-all duration-200 hover:border-slate-400"
+                        >
+                            <span class="text-white font-medium block mb-1">
+                                {prompt.prompt}
+                            </span>
+                            <span class="text-gray-400 text-xs">
+                                {prompt.details}
+                            </span>
+                        </button>
+                    {/each}
+                </div>
+            </div>
         {/if}
 
         <!-- user input -->
@@ -440,3 +409,16 @@
         </form>
     </div>
 </div>
+
+<style>
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Hide scrollbar for IE, Edge and Firefox */
+    .scrollbar-hide {
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;     /* Firefox */
+    }
+</style>

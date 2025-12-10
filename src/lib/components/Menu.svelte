@@ -15,9 +15,10 @@
 
     let newVisualizationToolTip = false;
     let toggleMenuToolTip = false;
+    let agentPageToolTip = false;
 
     function toggleMenu() {
-        isMenuOpen.update(current => !current);
+        isMenuOpen.update((current) => !current);
         toggleMenuToolTip = false;
     }
 
@@ -33,6 +34,11 @@
         inputFocused.set(true);
         console.log("input focused: ", $inputFocused);
         goto("/", { replaceState: true });
+    }
+
+    function goToAgentPage() {
+        isMenuOpen.set(false);
+        goto("/agent");
     }
 </script>
 
@@ -53,7 +59,7 @@
             on:mouseenter={() => (newVisualizationToolTip = true)}
             on:mouseleave={() => (newVisualizationToolTip = false)}
             on:click={() => handleCreateNewThread()}
-            class="p-4 bg-lime-800 z-10 group absolute top-0 right-0 font-mono text-3xl font-black hover:text-white text-slate-400"
+            class="p-4 z-10 group absolute top-0 right-0 font-mono text-2xl font-black hover:text-white text-slate-400"
             ><p
                 class="transform transition-all duration-500 ease-in-out group-hover:scale-110"
             >
@@ -63,14 +69,34 @@
             {#if newVisualizationToolTip}
                 <span
                     in:fly={{ duration: 200, y: -10 }}
-                    class="text-sm absolute top-10 right-0 tooltip rounded shadow-lg px-2 p-1 bg-black border-white border-[1px] text-white mt-8"
-                    >new visualization</span
+                    class="text-sm absolute top-6 right-2 tooltip rounded shadow-lg px-2 p-1 bg-black border-white border-[1px] text-white mt-8"
+                    >create new visualization</span
                 >
             {/if}
         </button>
 
-        <!-- visualizations -->
-        <div class="pt-12 flex flex-col p-">
+        <!-- navigation links -->
+        <div class="pt-12 flex flex-col space-y-2 w-full">
+            <!-- AI Agent button -->
+            <button
+                on:mouseenter={() => (agentPageToolTip = true)}
+                on:mouseleave={() => (agentPageToolTip = false)}
+                on:click={goToAgentPage}
+                class="relative flex items-center space-x-3 p-3 bg-gray-800/50 hover:bg-blue-600/30 rounded-lg transition-all duration-200 text-left w-full"
+            >
+                <span class="text-2xl">🤖</span>
+                <span class="text-white font-medium">AI Agent</span>
+
+                {#if agentPageToolTip}
+                    <span
+                        in:fly={{ duration: 200, y: -10 }}
+                        class="text-sm absolute left-full ml-2 top-1/2 -translate-y-1/2 tooltip rounded shadow-lg px-2 p-1 bg-black border-white border-[1px] text-white whitespace-nowrap"
+                        >Chat with ElevenLabs AI</span
+                    >
+                {/if}
+            </button>
+
+            <!-- Visualizations section -->
             <Threads />
         </div>
 
@@ -93,7 +119,7 @@
 
     {#if toggleMenuToolTip}
         <span
-            in:fly={{duration: 200, y: -10}}
+            in:fly={{ duration: 200, y: -10 }}
             class="z-50 flex justify-center items-center text-sm absolute top-10 left-0 tooltip w-28 rounded shadow-lg px-2 p-1 bg-black border-white border-[1px] font-mono font-normal text-white mt-8"
         >
             {#if $isMenuOpen}

@@ -28,9 +28,7 @@
         <Profile />
     </div>
 
-    <div class="z-10">
-        <Menu />
-    </div>
+    <Menu />
     <Chat />
 
     <!-- clouds -->

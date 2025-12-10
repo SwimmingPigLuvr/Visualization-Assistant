@@ -1,10 +1,64 @@
 <script lang="ts">
-    import VoiceData from "./VoiceData.svelte";
+    import {
+        currentVoiceID,
+        v,
+        currentAudio,
+        showVoiceModal,
+    } from "$lib/stores";
     import type { Voice } from "$lib/types";
-    import { v, showVoiceModal, isMenuOpen } from "$lib/stores";
-    import { writable } from "svelte/store";
-    import { fade, slide } from "svelte/transition";
-    import { cubicInOut } from "svelte/easing";
+    import { onDestroy } from "svelte";
+    import { get } from "svelte/store";
+
+    import { isMenuOpen } from "$lib/stores";
+    import { slide } from "svelte/transition";
+    import { onMount } from "svelte";
+
+    let audio = new Audio();
+
+    function updateVoiceID(idString: string) {
+        console.log("calling update voice function with voiceID: ", idString);
+        currentVoiceID.set(idString);
+    }
+
+    function playVoicePreview(audioURL: string) {
+        // get current audio
+        const currentAudioElement = get(currentAudio);
+
+        // pause if exists (but we can't compare src since currentAudio is OpenAI Audio type)
+        if (currentAudioElement) {
+            // currentAudioElement.pause(); // This doesn't exist on OpenAI Audio type
+        }
+
+        // update element and play
+        if (audio.src !== audioURL) {
+            audio.src = audioURL;
+        }
+
+        if (audio.paused) {
+            audio
+                .play()
+                .catch((error) =>
+                    console.error("error playing audio: ", error),
+                );
+        } else {
+            audio.pause();
+        }
+
+        // Don't update store with HTMLAudioElement since currentAudio expects OpenAI Audio type
+        // currentAudio.set(audio);
+    }
+
+    // pause audio if voice modal is closed
+    $: {
+        if (!get(showVoiceModal)) {
+            audio.pause();
+        }
+    }
+
+    // stop audio when component is unmounted
+    onDestroy(() => {
+        audio.pause();
+    });
 
     let voices: Voice[] = [
         {
@@ -36,13 +90,32 @@
     $: if (!$isMenuOpen) {
         showVoiceModal.set(false);
     }
+
+    // Close dropdown when clicking outside
+    onMount(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            const target = event.target as Element | null;
+            if (
+                target &&
+                !target.closest(".voice-dropdown-container") &&
+                $showVoiceModal
+            ) {
+                showVoiceModal.set(false);
+            }
+        };
+
+        document.addEventListener("click", handleClickOutside);
+        return () => {
+            document.removeEventListener("click", handleClickOutside);
+        };
+    });
 </script>
 
 <!-- voices -->
-<div class="flex flex-col text-left w-full">
+<div class="flex flex-col text-left w-full voice-dropdown-container relative">
     <!-- voice -->
     <button
-        on:click={() => showVoiceModal.set(true)}
+        on:click={() => showVoiceModal.set(!$showVoiceModal)}
         class="p-2 px-4 rounded-xl hover:bg-white hover:bg-opacity-10 hover:border-white border-[1px] border-transparent flex justify-between items-center text-xl text-left"
     >
         Voice
@@ -58,47 +131,68 @@
         </div>
     </button>
 
-    <!-- voice selection modal -->
+    <!-- voice selection dropdown -->
     {#if $showVoiceModal}
-        <!-- bg overlay -->
-        <button
-            in:fade={{ duration: 250 }}
-            on:click={() => showVoiceModal.set(false)}
-            class="bg-black bg-opacity-50 backdrop-blur p-2 h-screen fixed w-full z-50 top-0 left-0 flex justify-center items-center"
+        <div
+            in:slide={{ duration: 200, axis: "y" }}
+            out:slide={{ duration: 150, axis: "y" }}
+            class="absolute top-full left-0 mt-2 w-full bg-blue-800 border-white border-[1px] rounded-xl shadow-lg z-50 overflow-hidden"
         >
-            <!-- modal -->
-            <button
-                in:slide={{ duration: 250 }}
-                on:click|stopPropagation
-                class="rounded-none flex border-white border-[1px] bg-blue-800 flex-col p-4 w-full items-center justify-evenly overflow-x-auto"
+            <!-- header -->
+            <div class="px-4 py-3 border-b border-white border-opacity-20">
+                <p class="text-center text-white font-medium">Choose a voice</p>
+            </div>
+
+            <!-- current voice preview -->
+            <div
+                class="px-4 py-3 border-b border-white border-opacity-20 bg-blue-900 bg-opacity-50"
             >
-                <!-- header -->
-                <div class="mb-auto flex justify-between w-full items-center">
-                    <p class="text-center">Choose a voice</p>
-                    <button
-                        on:click={() => showVoiceModal.set(false)}
-                        class="rounded-none border-white border-[1px] px-3 hover:bg-rose-500 hover:bg-opacity-50 p-1"
-                        >X</button
-                    >
-                </div>
-                <div class="flex space-x-4 my-4">
-                    <!-- selected voice pfp -->
+                <div class="flex items-center space-x-3">
                     <img
                         src={voices[$v].imageURL}
-                        alt="{voices[$v].name} pfp"
-                        class="h-40 w-40 rounded-none mb-2"
+                        alt="{voices[$v].name} avatar"
+                        class="h-12 w-12 rounded-full"
                     />
+                    <div>
+                        <p class="text-white font-medium">{voices[$v].name}</p>
+                        <p class="text-blue-200 text-sm">Current voice</p>
+                    </div>
                 </div>
+            </div>
 
-                <!-- voice options -->
-                <div class="flex flex-col space-y-2 w-full my-6">
-                    {#each voices as voice, index}
-                        <button class="w-full">
-                            <VoiceData {voice} i={index} />
+            <!-- voice options -->
+            <div class="max-h-64 overflow-y-auto">
+                {#each voices as voice, index}
+                    <div
+                        class="border-b border-white border-opacity-10 last:border-b-0"
+                    >
+                        <button
+                            on:click={() => {
+                                v.set(index);
+                                updateVoiceID(voice.id);
+                            }}
+                            class="flex justify-between text-left pl-2 w-full items-center {$currentVoiceID ===
+                            voice.id
+                                ? 'opacity-100'
+                                : 'opacity-25 hover:opacity-75'} group"
+                        >
+                            <div class="flex space-x-2">
+                                <button
+                                    on:click={() =>
+                                        playVoicePreview(voice.audioPreviewURL)}
+                                    >🎧</button
+                                >
+                                <p
+                                    class="font-serif text-3xl -tracking-widest italic"
+                                >
+                                    {voice.name}
+                                </p>
+                            </div>
+                            <img src={voice.imageURL} class="h-10" alt="" />
                         </button>
-                    {/each}
-                </div>
-            </button>
-        </button>
+                    </div>
+                {/each}
+            </div>
+        </div>
     {/if}
 </div>
