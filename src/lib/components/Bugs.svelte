@@ -1,6 +1,7 @@
 <script lang="ts">
     import { onDestroy, onMount } from "svelte";
     import { fly, slide } from "svelte/transition";
+    import { browser } from "$app/environment";
 
     let reportBugWindowOpen = false;
     let suggestIdeaWindowOpen = false;
@@ -28,7 +29,9 @@
     }
 
     onMount(() => {
-        document.addEventListener("click", handleClickOutside);
+        if (browser) {
+            document.addEventListener("click", handleClickOutside);
+        }
     });
 
     onDestroy(() => {

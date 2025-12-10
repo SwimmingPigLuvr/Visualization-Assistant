@@ -1,10 +1,5 @@
 <script lang="ts">
-    import {
-        currentVoiceID,
-        v,
-        currentAudio,
-        showVoiceModal,
-    } from "$lib/stores";
+    import { currentVoiceID, v, showVoiceModal } from "$lib/stores";
     import type { Voice } from "$lib/types";
     import { onDestroy } from "svelte";
     import { get } from "svelte/store";
@@ -13,7 +8,7 @@
     import { slide } from "svelte/transition";
     import { onMount } from "svelte";
 
-    let audio = new Audio();
+    let audio: HTMLAudioElement;
 
     function updateVoiceID(idString: string) {
         console.log("calling update voice function with voiceID: ", idString);
@@ -21,15 +16,8 @@
     }
 
     function playVoicePreview(audioURL: string) {
-        // get current audio
-        const currentAudioElement = get(currentAudio);
+        if (!audio) return;
 
-        // pause if exists (but we can't compare src since currentAudio is OpenAI Audio type)
-        if (currentAudioElement) {
-            // currentAudioElement.pause(); // This doesn't exist on OpenAI Audio type
-        }
-
-        // update element and play
         if (audio.src !== audioURL) {
             audio.src = audioURL;
         }
@@ -43,21 +31,16 @@
         } else {
             audio.pause();
         }
-
-        // Don't update store with HTMLAudioElement since currentAudio expects OpenAI Audio type
-        // currentAudio.set(audio);
     }
 
-    // pause audio if voice modal is closed
     $: {
-        if (!get(showVoiceModal)) {
+        if (audio && !get(showVoiceModal)) {
             audio.pause();
         }
     }
 
-    // stop audio when component is unmounted
     onDestroy(() => {
-        audio.pause();
+        if (audio) audio.pause();
     });
 
     let voices: Voice[] = [
@@ -93,6 +76,7 @@
 
     // Close dropdown when clicking outside
     onMount(() => {
+        audio = new Audio();
         const handleClickOutside = (event: MouseEvent) => {
             const target = event.target as Element | null;
             if (
