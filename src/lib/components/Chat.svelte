@@ -199,13 +199,14 @@
         $userInput = examplePrompt;
     }
 
+    // come up with 10 more of these ideal wishes that might appeal to people
     const randomPrompts = [
         {
             prompt: "$100,000 monthly recurring profit",
             details: "from my online business with 0 employees",
         },
         {
-            prompt: "i want to make it into the NBA",
+            prompt: "To be the #1 NBA draft pick",
             details: "so i can ball out on my haters",
         },
         {
@@ -214,8 +215,47 @@
         },
         {
             prompt: "A fully recovered knee",
-            details:
-                "full flexibility and range of motion in my knee so that i can skate",
+            details: "full flexibility and range of motion",
+        },
+        {
+            prompt: "My dream house by the ocean",
+            details: "private beach and stunning sunset views",
+        },
+        {
+            prompt: "Financial freedom and independence",
+            details: "never having to worry about money again",
+        },
+        {
+            prompt: "The perfect romantic relationship",
+            details: "with my dream partner",
+        },
+        {
+            prompt: "My own successful podcast",
+            details: "with millions of listeners",
+        },
+        {
+            prompt: "Unshakeable confidence",
+            details: "feeling comfortable in any situation",
+        },
+        {
+            prompt: "Travel the world",
+            details: "for a full year",
+        },
+        {
+            prompt: "Write a bestselling book",
+            details: "that inspires people and changes lives",
+        },
+        {
+            prompt: "Master a new language fluently",
+            details: "speaking Spanish like a native speaker",
+        },
+        {
+            prompt: "Raise $1,000,000",
+            details: "for my nonprofit",
+        },
+        {
+            prompt: "Lose 50 pounds and get in shape",
+            details: "by fixing my metabolism",
         },
     ];
 
@@ -332,12 +372,12 @@
     </div>
 
     <!-- input -->
-    <div class=" max-w-3xl w-full fixed bottom-0 left-1/2 -translate-x-1/2">
+    <div class=" max-w-3xl w-full fixed bottom-2 left-1/2 -translate-x-1/2">
         {#if $messagesStore.length === 0}
             <!-- example prompts -->
-            <div class="w-full px-2">
+            <div class="w-full">
                 <div
-                    class="flex gap-3 overflow-x-auto overflow-y-hidden scroll-smooth pb-2 scrollbar-hide"
+                    class="flex space-x-2 overflow-x-auto overflow-y-hidden scroll-smooth pb-2 scrollbar-hide"
                     style="scrollbar-width: none; -ms-overflow-style: none;"
                 >
                     {#each shuffledPrompts as prompt, index}
@@ -347,9 +387,13 @@
                                 useExamplePrompt(
                                     `${prompt.prompt} ${prompt.details}`,
                                 )}
-                            class="flex-shrink-0 min-w-[280px] max-w-[320px] hover:bg-gray-900 rounded-lg p-3 border-slate-500 border-[1px] text-left focus:ring-0 outline-none bg-black bg-opacity-50 transition-all duration-200 hover:border-slate-400"
+                            class="flex-shrink-0 min-w-[280px] max-w-[320px]
+                            hover:bg-gray-900 rounded-lg p-3 border-slate-500
+                            border-[1px] text-left focus:ring-0 outline-none
+                            bg-black bg-opacity-50 transition-all duration-200
+                            hover:border-slate-400 flex flex-col"
                         >
-                            <span class="text-white font-medium block mb-1">
+                            <span class="text-white text-sm font-medium mb-1">
                                 {prompt.prompt}
                             </span>
                             <span class="text-gray-400 text-xs">
@@ -365,7 +409,7 @@
         <!-- focus on this @textarea -->
         <form
             on:submit|preventDefault={() => handleSubmit()}
-            class="flex items-center justify-between p-2 w-full"
+            class="flex items-center justify-between w-full"
         >
             <!-- allow more height for long inputs stay normal height for normal inputs -->
             <textarea
@@ -374,7 +418,9 @@
                 placeholder="send message"
                 rows={rows || 1}
                 on:keydown={handleKeyDown}
-                class="resize-none w-full pr-12 focus:ring-0 outline-none bg-black bg-opacity-50 rounded-lg relative p-4 border-slate-500 border-[1px] overflow-y-auto max-h-40"
+                class="resize-none w-full pr-12 focus:ring-0 outline-none bg-black
+                bg-opacity-50 rounded-lg relative p-4 border-slate-500 border-[1px]
+                overflow-y-auto max-h-40"
             ></textarea>
 
             <!-- submit button -->
@@ -418,7 +464,7 @@
 
     /* Hide scrollbar for IE, Edge and Firefox */
     .scrollbar-hide {
-        -ms-overflow-style: none;  /* IE and Edge */
-        scrollbar-width: none;     /* Firefox */
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none; /* Firefox */
     }
 </style>

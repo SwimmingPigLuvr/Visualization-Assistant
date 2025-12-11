@@ -3,123 +3,129 @@
 @tailwind utilities;
 
 @font-face {
-    font-family: 'Cinema';
-    src: url('/fonts/Cinema.otf') format('opentype');
+  font-family: "Cinema";
+  src: url("/fonts/Cinema.otf") format("opentype");
 }
 
 .message-content {
-    position: relative; /* Ensure relative positioning for proper padding application */
-    padding-left: 2rem; /* Indent all content */
+  position: relative; /* Ensure relative positioning for proper padding application */
+  padding-left: 2rem; /* Indent all content */
 }
 
 .message-content::first-line {
-    font-weight: bold; /* Any style you want to apply to the first line */
+  font-weight: bold; /* Any style you want to apply to the first line */
 }
 
 /* If you need the container to not have the padding affect other layout parts */
 .message-container {
-    margin-left: -2rem; /* Counteract the padding effect on the overall layout */
+  margin-left: -2rem; /* Counteract the padding effect on the overall layout */
 }
 
 body {
-    margin: 0;
-    padding: 0;
-    background-size: cover;
-    background-position: center;
-  }
-  
+  margin: 0;
+  padding: 0;
+  background-size: cover;
+  background-position: center;
+}
+
 #video-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
 }
 
 #background-video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: top;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
 }
 
 #video-container::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(rgba(0, 100, 0, 0.65) 0%, rgba(0, 0, 0, 1) 100%); 
-    z-index: 0;
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    rgba(255, 255, 255, 0.5) 0%,
+    rgba(255, 255, 255, 0.5) 10%,
+    rgba(0, 0, 100, 1) 100%
+  );
+  z-index: 0;
 }
 
 .glow {
-    box-shadow: 0 0 5px #ffffff,
-                 0 0 20px #ffffff,
-                 0 0 100px #ffffff;
+  box-shadow:
+    0 0 5px #ffffff,
+    0 0 20px #ffffff,
+    0 0 100px #ffffff;
 }
 
 .text-glow {
-    text-shadow: 0 0 2px #ffffff, /* Small white glow */
-                 0 0 4px #ffffff, /* Larger white glow */
-                 0 0 8px #ffffff; /* Even larger white glow */
+  text-shadow:
+    0 0 2px #ffffff,
+    /* Small white glow */ 0 0 4px #ffffff,
+    /* Larger white glow */ 0 0 8px #ffffff; /* Even larger white glow */
 }
 
 .text-dreamy {
-    text-shadow: 0 0 2px #ffffff, /* Small white glow */
-                 0 0 4px #ffffff, /* Larger white glow */
-                 0 0 8px #ffffff, /* Even larger white glow */
-                 0 0 20px #ffffff; /* Even larger white glow */
+  text-shadow:
+    0 0 2px #ffffff,
+    /* Small white glow */ 0 0 4px #ffffff,
+    /* Larger white glow */ 0 0 8px #ffffff,
+    /* Even larger white glow */ 0 0 20px #ffffff; /* Even larger white glow */
 }
 
 .hover-glow {
-    transition: box-shadow 0.3s ease-in-out;
+  transition: box-shadow 0.3s ease-in-out;
 }
 
 .hover-glow:hover {
-    box-shadow: 0 0 5px #ffffff, /* Small white glow */
-                0 0 10px #ffffff, /* Larger white glow */
-                0 0 20px #ffffff; /* Even larger white glow */
+  box-shadow:
+    0 0 5px #ffffff,
+    /* Small white glow */ 0 0 10px #ffffff,
+    /* Larger white glow */ 0 0 20px #ffffff; /* Even larger white glow */
 }
 
 .hover-text-glow {
-    transition: box-shadow 0.3s ease-in-out;
+  transition: box-shadow 0.3s ease-in-out;
 }
 
 .hover-text-glow:hover {
-    text-shadow: 0 0 5px #ffffff, /* Small white glow */
-                0 0 10px #ffffff, /* Larger white glow */
-                0 0 20px #ffffff, /* Even larger white glow */
-                0 0 40px #ff00ff, /* Pink outer glow */
-                0 0 80px #ff00ff, /* Larger pink glow */
-                0 0 100px #ff00ff, /* Even larger pink glow */
-                0 0 200px #ff00ff; /* Largest pink glow */
+  text-shadow:
+    0 0 5px #ffffff,
+    /* Small white glow */ 0 0 10px #ffffff,
+    /* Larger white glow */ 0 0 20px #ffffff,
+    /* Even larger white glow */ 0 0 40px #ff00ff,
+    /* Pink outer glow */ 0 0 80px #ff00ff,
+    /* Larger pink glow */ 0 0 100px #ff00ff,
+    /* Even larger pink glow */ 0 0 200px #ff00ff; /* Largest pink glow */
 }
 
+.retro-div {
+  background-color: lightblue;
+  margin: 50px;
+  position: relative;
+  font-size: 18px;
+  text-align: center;
+  line-height: 100px;
+  z-index: 1;
+}
 
-        .retro-div {
-            background-color: lightblue;
-            margin: 50px;
-            position: relative;
-            font-size: 18px;
-            text-align: center;
-            line-height: 100px;
-            z-index: 1;
-    
-        }
-
-        /* Retro drop shadow effect */
-        .retro-div::after {
-            content: '';
-            position: absolute;
-            top: 10px;   /* Vertical offset for shadow */
-            left: 10px;  /* Horizontal offset for shadow */
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.2); /* Shadow color */
-            z-index: -1; /* Place the shadow behind the div */
-        }
-
+/* Retro drop shadow effect */
+.retro-div::after {
+  content: "";
+  position: absolute;
+  top: 10px; /* Vertical offset for shadow */
+  left: 10px; /* Horizontal offset for shadow */
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.2); /* Shadow color */
+  z-index: -1; /* Place the shadow behind the div */
+}

@@ -13,17 +13,6 @@
         <Login />
     </div>
 
-    {#if browser}
-        {#if $bgMode === "video"}
-            <video autoplay muted loop playsinline class="background-video">
-                <source src={$wallpaper} type="video/mp4" />
-                Your browser does not support the video tag.
-            </video>
-        {:else if $bgMode === "image"}
-            <img src={$wallpaper} alt="background" class="background-image" />
-        {/if}
-    {/if}
-
     <div class="z-20">
         <Profile />
     </div>

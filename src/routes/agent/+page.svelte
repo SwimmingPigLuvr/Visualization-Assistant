@@ -39,12 +39,6 @@
             </p>
         </div>
 
-        <!-- ElevenLabs Widget Container -->
-        <div class="flex justify-center items-center min-h-[500px]">
-            <div class="w-full max-w-4xl">
-                <elevenlabs-convai agent-id="agent_2401kbxsmcskf5qr8fgc4merd25a"></elevenlabs-convai>
-            </div>
-        </div>
 
         <!-- Additional Info -->
         <div class="mt-12 text-center">
